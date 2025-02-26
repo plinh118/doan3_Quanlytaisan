@@ -13,20 +13,6 @@ export async function GET(req: NextRequest) {
   const orderType = (searchParams.get('orderType') as 'ASC' | 'DESC') || 'ASC';
   const TrainingCouseName = searchParams.get('trainingCouseName') || undefined;
 
-  return getIntellectualPropertiesByPageOrder(
-    pageIndex,
-    pageSize,
-    orderType,
-    TrainingCouseName,
-  );
-}
-
-export async function getIntellectualPropertiesByPageOrder(
-  pageIndex: number,
-  pageSize: number,
-  orderType: 'ASC' | 'DESC',
-  TrainingCouseName?: string,
-) {
   try {
     return db_Provider<GetTrainingCourse[]>(
       'CALL GetTrainingCoursesByPageOrder(?, ?, ?, ?)',
@@ -40,6 +26,7 @@ export async function getIntellectualPropertiesByPageOrder(
     );
   }
 }
+
 
 export async function POST(request: NextRequest) {
   try {

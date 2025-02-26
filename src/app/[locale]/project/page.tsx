@@ -17,7 +17,7 @@ import { DepartmentAPI } from '@/libs/api/department.api';
 import { PartnerAPI } from '@/libs/api/partner.api';
 import { uploadFile } from '@/libs/api/upload.api';
 import { documentAPI } from '@/libs/api/document.api';
-import { useAddDocuments, useUpdateDocuments } from '../document/page';
+import { useAddDocuments, useUpdateDocuments } from '../../../modules/shared/document/add_documentHooks';
 
 const ProjectPage = () => {
   const [projects, setProjects] = useState<Get_project[]>([]);

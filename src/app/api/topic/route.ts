@@ -14,15 +14,6 @@ export async function GET(req: NextRequest) {
   const orderType = (searchParams.get('orderType') as 'ASC' | 'DESC') || 'ASC';
   const TopicName = searchParams.get('topicName') || undefined;
 
-  return getproductByPageOrder(pageIndex, pageSize, orderType, TopicName);
-}
-
-export async function getproductByPageOrder(
-  pageIndex: number,
-  pageSize: number,
-  orderType: 'ASC' | 'DESC',
-  TopicName?: string,
-) {
   try {
     return db_Provider<Get_Product[]>('CALL GetTopicsByPageOrder(?, ?, ?, ?)', [
       pageIndex,

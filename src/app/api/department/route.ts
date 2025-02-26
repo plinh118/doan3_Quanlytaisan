@@ -13,32 +13,18 @@ export async function GET(req: NextRequest) {
   const orderType = (searchParams.get('orderType') as 'ASC' | 'DESC') || 'ASC';
   const departmentName = searchParams.get('departmentName') || undefined;
 
-  return GetDepartmentByPageOrder(
-    pageIndex,
-    pageSize,
-    orderType,
-    departmentName,
-  );
-}
-
-export async function GetDepartmentByPageOrder(
-  pageIndex: number,
-  pageSize: number,
-  orderType: 'ASC' | 'DESC',
-  departmentName?: string,
-) {
   try {
     const result = await db_Provider<Department_DTO[]>(
       'CALL GetDepartmentByPageOrder(?, ?, ?, ?)',
       [pageIndex, pageSize, orderType, departmentName || null],
     );
-    console.log(result);
     return result;
   } catch (error) {
     console.error('Lỗi khi lấy danh sách đơn vị:', error);
     throw new Error('Không thể lấy danh sách đơn vị.');
   }
 }
+
 
 export async function POST(request: NextRequest) {
   const body: AddDepartment = await request.json();

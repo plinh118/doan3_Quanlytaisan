@@ -13,15 +13,6 @@ export async function GET(req: NextRequest) {
   const orderType = (searchParams.get('orderType') as 'ASC' | 'DESC') || 'ASC';
   const projectName = searchParams.get('projectName') || undefined;
 
-  return GetProjectByPageOrder(pageIndex, pageSize, orderType, projectName);
-}
-
-export async function GetProjectByPageOrder(
-  pageIndex: number,
-  pageSize: number,
-  orderType: 'ASC' | 'DESC',
-  projectName?: string,
-) {
   try {
     return db_Provider<Get_project[]>(
       'CALL GetProjectByPageOrder(?, ?, ?, ?)',
@@ -35,6 +26,7 @@ export async function GetProjectByPageOrder(
     );
   }
 }
+
 
 export async function POST(request: NextRequest) {
   try {

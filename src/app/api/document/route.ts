@@ -6,18 +6,10 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const RelatedId = Number(searchParams.get('relatedId'));
   const RelatedType = searchParams.get('relatedType') || undefined;
-  console.log(searchParams);
-  return getDocuments_by_IdRelated(RelatedId, RelatedType);
-}
-
-export async function getDocuments_by_IdRelated(
-  relatedId: number,
-  relatedType: string | undefined,
-) {
   try {
     const result = await db_Provider<Up_Document_DTO[]>(
       'CALL GetDocuments_by_IdRelated(?,?)',
-      [relatedId, relatedType],
+      [RelatedId, RelatedType],
     );
     return result;
   } catch (error) {
@@ -25,6 +17,7 @@ export async function getDocuments_by_IdRelated(
     throw new Error('Không thể lấy danh sách tài liệu.');
   }
 }
+
 
 export async function POST(request: NextRequest) {
   const body: Add_Document_DTO = await request.json();

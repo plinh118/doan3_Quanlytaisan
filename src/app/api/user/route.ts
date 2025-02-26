@@ -12,15 +12,6 @@ export async function GET(req: NextRequest) {
   const orderType = (searchParams.get('orderType') as 'ASC' | 'DESC') || 'ASC';
   const FullName = searchParams.get('fullName') || undefined;
 
-  return getUsersByPageOrder(pageIndex, pageSize, orderType, FullName);
-}
-
-export async function getUsersByPageOrder(
-  pageIndex: number,
-  pageSize: number,
-  orderType: 'ASC' | 'DESC',
-  FullName?: string,
-) {
   try {
     const result = await db_Provider<GetUser[]>(
       'CALL GetUsersByPageOrder(?, ?, ?, ?)',
@@ -32,6 +23,7 @@ export async function getUsersByPageOrder(
     throw new Error('Không thể lấy danh sách người dùng.');
   }
 }
+
 
 export async function POST(request: NextRequest) {
   const body: AddUser = await request.json();

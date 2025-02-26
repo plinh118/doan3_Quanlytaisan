@@ -11,36 +11,22 @@ export async function GET(req: NextRequest) {
   const pageIndex = Number(searchParams.get('pageIndex')) || 1;
   const pageSize = Number(searchParams.get('pageSize')) || 10;
   const orderType = (searchParams.get('orderType') as 'ASC' | 'DESC') || 'ASC';
-  const IntellectualPropertyName =
-    searchParams.get('intellectualPropertyName') || undefined;
+  const IntellectualPropertyName =searchParams.get('intellectualPropertyName') || undefined;
 
-  return getIntellectualPropertiesByPageOrder(
-    pageIndex,
-    pageSize,
-    orderType,
-    IntellectualPropertyName,
-  );
+    try {
+      return db_Provider<GetIntellectualProperty[]>(
+        'CALL GetIntellectualPropertiesByPageOrder(?, ?, ?, ?)',
+        [pageIndex, pageSize, orderType, IntellectualPropertyName || null],
+      );
+    } catch (error) {
+      console.error('Lỗi khi lấy danh sách bản quyền:', error);
+      return NextResponse.json(
+        { error: 'Không thể lấy danh sách bản quyền.' },
+        { status: 500 },
+      );
+    }
 }
 
-export async function getIntellectualPropertiesByPageOrder(
-  pageIndex: number,
-  pageSize: number,
-  orderType: 'ASC' | 'DESC',
-  IntellectualPropertyName?: string,
-) {
-  try {
-    return db_Provider<GetIntellectualProperty[]>(
-      'CALL GetIntellectualPropertiesByPageOrder(?, ?, ?, ?)',
-      [pageIndex, pageSize, orderType, IntellectualPropertyName || null],
-    );
-  } catch (error) {
-    console.error('Lỗi khi lấy danh sách bản quyền:', error);
-    return NextResponse.json(
-      { error: 'Không thể lấy danh sách bản quyền.' },
-      { status: 500 },
-    );
-  }
-}
 
 export async function POST(request: NextRequest) {
   try {

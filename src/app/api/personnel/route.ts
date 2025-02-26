@@ -13,15 +13,6 @@ export async function GET(req: NextRequest) {
   const orderType = (searchParams.get('orderType') as 'ASC' | 'DESC') || 'ASC';
   const PersonnelName = searchParams.get('personnelName') || undefined;
 
-  return getPersonnelByPageOrder(pageIndex, pageSize, orderType, PersonnelName);
-}
-
-export async function getPersonnelByPageOrder(
-  pageIndex: number,
-  pageSize: number,
-  orderType: 'ASC' | 'DESC',
-  PersonnelName?: string,
-) {
   try {
     return db_Provider<GetPersonnel[]>(
       'CALL GetPersonnelByPageOrder(?, ?, ?, ?)',
@@ -35,6 +26,7 @@ export async function getPersonnelByPageOrder(
     );
   }
 }
+
 
 export async function POST(request: NextRequest) {
   try {
