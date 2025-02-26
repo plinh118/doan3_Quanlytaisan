@@ -7,7 +7,6 @@ const JWT_SECRET = process.env.JWT_SECRET || 'pham-thanh-long-2003004';
 export async function POST(request: Request) {
   try {
     const { email, password } = await request.json();
-    console.log(email, password);
     // Kiểm tra dữ liệu đầu vào
     if (!email || !password) {
       return NextResponse.json(
@@ -55,7 +54,6 @@ export async function POST(request: Request) {
       },
     });
   } catch (error) {
-    console.error('Login error:', error);
     return NextResponse.json({ error: 'Không thể đăng nhập' }, { status: 500 });
   }
 }

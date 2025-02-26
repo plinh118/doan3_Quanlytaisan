@@ -27,7 +27,6 @@ export async function GET(req: NextRequest) {
   }
 }
 
-
 export async function POST(request: NextRequest) {
   try {
     const body: AddPersonnel = await request.json();

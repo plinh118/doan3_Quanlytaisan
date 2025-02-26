@@ -12,18 +12,22 @@ export async function GET(req: NextRequest) {
   try {
     const customers = await db_Provider<GetCustomer[]>(
       'CALL GetCustomerByPageOrder(?, ?, ?, ?, ?)',
-      [pageIndex, pageSize, orderType, customerName || null, phoneNumber || null],
+      [
+        pageIndex,
+        pageSize,
+        orderType,
+        customerName || null,
+        phoneNumber || null,
+      ],
     );
-    return customers; 
+    return customers;
   } catch (error) {
-    console.error('Lỗi khi lấy danh sách khách hàng:', error);
     return NextResponse.json(
       { error: 'Không thể lấy danh sách khách hàng.' },
       { status: 500 },
     );
   }
 }
-
 
 export async function POST(request: NextRequest) {
   try {
@@ -41,7 +45,6 @@ export async function POST(request: NextRequest) {
       true,
     );
   } catch (error) {
-    console.error('Lỗi khi thêm khách hàng:', error);
     return NextResponse.json(
       { error: 'Không thể thêm khách hàng.' },
       { status: 500 },
@@ -65,7 +68,6 @@ export async function PATCH(request: NextRequest) {
       true,
     );
   } catch (error) {
-    console.error('Lỗi khi cập nhật khách hàng:', error);
     return NextResponse.json(
       { error: 'Không thể cập nhật khách hàng.' },
       { status: 500 },
@@ -85,7 +87,6 @@ export async function DELETE(request: NextRequest) {
 
     return db_Provider<any>('CALL DeleteCustomer(?)', [id], true);
   } catch (error) {
-    console.error('Lỗi khi xóa khách hàng:', error);
     return NextResponse.json(
       { error: 'Không thể xóa khách hàng.' },
       { status: 500 },

@@ -31,15 +31,9 @@ export const RULES_FORM: Record<keyof keyValidator, FormRule[]> = {
     {
       required: true,
       min: 10,
-      message: 'Số điện thoại tối thiểu 10 ký tự',
-    },
-    {
-      pattern: /^0/gm,
-      message: 'Số điện thoại phải bắt đầu bằng 0',
-    },
-    {
-      pattern: /^\d+$/gm,
-      message: 'Số điện thoại chỉ chứa ký tự số',
+      max: 10,
+      pattern: /^0\d{9}$/,
+      message: 'Số điện thoại phải đúng 10 chữ số và bắt đầu bằng 0',
     },
   ],
   number: [

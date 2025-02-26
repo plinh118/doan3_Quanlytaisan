@@ -13,11 +13,9 @@ export async function GET(req: NextRequest) {
     );
     return result;
   } catch (error) {
-    console.error('Lỗi khi lấy danh sách tài liệu:', error);
     throw new Error('Không thể lấy danh sách tài liệu.');
   }
 }
-
 
 export async function POST(request: NextRequest) {
   const body: Add_Document_DTO = await request.json();
