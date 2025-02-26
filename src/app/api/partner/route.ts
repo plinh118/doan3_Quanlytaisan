@@ -11,22 +11,6 @@ export async function GET(req: NextRequest) {
   const partnerName = searchParams.get('partnerName') || undefined;
   const phoneNumber = searchParams.get('phoneNumber') || undefined;
 
-  return getPartnerByPageOrder(
-    pageIndex,
-    pageSize,
-    orderType,
-    partnerName,
-    phoneNumber,
-  );
-}
-
-export async function getPartnerByPageOrder(
-  pageIndex: number,
-  pageSize: number,
-  orderType: 'ASC' | 'DESC',
-  PartnerName?: string,
-  PhoneNumber?: string,
-) {
   try {
     return db_Provider<Partner_DTO[]>(
       'CALL GetPartnerByPageOrder(?, ?, ?, ?, ?)',
@@ -34,8 +18,8 @@ export async function getPartnerByPageOrder(
         pageIndex,
         pageSize,
         orderType,
-        PartnerName || null,
-        PhoneNumber || null,
+        partnerName || null,
+        phoneNumber || null,
       ],
     );
   } catch (error) {

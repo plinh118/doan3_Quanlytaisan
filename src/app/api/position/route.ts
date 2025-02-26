@@ -9,15 +9,6 @@ export async function GET(req: NextRequest) {
   const orderType = (searchParams.get('orderType') as 'ASC' | 'DESC') || 'ASC';
   const positionName = searchParams.get('positionName') || undefined;
 
-  return getPositionsByPageOrder(pageIndex, pageSize, orderType, positionName);
-}
-
-export async function getPositionsByPageOrder(
-  pageIndex: number,
-  pageSize: number,
-  orderType: 'ASC' | 'DESC',
-  positionName?: string,
-) {
   try {
     const result = await db_Provider<GetPosition[]>(
       'CALL GetPositionsByPageOrder(?, ?, ?, ?)',
@@ -30,6 +21,7 @@ export async function getPositionsByPageOrder(
     throw new Error('Không thể lấy danh sách chức vụ.');
   }
 }
+
 
 export async function POST(request: NextRequest) {
   const body: AddPosistion = await request.json();

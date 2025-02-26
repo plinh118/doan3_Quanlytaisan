@@ -15,7 +15,7 @@ import { uploadFile } from '@/libs/api/upload.api';
 import { documentAPI } from '@/libs/api/document.api';
 import type { Department_DTO } from '@/models/department.model';
 import { DepartmentAPI } from '@/libs/api/department.api';
-import { useAddDocuments, useUpdateDocuments } from '../document/page';
+import { useAddDocuments, useUpdateDocuments } from '../../../modules/shared/document/add_documentHooks';
 
 const TopicPage = () => {
   const [Topics, setTopics] = useState<GetTopic[]>([]);

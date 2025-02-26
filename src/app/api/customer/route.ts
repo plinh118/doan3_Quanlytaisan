@@ -1,7 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { db_Provider } from '@/app/api/Api_Provider';
 import type { GetCustomer, AddCustomer } from '@/models/customer.model';
-
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const pageIndex = Number(searchParams.get('pageIndex')) || 1;
@@ -10,33 +9,12 @@ export async function GET(req: NextRequest) {
   const customerName = searchParams.get('customerName') || undefined;
   const phoneNumber = searchParams.get('phoneNumber') || undefined;
 
-  return getCustomerByPageOrder(
-    pageIndex,
-    pageSize,
-    orderType,
-    customerName,
-    phoneNumber,
-  );
-}
-
-export async function getCustomerByPageOrder(
-  pageIndex: number,
-  pageSize: number,
-  orderType: 'ASC' | 'DESC',
-  CustomerName?: string,
-  PhoneNumber?: string,
-) {
   try {
-    return db_Provider<GetCustomer[]>(
+    const customers = await db_Provider<GetCustomer[]>(
       'CALL GetCustomerByPageOrder(?, ?, ?, ?, ?)',
-      [
-        pageIndex,
-        pageSize,
-        orderType,
-        CustomerName || null,
-        PhoneNumber || null,
-      ],
+      [pageIndex, pageSize, orderType, customerName || null, phoneNumber || null],
     );
+    return customers; 
   } catch (error) {
     console.error('Lỗi khi lấy danh sách khách hàng:', error);
     return NextResponse.json(
@@ -45,6 +23,7 @@ export async function getCustomerByPageOrder(
     );
   }
 }
+
 
 export async function POST(request: NextRequest) {
   try {

@@ -13,15 +13,6 @@ export async function GET(req: NextRequest) {
   const orderType = (searchParams.get('orderType') as 'ASC' | 'DESC') || 'ASC';
   const ServiceName = searchParams.get('serviceName') || undefined;
 
-  return getServicesByPageOrder(pageIndex, pageSize, orderType, ServiceName);
-}
-
-export async function getServicesByPageOrder(
-  pageIndex: number,
-  pageSize: number,
-  orderType: 'ASC' | 'DESC',
-  ServiceName?: string,
-) {
   try {
     const result = await db_Provider<Get_Services[]>(
       'CALL GetServicesByPageOrder(?, ?, ?, ?)',
@@ -34,6 +25,7 @@ export async function getServicesByPageOrder(
     throw new Error('Không thể lấy danh sách dịch vụ.');
   }
 }
+
 
 export async function POST(request: NextRequest) {
   const body: Add_Services = await request.json();

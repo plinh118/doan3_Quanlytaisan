@@ -10,22 +10,6 @@ export async function GET(req: NextRequest) {
   const divisionName = searchParams.get('divisionName') || undefined;
   const departmentName = searchParams.get('departmentName') || undefined;
 
-  return getDivisionByPageOrder(
-    pageIndex,
-    pageSize,
-    orderType,
-    divisionName,
-    departmentName,
-  );
-}
-
-export async function getDivisionByPageOrder(
-  pageIndex: number,
-  pageSize: number,
-  orderType: 'ASC' | 'DESC',
-  divisionName?: string,
-  departmentName?: string,
-) {
   try {
     const result = await db_Provider<GetDivision[]>(
       'CALL GetDivisionByPageOrder(?, ?, ?, ?, ?)',
