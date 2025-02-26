@@ -6,7 +6,6 @@ export async function GET(req: NextRequest) {
     const result = await db_Provider<IStatistics[]>('CALL GetStatistics()');
     return result;
   } catch (error) {
-    console.error('Lỗi khi lấy danh sách thống kê:', error);
     throw new Error('Không thể lấy danh sách thống kê.');
   }
 }

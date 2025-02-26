@@ -20,11 +20,9 @@ export async function GET(req: NextRequest) {
     );
     return result;
   } catch (error) {
-    console.error('Lỗi khi lấy danh sách đơn vị:', error);
     throw new Error('Không thể lấy danh sách đơn vị.');
   }
 }
-
 
 export async function POST(request: NextRequest) {
   const body: AddDepartment = await request.json();

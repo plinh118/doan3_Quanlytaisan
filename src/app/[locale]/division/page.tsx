@@ -77,8 +77,8 @@ const DivisionPage = () => {
       currentPage,
       pageSize,
       orderType,
-      searchText,
       value,
+      searchText,
     );
   };
 

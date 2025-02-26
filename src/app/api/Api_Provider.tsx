@@ -24,7 +24,6 @@ export async function db_Provider<T>(
       return NextResponse.json(data[0]);
     }
   } catch (error) {
-    console.error('Database operation error:', error);
     return NextResponse.json(
       { result: 1, error: 'Internal Server Error' },
       { status: 500 },

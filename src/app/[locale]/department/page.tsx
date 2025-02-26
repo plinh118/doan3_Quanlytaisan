@@ -69,7 +69,6 @@ const DepartmentPage = () => {
     GetDepartmentsByPageOrder(1, pageSize, orderType, value);
   };
 
-  // Modal Functions
   const openCreateModal = () => {
     setEditingDepartment(null);
     setIsEditing(false);
@@ -78,6 +77,7 @@ const DepartmentPage = () => {
   };
 
   const openEditModal = (record: Department_DTO) => {
+    debugger;
     setEditingDepartment(record);
     setIsEditing(true);
     form.setFieldsValue(record);
@@ -93,6 +93,7 @@ const DepartmentPage = () => {
 
   const handleDelete = async (record: Department_DTO) => {
     try {
+      debugger;
       const data: any = await DepartmentAPI.deleteDepartment(
         record.DepartmentId,
       );

@@ -97,7 +97,6 @@ const DashboardPage: React.FC = () => {
         setError('Không có dữ liệu từ server!');
       }
     } catch (error) {
-      console.error('Error fetching dashboard data:', error);
       setError('Không thể tải dữ liệu, vui lòng thử lại sau!');
     } finally {
       setLoading(false);

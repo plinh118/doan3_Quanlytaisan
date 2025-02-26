@@ -23,7 +23,6 @@ export async function GET(req: NextRequest) {
     );
     return result;
   } catch (error) {
-    console.error('Lỗi khi lấy danh sách bộ phận:', error);
     throw new Error('Không thể lấy danh sách bộ phận.');
   }
 }

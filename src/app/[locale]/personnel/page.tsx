@@ -130,9 +130,7 @@ const PersonnelPage = () => {
             url: fileInfo.fileInfo.url,
           },
         ];
-      } catch (error) {
-        console.error('Lỗi khi lấy thông tin file:', error);
-      }
+      } catch (error) {}
     }
 
     form.setFieldsValue(formattedValues);
@@ -230,7 +228,6 @@ const PersonnelPage = () => {
         result: 1,
         messageError: 'Lỗi lưu nhân viên',
       });
-      console.error('Lỗi chi tiết:', error);
     } finally {
       setLoading(false);
     }
