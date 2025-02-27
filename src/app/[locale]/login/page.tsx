@@ -37,10 +37,13 @@ export default function LoginPage() {
 
     try {
       const data = await authAPI.login(values.email, values.password);
+
       show({ result: data, messageDone: 'Đăng nhập thành công' });
-      router.push('/vi/dashboard');
+      if (data === 0) {
+        router.push('/vi/dashboard');
+      }
     } catch (err: any) {
-      const errorCode = err.response?.data?.errorCode || 8; // Mặc định là 8 nếu không có errorCode
+      const errorCode = err.response?.data?.errorCode || 8;
       show({ result: errorCode });
     } finally {
       setLoading(false);
