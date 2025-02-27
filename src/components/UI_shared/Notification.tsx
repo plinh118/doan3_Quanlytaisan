@@ -28,8 +28,15 @@ export const useNotification = () => {
     messageError = 'Thao tác thất bại',
     messageErrorOfRighs = 'Bạn không có quyền thực hiện tác vụ',
   }: NotificationProps) => {
-    debugger;
-    if (result === 0 || result != 1) {
+    if (
+      result === 0 ||
+      (result != 1 &&
+        result != 5 &&
+        result != 6 &&
+        result != 7 &&
+        result != 8 &&
+        result != 3)
+    ) {
       notification.success({
         ...notificationConfig,
         description: messageDone,
@@ -42,10 +49,40 @@ export const useNotification = () => {
         description: messageError,
       });
     }
+
     if (result === 3) {
       notification.error({
         ...notificationConfig,
         description: messageErrorOfRighs,
+      });
+    }
+
+    // Thêm các trường hợp từ auth.api.ts
+    if (result === 5) {
+      notification.error({
+        ...notificationConfig,
+        description: 'Vui lòng nhập email và mật khẩu',
+      });
+    }
+
+    if (result === 6) {
+      notification.error({
+        ...notificationConfig,
+        description: 'Email không tồn tại',
+      });
+    }
+
+    if (result === 7) {
+      notification.error({
+        ...notificationConfig,
+        description: 'Tài khoản, mật khẩu không đúng',
+      });
+    }
+
+    if (result === 8) {
+      notification.error({
+        ...notificationConfig,
+        description: 'Lỗi server, vui lòng thử lại sau',
       });
     }
   };

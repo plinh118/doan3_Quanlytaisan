@@ -15,7 +15,10 @@ import { uploadFile } from '@/libs/api/upload.api';
 import { documentAPI } from '@/libs/api/document.api';
 import type { Department_DTO } from '@/models/department.model';
 import { DepartmentAPI } from '@/libs/api/department.api';
-import { useAddDocuments, useUpdateDocuments } from '../../../modules/shared/document/add_documentHooks';
+import {
+  useAddDocuments,
+  useUpdateDocuments,
+} from '../../../modules/shared/document/add_documentHooks';
 
 const ProductPage = () => {
   const [products, setProducts] = useState<Get_Product[]>([]);
@@ -171,10 +174,10 @@ const ProductPage = () => {
     try {
       const values: any = await form.validateFields();
       setLoading(true);
-  
+
       let uploadedDocuments: any = [];
       let newIDProductt, result: any;
-  
+
       if (documents.length > 0) {
         const uploadResult = await uploadFile(documents);
         uploadedDocuments = uploadResult.documents || [];
@@ -183,18 +186,31 @@ const ProductPage = () => {
       if (editingProduct) {
         result = await updateProduct(editingProduct.Id, values);
         if (result === 0) {
-          const dataDocuments = await documentAPI.GetDocuments_by_IdRelated(editingProduct.Id, 'Product');
-          const updateResult = await updateDocuments(uploadedDocuments,dataDocuments);
-          const addResult = await addDocuments('Product', editingProduct.Id, uploadedDocuments);
+          const dataDocuments = await documentAPI.GetDocuments_by_IdRelated(
+            editingProduct.Id,
+            'Product',
+          );
+          const updateResult = await updateDocuments(
+            uploadedDocuments,
+            dataDocuments,
+          );
+          const addResult = await addDocuments(
+            'Product',
+            editingProduct.Id,
+            uploadedDocuments,
+          );
           if (!updateResult.success) {
-            show({ result: 1, messageError: 'Cập nhật một số tài liệu thất bại!' });
+            show({
+              result: 1,
+              messageError: 'Cập nhật một số tài liệu thất bại!',
+            });
             return;
           }
           if (!addResult.success) {
             show({ result: 1, messageError: 'Thêm một số tài liệu thất bại!' });
             return;
           }
-  
+
           show({ result: 0, messageDone: 'Cập nhật dự án thành công!' });
         } else {
           show({ result: 1, messageError: 'Cập nhật dự án thất bại!' });
@@ -203,7 +219,11 @@ const ProductPage = () => {
       } else {
         newIDProductt = await addProduct(values);
         if (newIDProductt) {
-          const addResult = await addDocuments('Productt', newIDProductt, uploadedDocuments);
+          const addResult = await addDocuments(
+            'Product',
+            newIDProductt,
+            uploadedDocuments,
+          );
           if (!addResult.success) {
             show({ result: 1, messageError: 'Thêm một số tài liệu thất bại!' });
             return;
@@ -214,7 +234,7 @@ const ProductPage = () => {
           return;
         }
       }
-  
+
       fetchProducts();
       closeModal();
     } catch (error) {

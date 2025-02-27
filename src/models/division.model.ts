@@ -2,7 +2,7 @@ export interface Division_DTO {
   Id: number;
   DivisionName: string;
   DepartmentId: number;
-  Description: string;
+  Description: string | null;
 }
 
 export interface GetDivision {
@@ -10,6 +10,6 @@ export interface GetDivision {
   DivisionName: string;
   DepartmentId: number;
   DepartmentName: string;
-  Description: string;
+  Description: string | null;
   TotalRecords: number;
 }

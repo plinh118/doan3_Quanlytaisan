@@ -14,6 +14,7 @@ import {
   BankOutlined,
   FolderOutlined,
   CustomerServiceOutlined,
+  TabletOutlined,
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Menu } from 'antd';
@@ -37,6 +38,7 @@ const routeMap: { [key: string]: string } = {
   '11': '/vi/department',
   '13': '/vi/services',
   '20': '/vi/user',
+  '30': '/vi/asset',
 };
 
 const SideBar = () => {
@@ -92,6 +94,11 @@ const SideBar = () => {
             key: '20',
             label: 'Quản lý người dùng',
             icon: <TeamOutlined />,
+          },
+          {
+            key: '30',
+            label: 'Quản lý tài sản',
+            icon: <TabletOutlined />,
           },
         ],
       },

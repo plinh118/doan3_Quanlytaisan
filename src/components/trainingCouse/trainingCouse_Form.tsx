@@ -69,7 +69,7 @@ export const TrainingCouseForm: React.FC<ReusableFormProps> = ({
         </Col>
       </Row>
 
-      <Form.Item name="Description" label="Mô tả" rules={RULES_FORM.required}>
+      <Form.Item name="Description" label="Mô tả">
         <TextArea />
       </Form.Item>
     </Form>

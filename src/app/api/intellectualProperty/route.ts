@@ -30,6 +30,7 @@ export async function GET(req: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body: AddIntellectualProperty = await request.json();
+    const Description = body.Description ? body.Description : null;
 
     return db_Provider<any>(
       'CALL AddIntellectualProperty(?,?,?,?,?)',
@@ -37,7 +38,7 @@ export async function POST(request: NextRequest) {
         body.DepartmentId,
         body.IntellectualPropertyName,
         body.IntellectualPropertyImage,
-        body.Description,
+        Description,
         body.IntellectualPropertyStatus,
       ],
       true,
@@ -59,6 +60,7 @@ export async function PATCH(request: NextRequest) {
         { status: 400 },
       );
     }
+    const Description = body.Description ? body.Description : null;
 
     return db_Provider<any>(
       'CALL UpdateIntellectualProperty(?,?,?,?,?,?)',
@@ -67,7 +69,7 @@ export async function PATCH(request: NextRequest) {
         body.DepartmentId,
         body.IntellectualPropertyName,
         body.IntellectualPropertyImage,
-        body.Description,
+        Description,
         body.IntellectualPropertyStatus,
       ],
       true,

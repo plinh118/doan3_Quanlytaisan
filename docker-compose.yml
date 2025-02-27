@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "80:80"  # Thay 3000 thành 80 như trong Dockerfile
+      - "80:80"
     environment:
       - MYSQL_HOST=db
       - MYSQL_PORT=3306
@@ -12,11 +12,13 @@ services:
       - MYSQL_USER=ams
       - MYSQL_PASSWORD=aiavn@123
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+    volumes:
+      - ./public/uploads:/app/public/uploads
 
   db:
-    image: mysql:8
-    command: --default-authentication-plugin=mysql_native_password
+    image: mysql:8  
     ports:
       - "13311:3306"
     environment:
@@ -26,6 +28,11 @@ services:
       - MYSQL_PASSWORD=aiavn@123
     volumes:
       - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
 volumes:
   mysql-data:

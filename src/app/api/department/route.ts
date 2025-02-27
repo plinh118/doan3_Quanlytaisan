@@ -26,20 +26,21 @@ export async function GET(req: NextRequest) {
 
 export async function POST(request: NextRequest) {
   const body: AddDepartment = await request.json();
-  console.log(body);
+  const Description = body.Description ? body.Description : null;
   return db_Provider<any>(
     'CALL AddDepartment(?,?)',
-    [body.DepartmentName, body.Description],
+    [body.DepartmentName, Description],
     true,
   );
 }
 
 export async function PATCH(request: NextRequest) {
   const body: GetDepartment = await request.json();
-  console.log(body);
+  const Description = body.Description ? body.Description : null;
+
   return db_Provider<any>(
     'CALL UpdateDepartment(?,?,?)',
-    [body.Id, body.DepartmentName, body.Description],
+    [body.Id, body.DepartmentName, Description],
     true,
   );
 }

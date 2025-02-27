@@ -1,16 +1,11 @@
 import { CallApi } from '@/libs/call_API';
-import storage from '@/utils/storage';
 import { API_URL } from '@/libs/call_API';
 interface User {
   id: number;
   email: string;
   role: 'admin' | 'user';
 }
-
-interface LoginResponse {
-  token: string;
-  user: User;
-}
+type LoginResponse = number;
 
 export const authAPI = {
   register: async (
@@ -24,7 +19,7 @@ export const authAPI = {
         password,
         fullName,
       });
-      return data; // Trả về userId
+      return data;
     } catch (error) {
       throw new Error(
         `Đăng ký thất bại: ${error instanceof Error ? error.message : 'Không xác định'}`,
@@ -35,10 +30,9 @@ export const authAPI = {
   login: async (email: string, password: string): Promise<LoginResponse> => {
     try {
       if (!email || !password) {
-        throw new Error('Email và mật khẩu không được để trống');
+        return 5;
       }
 
-      // Tạo request đăng nhập
       const response = await fetch(`${API_URL}/auth/login`, {
         method: 'POST',
         headers: {
@@ -47,28 +41,23 @@ export const authAPI = {
         body: JSON.stringify({ email, password }),
       });
 
-      // Kiểm tra trạng thái response
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(
-          errorData.message || `Lỗi đăng nhập: ${response.status}`,
-        );
+
+        return errorData.errorCode || response.status;
       }
 
-      // Xử lý dữ liệu trả về
       const data = await response.json();
 
-      // Lưu token và thông tin người dùng vào localStorage
       localStorage.setItem('ACCESS_TOKEN', data.token);
       localStorage.setItem('ROLE', data.user.role);
+      localStorage.setItem('Email', data.user.email);
+
       localStorage.setItem('FullName', data.user.fullName);
 
-      console.log('Đăng nhập thành công:', data.user.email);
-      return data;
+      return 0;
     } catch (error) {
-      throw new Error(
-        `Đăng nhập thất bại: ${error instanceof Error ? error.message : 'Không xác định'}`,
-      );
+      return 8;
     }
   },
 

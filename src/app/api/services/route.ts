@@ -26,21 +26,23 @@ export async function GET(req: NextRequest) {
   }
 }
 
-
 export async function POST(request: NextRequest) {
   const body: Add_Services = await request.json();
+  const Description = body.Description ? body.Description : null;
+
   return db_Provider<any>(
     'CALL AddService(?,?,?)',
-    [body.ServiceName, body.Description, body.ServiceStatus],
+    [body.ServiceName, Description, body.ServiceStatus],
     true,
   );
 }
 
 export async function PATCH(request: NextRequest) {
   const body: Update_Services = await request.json();
+  const Description = body.Description ? body.Description : null;
   return db_Provider<any>(
     'CALL UpdateService(?,?,?,?)',
-    [body.Id, body.ServiceName, body.Description, body.ServiceStatus],
+    [body.Id, body.ServiceName, Description, body.ServiceStatus],
     true,
   );
 }
