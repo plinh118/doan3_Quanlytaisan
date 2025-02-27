@@ -38,6 +38,7 @@ export const RULES_FORM: Record<keyof keyValidator, FormRule[]> = {
   ],
   number: [
     {
+      required: true,
       pattern: /^[0-9]*$/gm,
       message: 'Chỉ được là số',
     },

@@ -1,7 +1,17 @@
 'use client';
 
 import type React from 'react';
-import { Form, Input, Button, Row, Col, Upload, Select, Card,Typography } from 'antd';
+import {
+  Form,
+  Input,
+  Button,
+  Row,
+  Col,
+  Upload,
+  Select,
+  Card,
+  Typography,
+} from 'antd';
 import { FileOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import { RULES_FORM } from '@/utils/validator';
 import { documentAPI } from '@/libs/api/document.api';
@@ -106,18 +116,25 @@ export const TopicForm: React.FC<ReusableFormProps> = ({
         </Select>
       </Form.Item>
 
-      <Form.Item name="Description" label="Mô tả " rules={RULES_FORM.required}>
+      <Form.Item name="Description" label="Mô tả ">
         <TextArea />
       </Form.Item>
 
       <Card title="Tài liệu đính kèm">
         {documents.map((doc, index) => (
-          <Row gutter={16} key={index} align="middle" style={{ marginBottom: 16 }}>
+          <Row
+            gutter={16}
+            key={index}
+            align="middle"
+            style={{ marginBottom: 16 }}
+          >
             <Col span={11}>
               <Form.Item label="Tên tài liệu" required>
                 <Input
                   value={doc.DocumentName}
-                  onChange={(e) => updateDocument(index, 'DocumentName', e.target.value)}
+                  onChange={(e) =>
+                    updateDocument(index, 'DocumentName', e.target.value)
+                  }
                 />
               </Form.Item>
             </Col>
@@ -143,7 +160,11 @@ export const TopicForm: React.FC<ReusableFormProps> = ({
                 ) : doc.DocumentLink ? (
                   <Text>
                     <FileOutlined style={{ marginRight: 8 }} />
-                    <a href={doc.DocumentLink} target="_blank" rel="noopener noreferrer">
+                    <a
+                      href={doc.DocumentLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       {doc.DocumentLink.replace('/uploads/', '').length > 20
                         ? `${doc.DocumentLink.replace('/uploads/', '').substring(0, 17)}...`
                         : doc.DocumentLink.replace('/uploads/', '')}
@@ -170,7 +191,12 @@ export const TopicForm: React.FC<ReusableFormProps> = ({
             </Col>
           </Row>
         ))}
-        <Button type="dashed" onClick={addDocument} block icon={<PlusOutlined />}>
+        <Button
+          type="dashed"
+          onClick={addDocument}
+          block
+          icon={<PlusOutlined />}
+        >
           Thêm tài liệu
         </Button>
       </Card>

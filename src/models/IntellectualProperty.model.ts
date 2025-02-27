@@ -5,7 +5,7 @@ export interface GetIntellectualProperty {
   DepartmentId: number;
   IntellectualPropertyName: string;
   IntellectualPropertyImage: string | UploadFile[];
-  Description: string;
+  Description: string | null;
   IntellectualPropertyStatus: string;
   DepartmentName: string;
   TotalRecords: number;
@@ -14,7 +14,7 @@ export interface AddIntellectualProperty {
   DepartmentId: number;
   IntellectualPropertyName: string;
   IntellectualPropertyImage: string;
-  Description: string;
+  Description: string | null;
   IntellectualPropertyStatus: string;
 }
 
@@ -23,6 +23,6 @@ export interface UpIntellectualProperty {
   DepartmentId: number;
   IntellectualPropertyName: string;
   IntellectualPropertyImage: string;
-  Description: string;
+  Description: string | null;
   IntellectualPropertyStatus: string;
 }

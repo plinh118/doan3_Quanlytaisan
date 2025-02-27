@@ -23,27 +23,25 @@ import {
 } from '@ant-design/icons';
 import { authAPI } from '@/libs/api/auth.api';
 import { RULES_FORM } from '@/utils/validator';
-
+import { useNotification } from '@/components/UI_shared/Notification';
 const { Title, Text } = Typography;
 
 export default function LoginPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const { show } = useNotification();
 
   const onFinish = async (values: any) => {
-    setError('');
     setLoading(true);
 
     try {
-      await authAPI.login(values.email, values.password);
+      const data = await authAPI.login(values.email, values.password);
+      show({ result: data, messageDone: 'Đăng nhập thành công' });
       router.push('/vi/dashboard');
-    } catch (err) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : 'Đăng nhập thất bại. Vui lòng thử lại.',
-      );
+    } catch (err: any) {
+      const errorCode = err.response?.data?.errorCode || 8; // Mặc định là 8 nếu không có errorCode
+      show({ result: errorCode });
     } finally {
       setLoading(false);
     }

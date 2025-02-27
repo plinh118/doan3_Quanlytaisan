@@ -34,6 +34,7 @@ export async function POST(request: NextRequest) {
     const formattedEndDate = body.EndDate ? body.EndDate : null;
     const formattedDateOfBirth = body.DateOfBirth ? body.DateOfBirth : null;
     const formattedJoinDate = body.JoinDate ? body.JoinDate : null;
+    const Description = body.Description ? body.Description : null;
 
     return db_Provider<any>(
       'CALL AddPersonnel(?,?,?,?,?,?,?,?,?,?,?)',
@@ -44,7 +45,7 @@ export async function POST(request: NextRequest) {
         formattedDateOfBirth,
         body.Picture,
         body.Email,
-        body.Description,
+        Description,
         body.PhoneNumber,
         formattedJoinDate,
         formattedEndDate,
@@ -74,6 +75,7 @@ export async function PATCH(request: NextRequest) {
     const formattedEndDate = body.EndDate ? body.EndDate : null;
     const formattedDateOfBirth = body.DateOfBirth ? body.DateOfBirth : null;
     const formattedJoinDate = body.JoinDate ? body.JoinDate : null;
+    const Description = body.Description ? body.Description : null;
 
     return db_Provider<any>(
       'CALL UpdatePersonnel(?,?,?,?,?,?,?,?,?,?,?,?)',
@@ -85,7 +87,7 @@ export async function PATCH(request: NextRequest) {
         formattedDateOfBirth,
         body.Picture,
         body.Email,
-        body.Description,
+        Description,
         body.PhoneNumber,
         formattedJoinDate,
         formattedEndDate,

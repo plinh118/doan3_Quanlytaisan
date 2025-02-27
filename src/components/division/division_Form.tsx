@@ -39,7 +39,7 @@ export const DivisiontForm: React.FC<ReusableFormProps> = ({
           </Form.Item>
         </Col>
       </Row>
-      <Form.Item name="Description" label="Mô tả" rules={RULES_FORM.required}>
+      <Form.Item name="Description" label="Mô tả">
         <TextArea />
       </Form.Item>
     </Form>

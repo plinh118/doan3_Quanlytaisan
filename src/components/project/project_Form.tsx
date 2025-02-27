@@ -72,12 +72,20 @@ const ProjectForm: React.FC<ReusableFormProps> = ({
       <Card title="Thông tin dự án">
         <Row gutter={16}>
           <Col span={12}>
-            <Form.Item name="ProjectName" label="Tên dự án" rules={RULES_FORM.required}>
+            <Form.Item
+              name="ProjectName"
+              label="Tên dự án"
+              rules={RULES_FORM.required}
+            >
               <Input />
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item name="DepartmentId" label="Đơn vị thực hiện" rules={RULES_FORM.required}>
+            <Form.Item
+              name="DepartmentId"
+              label="Đơn vị thực hiện"
+              rules={RULES_FORM.required}
+            >
               <Select
                 options={departments.map((department) => ({
                   label: department.DepartmentName,
@@ -99,17 +107,29 @@ const ProjectForm: React.FC<ReusableFormProps> = ({
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item name="ProjectStatus" label="Trạng thái dự án" rules={RULES_FORM.required}>
+            <Form.Item
+              name="ProjectStatus"
+              label="Trạng thái dự án"
+              rules={RULES_FORM.required}
+            >
               <Select>
-                <Select.Option value="Đang triển khai">Đang triển khai</Select.Option>
-                <Select.Option value="Đã hoàn thành">Đã hoàn thành</Select.Option>
+                <Select.Option value="Đang triển khai">
+                  Đang triển khai
+                </Select.Option>
+                <Select.Option value="Đã hoàn thành">
+                  Đã hoàn thành
+                </Select.Option>
               </Select>
             </Form.Item>
           </Col>
         </Row>
         <Row gutter={16}>
           <Col span={12}>
-            <Form.Item name="ProjectStartDate" label="Ngày bắt đầu" rules={RULES_FORM.required}>
+            <Form.Item
+              name="ProjectStartDate"
+              label="Ngày bắt đầu"
+              rules={RULES_FORM.required}
+            >
               <Input type="date" />
             </Form.Item>
           </Col>
@@ -119,18 +139,25 @@ const ProjectForm: React.FC<ReusableFormProps> = ({
             </Form.Item>
           </Col>
         </Row>
-        <Form.Item name="Description" label="Mô tả" rules={RULES_FORM.required}>
+        <Form.Item name="Description" label="Mô tả">
           <TextArea />
         </Form.Item>
       </Card>
       <Card title="Tài liệu đính kèm">
         {documents.map((doc, index) => (
-          <Row gutter={16} key={index} align="middle" style={{ marginBottom: 16 }}>
+          <Row
+            gutter={16}
+            key={index}
+            align="middle"
+            style={{ marginBottom: 16 }}
+          >
             <Col span={11}>
               <Form.Item label="Tên tài liệu" required>
                 <Input
                   value={doc.DocumentName}
-                  onChange={(e) => updateDocument(index, 'DocumentName', e.target.value)}
+                  onChange={(e) =>
+                    updateDocument(index, 'DocumentName', e.target.value)
+                  }
                 />
               </Form.Item>
             </Col>
@@ -156,7 +183,11 @@ const ProjectForm: React.FC<ReusableFormProps> = ({
                 ) : doc.DocumentLink ? (
                   <Text>
                     <FileOutlined style={{ marginRight: 8 }} />
-                    <a href={doc.DocumentLink} target="_blank" rel="noopener noreferrer">
+                    <a
+                      href={doc.DocumentLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       {doc.DocumentLink.replace('/uploads/', '').length > 20
                         ? `${doc.DocumentLink.replace('/uploads/', '').substring(0, 17)}...`
                         : doc.DocumentLink.replace('/uploads/', '')}
@@ -183,7 +214,12 @@ const ProjectForm: React.FC<ReusableFormProps> = ({
             </Col>
           </Row>
         ))}
-        <Button type="dashed" onClick={addDocument} block icon={<PlusOutlined />}>
+        <Button
+          type="dashed"
+          onClick={addDocument}
+          block
+          icon={<PlusOutlined />}
+        >
           Thêm tài liệu
         </Button>
       </Card>

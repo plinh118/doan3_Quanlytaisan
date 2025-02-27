@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { executeQuery } from '@/libs/db';
+
 const JWT_SECRET = process.env.JWT_SECRET || 'pham-thanh-long-2003004';
 
 export async function POST(request: Request) {
@@ -10,7 +11,7 @@ export async function POST(request: Request) {
     // Kiểm tra dữ liệu đầu vào
     if (!email || !password) {
       return NextResponse.json(
-        { error: 'Thiếu email hoặc mật khẩu' },
+        { errorCode: 5 }, // Thiếu email hoặc mật khẩu
         { status: 400 },
       );
     }
@@ -24,18 +25,20 @@ export async function POST(request: Request) {
     const user = users[0];
     if (!user) {
       return NextResponse.json(
-        { error: 'Email không tồn tại' },
+        { errorCode: 6 }, // Email không tồn tại
         { status: 401 },
       );
     }
+
     // Kiểm tra mật khẩu
     const isPasswordValid = await bcrypt.compare(password, user.Password);
     if (!isPasswordValid) {
       return NextResponse.json(
-        { error: 'Mật khẩu không đúng' },
+        { errorCode: 7 }, // Mật khẩu không đúng
         { status: 401 },
       );
     }
+
     // Tạo JWT
     const token = jwt.sign(
       { id: user.Id, email: user.Email, role: user.Role },
@@ -54,6 +57,9 @@ export async function POST(request: Request) {
       },
     });
   } catch (error) {
-    return NextResponse.json({ error: 'Không thể đăng nhập' }, { status: 500 });
+    return NextResponse.json(
+      { errorCode: 8 }, // Lỗi server
+      { status: 500 },
+    );
   }
 }

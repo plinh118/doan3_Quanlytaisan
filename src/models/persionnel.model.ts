@@ -24,7 +24,7 @@ export interface AddPersonnel {
   DateOfBirth: string | null;
   Picture: string;
   Email: string;
-  Description: string;
+  Description: string | null;
   PhoneNumber: string;
   JoinDate: string | null;
   EndDate: string | null;
