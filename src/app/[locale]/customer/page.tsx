@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Table, Button, Modal, Form, Input, Space, Card } from 'antd';
+import { Table, Button, Modal, Form, Input, Space, Card, Divider } from 'antd';
 import { SearchOutlined, ReloadOutlined } from '@ant-design/icons';
 import type { AddCustomer, GetCustomer } from '@/models/customer.model';
 import { CustomerAPI } from '@/libs/api/customer.api';
@@ -163,12 +163,12 @@ const CustomerPage = () => {
         text_btn_add="Thêm khách hàng"
       />
 
-      <hr />
+      <Divider />
 
       <div className="py-4">
         <Space size="middle">
           <Input.Search
-            placeholder="Search Customers..."
+            placeholder="Tên khách hàng..."
             allowClear
             enterButton={<SearchOutlined />}
             size="large"
@@ -180,9 +180,7 @@ const CustomerPage = () => {
             icon={<ReloadOutlined />}
             size="large"
             onClick={handleRefresh}
-          >
-            Refresh
-          </Button>
+          />
         </Space>
       </div>
 

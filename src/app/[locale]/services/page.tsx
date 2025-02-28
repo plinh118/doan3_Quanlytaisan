@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Table, Button, Modal, Form, Input, Space, Card } from 'antd';
+import { Table, Button, Modal, Form, Input, Space, Card, Divider } from 'antd';
 import { SearchOutlined, ReloadOutlined } from '@ant-design/icons';
 import type { Add_Services, Get_Services } from '@/models/services.model';
 import { servicesAPI } from '@/libs/api/services.api';
@@ -159,12 +159,12 @@ const ServicePage = () => {
         text_btn_add="Thêm dịch vụ"
       />
 
-      <hr />
+      <Divider />
 
       <div className="py-4">
         <Space size="middle">
           <Input.Search
-            placeholder="Search Services..."
+            placeholder="Tên dịch vụ..."
             allowClear
             enterButton={<SearchOutlined />}
             size="large"
@@ -176,9 +176,7 @@ const ServicePage = () => {
             icon={<ReloadOutlined />}
             size="large"
             onClick={handleRefresh}
-          >
-            Refresh
-          </Button>
+          />
         </Space>
       </div>
 

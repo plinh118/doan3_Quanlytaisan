@@ -6,6 +6,7 @@ import { Layout, ConfigProvider } from 'antd';
 import SiderBar from '@/modules/shared/siderbar/siderbar';
 import { App as AntApp } from 'antd';
 import { usePathname } from 'next/navigation';
+import { useState } from 'react';
 
 const { Sider, Content } = Layout;
 
@@ -18,27 +19,74 @@ export default function RootLayout({ children }: RootLayoutProps) {
   const isLoginPage = pathname === '/vi';
   const isRegisterPage = pathname === '/vi/register';
 
+  const [collapsed, setCollapsed] = useState(false);
+
+  const siderStyle: React.CSSProperties = {
+    position: 'fixed',
+    left: 0,
+    top: 0,
+    height: '100vh',
+    overflowY: 'auto',
+    transition: 'all 0.3s',
+    backgroundColor: 'transparent',
+    borderRight: '1px solid rgba(0,0,0,0.06)',
+    WebkitOverflowScrolling: 'touch',
+    msOverflowStyle: 'none',
+  };
+
+  const scrollbarStyle = `
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background-color: rgba(0, 0, 0, 0.2);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-track {
+      background-color: transparent;
+    }
+  `;
+
+  const isAuthPage = isLoginPage || isRegisterPage;
+
   return (
     <html lang="en">
-      <body>
+      <head>
+        <style>{scrollbarStyle}</style>
+      </head>
+      <body style={{ margin: 0 }}>
         <ConfigProvider>
           <AntApp>
             <AppProvider>
-              <Layout className="min-h-screen">
-                {!(isLoginPage || isRegisterPage) && (
+              <Layout style={{ minHeight: '100vh' }}>
+                {!isAuthPage && (
                   <Sider
-                    width="18%"
-                    className="fixed left-0 top-0 h-screen overflow-y-auto"
-                    style={{
-                      backgroundColor: 'transparent',
-                      borderRight: '1px solid rgba(0,0,0,0.06)',
-                    }}
+                    collapsible
+                    collapsed={collapsed}
+                    onCollapse={setCollapsed}
+                    width={245}
+                    collapsedWidth={80}
+                    style={siderStyle}
                   >
-                    <SiderBar />
+                    <SiderBar
+                      collapsed={collapsed}
+                      setCollapsed={setCollapsed}
+                    />
                   </Sider>
                 )}
-                <Layout className={isLoginPage ? 'w-full' : 'ml-[280px]'}>
-                  <Content className="p-6 min-h-[calc(100vh-64px)]">
+                <Layout
+                  style={{
+                    marginLeft: isAuthPage ? 0 : collapsed ? 80 : 245,
+                    transition: 'all 0.3s',
+                  }}
+                >
+                  <Content
+                    style={{
+                      padding: isAuthPage ? 0 : 24,
+                      minHeight: '100vh',
+                      boxSizing: 'border-box',
+                    }}
+                  >
                     {children}
                   </Content>
                 </Layout>

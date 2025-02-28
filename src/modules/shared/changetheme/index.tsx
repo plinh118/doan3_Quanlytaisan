@@ -105,7 +105,7 @@ const buttonStyle = (color: string) => ({
   borderRadius: '50%',
   height: '15px',
   width: '15px',
-  border: 'none',
+  border: '1px black solid',
   cursor: 'pointer',
 });
 

@@ -1,9 +1,13 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { Table, Button, Modal, Form, Space, Card, Input } from 'antd';
+import { Table, Button, Modal, Form, Space, Card, Input, Divider } from 'antd';
 import { SearchOutlined, ReloadOutlined } from '@ant-design/icons';
-import type { Get_project, Up_project, Add_project } from '@/models/project.model';
+import type {
+  Get_project,
+  Up_project,
+  Add_project,
+} from '@/models/project.model';
 import { projectAPI } from '@/libs/api/project.api';
 import { COLUMNS } from '../../../components/UI_shared/Table';
 import { Project_Colum } from '@/components/project/project_table';
@@ -17,7 +21,10 @@ import { DepartmentAPI } from '@/libs/api/department.api';
 import { PartnerAPI } from '@/libs/api/partner.api';
 import { uploadFile } from '@/libs/api/upload.api';
 import { documentAPI } from '@/libs/api/document.api';
-import { useAddDocuments, useUpdateDocuments } from '../../../modules/shared/document/add_documentHooks';
+import {
+  useAddDocuments,
+  useUpdateDocuments,
+} from '../../../modules/shared/document/add_documentHooks';
 
 const ProjectPage = () => {
   const [projects, setProjects] = useState<Get_project[]>([]);
@@ -61,8 +68,8 @@ const ProjectPage = () => {
 
   useEffect(() => {
     refreshProjects();
-     getDepartment();
-     getPartner();
+    getDepartment();
+    getPartner();
   }, [refreshProjects]);
 
   const getDepartment = async () => {
@@ -91,14 +98,17 @@ const ProjectPage = () => {
     setEditingProject(null);
     setIsEditing(false);
     form.resetFields();
-  
+
     setDocuments([]);
     setModalVisible(true);
   };
 
   const openEditModal = useCallback(
     async (record: Get_project) => {
-      const dataDocuments = await documentAPI.GetDocuments_by_IdRelated(record.Id, 'Project');
+      const dataDocuments = await documentAPI.GetDocuments_by_IdRelated(
+        record.Id,
+        'Project',
+      );
       setDocuments(dataDocuments || []);
       setEditingProject(record);
       setIsEditing(true);
@@ -136,7 +146,10 @@ const ProjectPage = () => {
   };
 
   const updateProject = async (Id: number, project: Add_project) => {
-    if (project.ProjectEndDate && project.ProjectEndDate < project.ProjectStartDate) {
+    if (
+      project.ProjectEndDate &&
+      project.ProjectEndDate < project.ProjectStartDate
+    ) {
       show({ result: 1, messageError: 'Ngày kết thúc phải sau ngày bắt đầu' });
       return null;
     }
@@ -146,7 +159,10 @@ const ProjectPage = () => {
   };
 
   const addProject = useCallback(async (newProject: any) => {
-    if (newProject.ProjectEndDate && newProject.ProjectEndDate < newProject.ProjectStartDate) {
+    if (
+      newProject.ProjectEndDate &&
+      newProject.ProjectEndDate < newProject.ProjectStartDate
+    ) {
       show({ result: 1, messageError: 'Ngày kết thúc phải sau ngày bắt đầu' });
       return null;
     }
@@ -158,10 +174,10 @@ const ProjectPage = () => {
     try {
       const values: any = await form.validateFields();
       setLoading(true);
-  
+
       let uploadedDocuments: any = [];
       let newIDProject, result: any;
-  
+
       if (documents.length > 0) {
         const uploadResult = await uploadFile(documents);
         uploadedDocuments = uploadResult.documents || [];
@@ -170,19 +186,32 @@ const ProjectPage = () => {
       if (editingProject) {
         result = await updateProject(editingProject.Id, values);
         if (result === 0) {
-          const dataDocuments = await documentAPI.GetDocuments_by_IdRelated(editingProject.Id, 'Project');
-          const updateResult = await updateDocuments(uploadedDocuments,dataDocuments);
-          const addResult = await addDocuments('Project', editingProject.Id, uploadedDocuments);
-  
+          const dataDocuments = await documentAPI.GetDocuments_by_IdRelated(
+            editingProject.Id,
+            'Project',
+          );
+          const updateResult = await updateDocuments(
+            uploadedDocuments,
+            dataDocuments,
+          );
+          const addResult = await addDocuments(
+            'Project',
+            editingProject.Id,
+            uploadedDocuments,
+          );
+
           if (!updateResult.success) {
-            show({ result: 1, messageError: 'Cập nhật một số tài liệu thất bại!' });
+            show({
+              result: 1,
+              messageError: 'Cập nhật một số tài liệu thất bại!',
+            });
             return;
           }
           if (!addResult.success) {
             show({ result: 1, messageError: 'Thêm một số tài liệu thất bại!' });
             return;
           }
-  
+
           show({ result: 0, messageDone: 'Cập nhật dự án thành công!' });
         } else {
           show({ result: 1, messageError: 'Cập nhật dự án thất bại!' });
@@ -191,7 +220,11 @@ const ProjectPage = () => {
       } else {
         newIDProject = await addProject(values);
         if (newIDProject) {
-          const addResult = await addDocuments('Project', newIDProject, uploadedDocuments);
+          const addResult = await addDocuments(
+            'Project',
+            newIDProject,
+            uploadedDocuments,
+          );
           if (!addResult.success) {
             show({ result: 1, messageError: 'Thêm một số tài liệu thất bại!' });
             return;
@@ -202,7 +235,7 @@ const ProjectPage = () => {
           return;
         }
       }
-  
+
       refreshProjects();
       closeModal();
     } catch (error) {
@@ -220,19 +253,28 @@ const ProjectPage = () => {
 
   return (
     <Card className="p-6">
-      <Header_Children title={'Quản lý dự án'} onAdd={openCreateModal} text_btn_add="Thêm dự án" />
-      <hr />
+      <Header_Children
+        title={'Quản lý dự án'}
+        onAdd={openCreateModal}
+        text_btn_add="Thêm dự án"
+      />
+      <Divider />
       <div className="py-4">
         <Space size="middle">
           <Input.Search
-            placeholder="Search Projects..."
+            placeholder="Tên dự án..."
             allowClear
             enterButton={<SearchOutlined />}
             size="large"
             onSearch={handleSearch}
             style={{ width: 300 }}
           />
-          <Button type="default" icon={<ReloadOutlined />} size="large" onClick={handleRefresh}>
+          <Button
+            type="default"
+            icon={<ReloadOutlined />}
+            size="large"
+            onClick={handleRefresh}
+          >
             Refresh
           </Button>
         </Space>

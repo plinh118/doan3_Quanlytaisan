@@ -10,6 +10,7 @@ import {
   Space,
   Card,
   UploadFile,
+  Divider,
 } from 'antd';
 import { SearchOutlined, ReloadOutlined } from '@ant-design/icons';
 import { IntellectualPropertyAPI } from '@/libs/api/IntellectualProperty.api';
@@ -18,11 +19,6 @@ import { IntellectualPropertyForm } from '@/components/intellectualProperty/inte
 import { IntellectualProperty_Colum } from '@/components/intellectualProperty/intellectualProperty_Table';
 import { useNotification } from '../../../components/UI_shared/Notification';
 import Header_Children from '@/components/UI_shared/Children_Head';
-import { showDateFormat } from '@/utils/date';
-import { GetDivision } from '@/models/division.model';
-import { GetPosition } from '@/models/position.model';
-import { PositionAPI } from '@/libs/api/position.api';
-import { divisionAPI } from '@/libs/api/division.api';
 import { getInforFile, uploadFilesImage } from '@/libs/api/upload.api';
 import { GetIntellectualProperty } from '@/models/IntellectualProperty.model';
 import { DepartmentAPI } from '@/libs/api/department.api';
@@ -248,12 +244,12 @@ const IntellectualPropertyPage = () => {
         text_btn_add="Thêm bản quyền"
       />
 
-      <hr />
+      <Divider />
 
       <div className="py-4">
         <Space size="middle">
           <Input.Search
-            placeholder="Search IntellectualPropertys..."
+            placeholder="Tên bản quyền..."
             allowClear
             enterButton={<SearchOutlined />}
             size="large"
@@ -265,9 +261,7 @@ const IntellectualPropertyPage = () => {
             icon={<ReloadOutlined />}
             size="large"
             onClick={handleRefresh}
-          >
-            Refresh
-          </Button>
+          />
         </Space>
       </div>
 

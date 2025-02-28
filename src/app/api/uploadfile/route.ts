@@ -1,39 +1,43 @@
 import { NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
-import type { NextApiRequest, NextApiResponse } from 'next';
-
+import multer from 'multer';
 import fs from 'node:fs/promises';
 import path from 'path';
+
+const upload = multer({
+  storage: multer.diskStorage({
+    destination: path.join(process.cwd(), 'public/uploads'),
+    filename: (req, file, cb) => {
+      const fileName = file.originalname;
+      cb(null, fileName);
+    },
+  }),
+});
 
 export async function POST(req: Request) {
   console.log('API route called');
   try {
     const formData = await req.formData();
-    console.log('FormData received:', formData);
+    const files = formData.getAll('file') as File[];
 
-    const uploadDir = './public/uploads';
-    const uploadedPaths = [];
-
-    for (const [key, value] of formData.entries()) {
-      console.log(`Processing ${key}:`, value);
-      if (value instanceof File) {
-        const file = value;
-        const filePath = path.join(uploadDir, file.name);
-
-        // Read file and write to directory
-        const arrayBuffer = await file.arrayBuffer();
-        const buffer = new Uint8Array(arrayBuffer);
-        await fs.writeFile(filePath, buffer);
-
-        const fileUrl = `/uploads/${file.name}`;
-        uploadedPaths.push(fileUrl);
-        console.log(`File uploaded: ${fileUrl}`);
-      }
+    if (!files.length) {
+      console.log('No files uploaded');
+      return NextResponse.json(
+        { status: 'fail', error: 'No files uploaded' },
+        { status: 400 },
+      );
     }
 
-    if (uploadedPaths.length === 0) {
-      console.log('No files uploaded');
-      return NextResponse.json({ status: 'fail', error: 'No files uploaded' });
+    const uploadedPaths: string[] = [];
+    for (const file of files) {
+      const fileName = file.name;
+      const filePath = path.join(process.cwd(), 'public/uploads', fileName);
+      const buffer = Buffer.from(await file.arrayBuffer());
+      await fs.writeFile(filePath, buffer);
+
+      const fileUrl = `/uploads/${fileName}`;
+      uploadedPaths.push(fileUrl);
+      console.log(`File uploaded: ${fileUrl}`);
     }
 
     revalidatePath('/');
@@ -42,7 +46,10 @@ export async function POST(req: Request) {
     return NextResponse.json({ status: 'success', uploadedPaths });
   } catch (e) {
     console.error('Error in API route:', e);
-    return NextResponse.json({ status: 'fail', error: String(e) });
+    return NextResponse.json(
+      { status: 'fail', error: String(e) },
+      { status: 500 },
+    );
   }
 }
 
@@ -79,3 +86,9 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: 'File không tồn tại' }, { status: 404 });
   }
 }
+
+export const config = {
+  api: {
+    bodyParser: false, // Tắt bodyParser mặc định
+  },
+};

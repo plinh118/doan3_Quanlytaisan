@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Table, Button, Modal, Form, Input, Space, Card } from 'antd';
+import { Table, Button, Modal, Form, Input, Space, Card, Divider } from 'antd';
 import { SearchOutlined, ReloadOutlined } from '@ant-design/icons';
 import type { Partner_DTO } from '@/models/partners.model';
 import { PartnerAPI } from '@/libs/api/partner.api';
@@ -179,12 +179,12 @@ const PartnerPage = () => {
         text_btn_add="Thêm đối tác"
       />
 
-      <hr />
+      <Divider />
 
       <div className="py-4">
         <Space size="middle">
           <Input.Search
-            placeholder="Search Partners..."
+            placeholder="Tên đối tác..."
             allowClear
             enterButton={<SearchOutlined />}
             size="large"
@@ -196,9 +196,7 @@ const PartnerPage = () => {
             icon={<ReloadOutlined />}
             size="large"
             onClick={handleRefresh}
-          >
-            Refresh
-          </Button>
+          />
         </Space>
       </div>
 

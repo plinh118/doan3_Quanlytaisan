@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Table, Button, Modal, Form, Input, Space, Card } from 'antd';
+import { Table, Button, Modal, Form, Input, Space, Card, Divider } from 'antd';
 import { SearchOutlined, ReloadOutlined } from '@ant-design/icons';
 import { GetUser, AddUser } from '@/models/user.model';
 import { userAPI } from '@/libs/api/user.api';
@@ -159,12 +159,12 @@ const UserPage = () => {
         text_btn_add="Thêm người dùng"
       />
 
-      <hr />
+      <Divider />
 
       <div className="py-4">
         <Space size="middle">
           <Input.Search
-            placeholder="Search fullname..."
+            placeholder="Tên người dùng..."
             allowClear
             enterButton={<SearchOutlined />}
             size="large"
@@ -176,9 +176,7 @@ const UserPage = () => {
             icon={<ReloadOutlined />}
             size="large"
             onClick={handleRefresh}
-          >
-            Refresh
-          </Button>
+          />
         </Space>
       </div>
 

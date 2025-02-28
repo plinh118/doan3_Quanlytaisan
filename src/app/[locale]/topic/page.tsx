@@ -1,7 +1,17 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { Table, Button, Modal, Form, Input, Space, Card, message } from 'antd';
+import {
+  Table,
+  Button,
+  Modal,
+  Form,
+  Input,
+  Space,
+  Card,
+  message,
+  Divider,
+} from 'antd';
 import { SearchOutlined, ReloadOutlined } from '@ant-design/icons';
 import type { GetTopic, AddTopic } from '@/models/topic.model';
 import { topicAPI } from '@/libs/api/topic.api';
@@ -15,7 +25,10 @@ import { uploadFile } from '@/libs/api/upload.api';
 import { documentAPI } from '@/libs/api/document.api';
 import type { Department_DTO } from '@/models/department.model';
 import { DepartmentAPI } from '@/libs/api/department.api';
-import { useAddDocuments, useUpdateDocuments } from '../../../modules/shared/document/add_documentHooks';
+import {
+  useAddDocuments,
+  useUpdateDocuments,
+} from '../../../modules/shared/document/add_documentHooks';
 
 const TopicPage = () => {
   const [Topics, setTopics] = useState<GetTopic[]>([]);
@@ -163,15 +176,14 @@ const TopicPage = () => {
     return result.result;
   }, []);
 
-  
   const handleSave = async () => {
     try {
       const values: any = await form.validateFields();
       setLoading(true);
-  
+
       let uploadedDocuments: any = [];
       let newIDTopic, result: any;
-  
+
       if (documents.length > 0) {
         const uploadResult = await uploadFile(documents);
         uploadedDocuments = uploadResult.documents || [];
@@ -180,18 +192,31 @@ const TopicPage = () => {
       if (editingTopic) {
         result = await updateTopic(editingTopic.Id, values);
         if (result === 0) {
-          const dataDocuments = await documentAPI.GetDocuments_by_IdRelated(editingTopic.Id, 'Topic');
-          const updateResult = await updateDocuments(uploadedDocuments,dataDocuments);
-          const addResult = await addDocuments('Topic', editingTopic.Id, uploadedDocuments);
+          const dataDocuments = await documentAPI.GetDocuments_by_IdRelated(
+            editingTopic.Id,
+            'Topic',
+          );
+          const updateResult = await updateDocuments(
+            uploadedDocuments,
+            dataDocuments,
+          );
+          const addResult = await addDocuments(
+            'Topic',
+            editingTopic.Id,
+            uploadedDocuments,
+          );
           if (!updateResult.success) {
-            show({ result: 1, messageError: 'Cập nhật một số tài liệu thất bại!' });
+            show({
+              result: 1,
+              messageError: 'Cập nhật một số tài liệu thất bại!',
+            });
             return;
           }
           if (!addResult.success) {
             show({ result: 1, messageError: 'Thêm một số tài liệu thất bại!' });
             return;
           }
-  
+
           show({ result: 0, messageDone: 'Cập nhật dự án thành công!' });
         } else {
           show({ result: 1, messageError: 'Cập nhật dự án thất bại!' });
@@ -200,7 +225,11 @@ const TopicPage = () => {
       } else {
         newIDTopic = await addTopic(values);
         if (newIDTopic) {
-          const addResult = await addDocuments('Topic', newIDTopic, uploadedDocuments);
+          const addResult = await addDocuments(
+            'Topic',
+            newIDTopic,
+            uploadedDocuments,
+          );
           if (!addResult.success) {
             show({ result: 1, messageError: 'Thêm một số tài liệu thất bại!' });
             return;
@@ -211,7 +240,7 @@ const TopicPage = () => {
           return;
         }
       }
-  
+
       fetchTopics();
       closeModal();
     } catch (error) {
@@ -235,12 +264,12 @@ const TopicPage = () => {
         text_btn_add="Thêm đề tài"
       />
 
-      <hr />
+      <Divider />
 
       <div className="py-4">
         <Space size="middle">
           <Input.Search
-            placeholder="Search Topics..."
+            placeholder="Tên đề tài..."
             allowClear
             enterButton={<SearchOutlined />}
             size="large"
@@ -252,9 +281,7 @@ const TopicPage = () => {
             icon={<ReloadOutlined />}
             size="large"
             onClick={handleRefresh}
-          >
-            Refresh
-          </Button>
+          />
         </Space>
       </div>
 

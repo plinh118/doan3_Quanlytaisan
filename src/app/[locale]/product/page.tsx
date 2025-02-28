@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { Table, Button, Modal, Form, Input, Space, Card, message } from 'antd';
+import { Table, Button, Modal, Form, Input, Space, Card, Divider } from 'antd';
 import { SearchOutlined, ReloadOutlined } from '@ant-design/icons';
 import type { Get_Product, Add_Product } from '@/models/product.model';
 import { productAPI } from '@/libs/api/product.api';
@@ -15,6 +15,7 @@ import { uploadFile } from '@/libs/api/upload.api';
 import { documentAPI } from '@/libs/api/document.api';
 import type { Department_DTO } from '@/models/department.model';
 import { DepartmentAPI } from '@/libs/api/department.api';
+import { validateDates } from '@/utils/validator';
 import {
   useAddDocuments,
   useUpdateDocuments,
@@ -138,15 +139,13 @@ const ProductPage = () => {
 
   const addProduct = useCallback(async (newProduct: Add_Product) => {
     if (
-      newProduct.ProductEndDate &&
-      newProduct.ProductEndDate < newProduct.ProductStartDate
-    ) {
-      show({
-        result: 1,
-        messageError: 'Ngày kết thúc phải lớn hơn ngày bắt đầu',
-      });
+      !validateDates(
+        newProduct.ProductStartDate,
+        newProduct.ProductEndDate,
+        show,
+      )
+    )
       return null;
-    }
     const result: any = await productAPI.createproduct(newProduct);
     return result.result;
   }, []);
@@ -154,15 +153,9 @@ const ProductPage = () => {
   const updateProduct = useCallback(
     async (Id: number, product: Add_Product) => {
       if (
-        product.ProductEndDate &&
-        product.ProductEndDate < product.ProductStartDate
-      ) {
-        show({
-          result: 1,
-          messageError: 'Ngày kết thúc phải lớn hơn ngày bắt đầu',
-        });
+        !validateDates(product.ProductStartDate, product.ProductEndDate, show)
+      )
         return null;
-      }
       const newProduct = { Id, ...product };
       const result: any = await productAPI.updateproduct(newProduct);
       return result.result;
@@ -177,12 +170,12 @@ const ProductPage = () => {
 
       let uploadedDocuments: any = [];
       let newIDProductt, result: any;
+      debugger;
 
       if (documents.length > 0) {
         const uploadResult = await uploadFile(documents);
         uploadedDocuments = uploadResult.documents || [];
       }
-      debugger;
       if (editingProduct) {
         result = await updateProduct(editingProduct.Id, values);
         if (result === 0) {
@@ -258,7 +251,7 @@ const ProductPage = () => {
         text_btn_add="Thêm sản phẩm"
       />
 
-      <hr />
+      <Divider />
 
       <div className="py-4">
         <Space size="middle">
@@ -275,9 +268,7 @@ const ProductPage = () => {
             icon={<ReloadOutlined />}
             size="large"
             onClick={handleRefresh}
-          >
-            Refresh
-          </Button>
+          />
         </Space>
       </div>
 

@@ -10,6 +10,7 @@ import {
   Space,
   Card,
   UploadFile,
+  Divider,
 } from 'antd';
 import { SearchOutlined, ReloadOutlined } from '@ant-design/icons';
 import type { GetPersonnel } from '@/models/persionnel.model';
@@ -161,14 +162,16 @@ const PersonnelPage = () => {
     }
   };
   const AddPersonnel = async (value: any) => {
-    if (value.EndDate == undefined) {
+    if (!value.EndDate) {
       const result: any = await personnelAPI.createpersonnel(value);
       show({
         result: result.result,
         messageDone: 'Thêm nhân viên thành công',
         messageError: 'Thêm nhân viên thất bại',
       });
+      return;
     }
+
     if (value.EndDate > value.StartDate) {
       const result: any = await personnelAPI.createpersonnel(value);
       show({
@@ -189,13 +192,32 @@ const PersonnelPage = () => {
       Id: Id,
       ...value,
     };
-    const result: any = await personnelAPI.updatepersonnel(newPersonnel);
-    show({
-      result: result.result,
-      messageDone: 'Cập nhật nhân viên thành công',
-      messageError: 'Cập nhật nhân viên thất bại',
-    });
+
+    if (!value.EndDate) {
+      const result: any = await personnelAPI.updatepersonnel(newPersonnel);
+      show({
+        result: result.result,
+        messageDone: 'Cập nhật nhân viên thành công',
+        messageError: 'Cập nhật nhân viên thất bại',
+      });
+      return;
+    }
+
+    if (value.EndDate > value.StartDate) {
+      const result: any = await personnelAPI.updatepersonnel(newPersonnel);
+      show({
+        result: result.result,
+        messageDone: 'Cập nhật nhân viên thành công',
+        messageError: 'Cập nhật nhân viên thất bại',
+      });
+    } else {
+      show({
+        result: 1,
+        messageError: 'Ngày kết thúc phải sau ngày bắt đầu',
+      });
+    }
   };
+
   const handleSave = async () => {
     try {
       const values: any = await form.validateFields();
@@ -247,12 +269,12 @@ const PersonnelPage = () => {
         text_btn_add="Thêm nhân viên"
       />
 
-      <hr />
+      <Divider />
 
       <div className="py-4">
         <Space size="middle">
           <Input.Search
-            placeholder="Search Personnels..."
+            placeholder="Tên nhân viên..."
             allowClear
             enterButton={<SearchOutlined />}
             size="large"
@@ -264,9 +286,7 @@ const PersonnelPage = () => {
             icon={<ReloadOutlined />}
             size="large"
             onClick={handleRefresh}
-          >
-            Refresh
-          </Button>
+          />
         </Space>
       </div>
 
