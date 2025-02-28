@@ -21,5 +21,13 @@
   .menu {
     flex: 1;
     overflow-y: auto;
+
+    :global {
+      .ant-menu-item,
+      .ant-menu-submenu-title {
+        height: 32px;
+        line-height: 32px;
+      }
+    }
   }
 }
