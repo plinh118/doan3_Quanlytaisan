@@ -1,7 +1,10 @@
 'use client';
 import { useCallback, useMemo } from 'react';
-import { ConfigProvider } from 'antd';
+import { ConfigProvider, Menu } from 'antd';
 import Image from 'next/image';
+import { useRouter, usePathname } from 'next/navigation';
+import { useColorState } from '@/stores/color.store';
+import type { MenuProps } from 'antd';
 import {
   UserOutlined,
   ProjectOutlined,
@@ -16,14 +19,15 @@ import {
   CustomerServiceOutlined,
   TabletOutlined,
 } from '@ant-design/icons';
-import type { MenuProps } from 'antd';
-import { Menu } from 'antd';
-import { useRouter, usePathname } from 'next/navigation';
-import { useColorState } from '@/stores/color.store';
-import styles from './siderbar.module.scss';
-type MenuItem = Required<MenuProps>['items'][number];
+import styles from './SiderBar.module.scss';
 
-const routeMap: { [key: string]: string } = {
+type MenuItem = Required<MenuProps>['items'][number];
+interface SiderBarProps {
+  collapsed: boolean;
+  setCollapsed: (collapsed: boolean) => void;
+}
+
+const routeMap: Record<string, string> = {
   sub5: '/vi/dashboard',
   '12': '/vi/position',
   '10': '/vi/division',
@@ -41,65 +45,42 @@ const routeMap: { [key: string]: string } = {
   '30': '/vi/asset',
 };
 
-const SideBar = () => {
+const SiderBar: React.FC<SiderBarProps> = ({ collapsed }) => {
   const router = useRouter();
   const pathname = usePathname();
   const { themeColor } = useColorState();
 
   const getCurrentKey = useCallback(() => {
     const entry = Object.entries(routeMap).find(
-      ([_, path]) => path === pathname,
+      ([, path]) => path === pathname,
     );
     return entry ? entry[0] : '1';
   }, [pathname]);
 
-  const onClick: MenuProps['onClick'] = useCallback(
-    (e: any) => {
-      const path = routeMap[e.key];
-      if (path && path !== pathname) {
-        router.push(path);
-      }
-    },
-    [router, pathname],
-  );
+  const onClick: MenuProps['onClick'] = (e) => {
+    const path = routeMap[e.key];
+    if (path && path !== pathname) {
+      router.push(path);
+    }
+  };
 
-  const sidebarItems = useMemo(
+  const sidebarItems = useMemo<MenuItem[]>(
     () => [
-      {
-        key: 'sub5',
-        label: 'DashBoard',
-        icon: <ProjectOutlined />,
-      },
+      { key: 'sub5', label: 'DashBoard', icon: <ProjectOutlined /> },
       {
         key: 'sub1',
         label: 'Quản lý đối tượng',
         icon: <UserOutlined />,
         children: [
-          {
-            key: '1',
-            label: 'Quản lý nhân viên',
-            icon: <TeamOutlined />,
-          },
+          { key: '1', label: 'Quản lý nhân viên', icon: <TeamOutlined /> },
           {
             key: '2',
             label: 'Quản lý đối tác',
             icon: <UsergroupAddOutlined />,
           },
-          {
-            key: '3',
-            label: 'Quản lý khách hàng',
-            icon: <WalletOutlined />,
-          },
-          {
-            key: '20',
-            label: 'Quản lý người dùng',
-            icon: <TeamOutlined />,
-          },
-          {
-            key: '30',
-            label: 'Quản lý tài sản',
-            icon: <TabletOutlined />,
-          },
+          { key: '3', label: 'Quản lý khách hàng', icon: <WalletOutlined /> },
+          { key: '20', label: 'Quản lý người dùng', icon: <TeamOutlined /> },
+          { key: '30', label: 'Quản lý tài sản', icon: <TabletOutlined /> },
         ],
       },
       {
@@ -107,36 +88,16 @@ const SideBar = () => {
         label: 'Quản lý phi vật thể',
         icon: <ProjectOutlined />,
         children: [
-          {
-            key: '5',
-            label: 'Quản lý sản phẩm',
-            icon: <FolderOutlined />,
-          },
-          {
-            key: '6',
-            label: 'Quản lý dự án',
-            icon: <TrophyOutlined />,
-          },
-          {
-            key: '7',
-            label: 'Quản lý đề tài',
-            icon: <BookOutlined />,
-          },
-          {
-            key: '8',
-            label: 'Quản lý khóa đào tạo',
-            icon: <BankOutlined />,
-          },
+          { key: '5', label: 'Quản lý sản phẩm', icon: <FolderOutlined /> },
+          { key: '6', label: 'Quản lý dự án', icon: <TrophyOutlined /> },
+          { key: '7', label: 'Quản lý đề tài', icon: <BookOutlined /> },
+          { key: '8', label: 'Quản lý khóa đào tạo', icon: <BankOutlined /> },
           {
             key: '13',
             label: 'Quản lý dịch vụ',
             icon: <CustomerServiceOutlined />,
           },
-          {
-            key: '9',
-            label: 'Sở hữu trí tuệ',
-            icon: <SettingOutlined />,
-          },
+          { key: '9', label: 'Sở hữu trí tuệ', icon: <SettingOutlined /> },
         ],
       },
       {
@@ -144,86 +105,59 @@ const SideBar = () => {
         label: 'Danh Mục',
         icon: <SettingOutlined />,
         children: [
-          {
-            key: '11',
-            label: 'Đơn vị/ công ty con',
-            icon: <TeamOutlined />,
-          },
-          {
-            key: '10',
-            label: 'Quản bộ phận',
-            icon: <FolderOutlined />,
-          },
-          {
-            key: '12',
-            label: 'Quản lý chức vụ',
-            icon: <BankOutlined />,
-          },
+          { key: '11', label: 'Đơn vị/ công ty con', icon: <TeamOutlined /> },
+          { key: '10', label: 'Quản bộ phận', icon: <FolderOutlined /> },
+          { key: '12', label: 'Quản lý chức vụ', icon: <BankOutlined /> },
         ],
       },
     ],
     [],
   );
 
+  const sidebarBg = themeColor?.token?.colorPrimary || 'rgb(13,68,138)';
   const textColor = themeColor?.token?.colorPrimary ? '#ffffff' : '#000000';
 
   return (
     <div
-      className="h-full flex flex-col"
+      className={styles.menuContainer}
       style={{
-        backgroundColor: themeColor?.token?.colorPrimary || 'rgb(13,68,138)',
+        backgroundColor: sidebarBg,
         color: textColor,
-        height: '100vh',
       }}
     >
       <div
-        className="flex items-center justify-center h-16 px-4"
+        className={styles.headerLogo}
         style={{
-          backgroundColor: themeColor?.token?.colorPrimary || 'rgb(13,68,138)',
+          backgroundColor: sidebarBg,
           color: textColor,
-          borderBottom: '1px solid #f0f0f0',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
         }}
       >
         <Image
-          src="/image/logotrang.png"
+          src={collapsed ? '/image/logotrangnho.png' : '/image/logotrang.png'}
           alt="Logo"
-          width={150}
+          width={collapsed ? 50 : 150}
           height={60}
-          className="h-12 object-contain"
-          style={{ marginLeft: '10px' }}
+          style={{
+            objectFit: 'contain',
+            height: 60,
+            marginLeft: collapsed ? '5%' : '20%',
+          }}
         />
       </div>
 
       <ConfigProvider
-        theme={{
-          token: {
-            colorBgContainer:
-              themeColor?.token?.colorPrimary || 'rgb(13,68,138)',
-            colorText: textColor,
-          },
-          components: {
-            Menu: {
-              itemHeight: 30,
-              itemColor: textColor,
-              itemHoverColor: textColor,
-              horizontalItemSelectedColor: textColor,
-            },
-          },
-        }}
+        theme={{ token: { colorBgContainer: sidebarBg, colorText: textColor } }}
       >
         <Menu
           onClick={onClick}
-          className="h-full border-0"
-          defaultOpenKeys={['sub1', 'sub2', 'sub4']}
+          defaultOpenKeys={collapsed ? [] : ['sub1', 'sub2', 'sub4']}
           selectedKeys={[getCurrentKey()]}
           mode="inline"
           items={sidebarItems}
+          inlineCollapsed={collapsed}
+          className={styles.menu}
           style={{
-            backgroundColor:
-              themeColor?.token?.colorPrimary || 'rgb(13,68,138)',
+            backgroundColor: sidebarBg,
             color: textColor,
           }}
         />
@@ -232,4 +166,4 @@ const SideBar = () => {
   );
 };
 
-export default SideBar;
+export default SiderBar;

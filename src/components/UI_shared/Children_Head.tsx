@@ -17,7 +17,7 @@ const Header_Children: React.FC<HeaderProps> = ({
   return (
     <>
       <div
-        className="flex justify-between items-center mb-6"
+        className="flex justify-between items-center "
         style={{
           display: 'flex',
           justifyContent: 'space-between',
@@ -25,8 +25,13 @@ const Header_Children: React.FC<HeaderProps> = ({
           fontWeight: 'bolder',
         }}
       >
-        <div style={{ display: 'flex' }}>
-          <Link href="/vi/dashboard" className="hover:text-purple-600 flex items-center justify-center">
+        <div
+          style={{ display: 'flex', alignItems: 'center', lineHeight: '49px' }}
+        >
+          <Link
+            href="/vi/dashboard"
+            className="hover:text-purple-600 flex items-center justify-center"
+          >
             <Button type="default" icon={<HomeIcon />} />
           </Link>
           <div>/ {title}</div>

@@ -1,3 +1,4 @@
+import { useNotification } from '@/components/UI_shared/Notification';
 import { FormRule } from 'antd';
 
 // Validator
@@ -29,7 +30,6 @@ export const RULES_FORM: Record<keyof keyValidator, FormRule[]> = {
   ],
   phone: [
     {
-      required: true,
       min: 10,
       max: 10,
       pattern: /^0\d{9}$/,
@@ -96,4 +96,19 @@ export const RULES_FORM: Record<keyof keyValidator, FormRule[]> = {
       message: 'Tên phải tối thiểu 5 ký tự',
     },
   ],
+};
+
+export const validateDates = (
+  startDate: string,
+  endDate?: string | null,
+  show?: (msg: any) => void,
+): boolean => {
+  if (endDate && endDate < startDate) {
+    show?.({
+      result: 1,
+      messageError: 'Ngày kết thúc phải lớn hơn ngày bắt đầu',
+    });
+    return false;
+  }
+  return true;
 };

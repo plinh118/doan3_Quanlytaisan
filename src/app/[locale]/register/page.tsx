@@ -20,11 +20,19 @@ export default function RegisterPage() {
     email: string;
     password: string;
     fullName: string;
+    comfilmPassword: string;
   }) => {
     setError('');
     setLoading(true);
 
     try {
+      if (values.password !== values.comfilmPassword) {
+        show({
+          result: 1,
+          messageError: 'Mật khẩu nhập lại không trùng khớp!',
+        });
+        return;
+      }
       const userId = await authAPI.register(
         values.email,
         values.password,
@@ -32,8 +40,8 @@ export default function RegisterPage() {
       );
       if (userId) {
         show({ result: 0, messageDone: 'Đăng ký thành công!' });
+        router.push('/vi');
       }
-      router.push('/vi');
     } catch (err: any) {
       const errorMessage = err?.message || 'Đăng ký thất bại!';
       if (errorMessage.includes('Email đã được sử dụng')) {
@@ -116,6 +124,19 @@ export default function RegisterPage() {
             ]}
           >
             <Input.Password prefix={<LockOutlined />} placeholder="Mật khẩu" />
+          </Form.Item>
+
+          <Form.Item
+            name="comfilmPassword"
+            rules={[
+              { required: true, message: 'Vui lòng nhập mật khẩu!' },
+              { min: 6, message: 'Mật khẩu phải có ít nhất 6 ký tự!' },
+            ]}
+          >
+            <Input.Password
+              prefix={<LockOutlined />}
+              placeholder="Nhập lại mật khẩu"
+            />
           </Form.Item>
 
           <Form.Item>

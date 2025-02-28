@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Table, Button, Modal, Form, Input, Space, Card } from 'antd';
+import { Table, Button, Modal, Form, Input, Space, Card, Divider } from 'antd';
 import { SearchOutlined, ReloadOutlined } from '@ant-design/icons';
 import { GetDivision } from '@/models/division.model';
 import { divisionAPI } from '@/libs/api/division.api';
@@ -186,13 +186,13 @@ const DivisionPage = () => {
         text_btn_add="Thêm bộ phận"
       />
 
-      <hr />
+      <Divider />
 
       {/* Tier 2: Search and Refresh */}
       <div className="py-4">
         <Space size="middle">
           <Input.Search
-            placeholder="Search Divisions..."
+            placeholder="Tên bộ phận"
             allowClear
             enterButton={<SearchOutlined />}
             size="large"
@@ -204,9 +204,7 @@ const DivisionPage = () => {
             icon={<ReloadOutlined />}
             size="large"
             onClick={handleRefresh}
-          >
-            Refresh
-          </Button>
+          />
         </Space>
       </div>
 

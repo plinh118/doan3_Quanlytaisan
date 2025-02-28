@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Table, Button, Modal, Form, Input, Space, Card } from 'antd';
+import { Table, Button, Modal, Form, Input, Space, Card, Divider } from 'antd';
 import { SearchOutlined, ReloadOutlined } from '@ant-design/icons';
 import {
   AddTrainingCourse,
@@ -174,13 +174,13 @@ const TrainingCousePage = () => {
         text_btn_add="Thêm khóa học"
       />
 
-      <hr />
+      <Divider />
 
       {/* Tier 2: Search and Refresh */}
       <div className="py-4">
         <Space size="middle">
           <Input.Search
-            placeholder="Search TrainingCouses..."
+            placeholder="Tên khóa học..."
             allowClear
             enterButton={<SearchOutlined />}
             size="large"
@@ -192,9 +192,7 @@ const TrainingCousePage = () => {
             icon={<ReloadOutlined />}
             size="large"
             onClick={handleRefresh}
-          >
-            Refresh
-          </Button>
+          />
         </Space>
       </div>
 

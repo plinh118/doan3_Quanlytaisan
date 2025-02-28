@@ -1,8 +1,7 @@
 import { message } from 'antd';
 
-
 interface Document {
-  Id?: number; // Thêm Id để phân biệt tài liệu cũ
+  Id?: number;
   DocumentName: string;
   DocumentFile?: File;
   DocumentLink?: string;
@@ -16,7 +15,10 @@ interface UploadResult {
   uploadedPaths?: string[];
   error?: string;
 }
-export const uploadFile = async (documents: Document[]): Promise<UploadResult> => {
+
+export const uploadFile = async (
+  documents: Document[],
+): Promise<UploadResult> => {
   if (documents.length === 0) {
     return { success: false, documents: [], error: 'No documents to upload' };
   }
@@ -33,19 +35,27 @@ export const uploadFile = async (documents: Document[]): Promise<UploadResult> =
   });
 
   if (filesCount === 0) {
-    return { success: true, documents: documents.map(doc => ({ ...doc, DocumentFile: undefined })), uploadedPaths: [] };
+    return {
+      success: true,
+      documents: documents.map((doc) => ({ ...doc, DocumentFile: undefined })),
+      uploadedPaths: [],
+    };
   }
 
-  // Append files to FormData
-  documents.forEach((doc, index) => {
+  // Append files to FormData with key 'file'
+  documents.forEach((doc) => {
     if (doc.DocumentFile instanceof File) {
-      formData.append(`file_${index}`, doc.DocumentFile);
+      formData.append('file', doc.DocumentFile); // Dùng key 'file'
       hasFiles = true;
     }
   });
 
   if (!hasFiles) {
-    return { success: true, documents: documents.map(doc => ({ ...doc, DocumentFile: undefined })), uploadedPaths: [] };
+    return {
+      success: true,
+      documents: documents.map((doc) => ({ ...doc, DocumentFile: undefined })),
+      uploadedPaths: [],
+    };
   }
 
   try {
@@ -70,28 +80,39 @@ export const uploadFile = async (documents: Document[]): Promise<UploadResult> =
           updatedDocuments[index] = {
             ...doc,
             DocumentLink: result.uploadedPaths[uploadedIndex],
-            DocumentFile: undefined, 
+            DocumentFile: undefined,
           };
           uploadedIndex++;
         }
       });
 
-      return { success: true, documents: updatedDocuments, uploadedPaths: result.uploadedPaths };
+      return {
+        success: true,
+        documents: updatedDocuments,
+        uploadedPaths: result.uploadedPaths,
+      };
     } else {
       message.error('File upload failed: Invalid response');
       return { success: false, documents, error: 'Invalid server response' };
     }
   } catch (error) {
     console.error('Error uploading files:', error);
-    message.error(`Error uploading files: ${error instanceof Error ? error.message : 'Unknown error'}`);
-    return { success: false, documents, error: error instanceof Error ? error.message : 'Unknown upload error' };
+    message.error(
+      `Error uploading files: ${error instanceof Error ? error.message : 'Unknown error'}`,
+    );
+    return {
+      success: false,
+      documents,
+      error: error instanceof Error ? error.message : 'Unknown upload error',
+    };
   }
 };
+
 export async function uploadFilesImage(files: File[]): Promise<string[]> {
   const formData = new FormData();
 
-  files.forEach((file, index) => {
-    formData.append(`file${index}`, file);
+  files.forEach((file) => {
+    formData.append('file', file); // Dùng key 'file'
   });
 
   try {
@@ -121,9 +142,7 @@ export async function getInforFile(filePath: string) {
   try {
     const response = await fetch(
       `/api/uploadfile?path=${encodeURIComponent(filePath)}`,
-      {
-        method: 'GET',
-      },
+      { method: 'GET' },
     );
 
     const data = await response.json();
@@ -134,7 +153,7 @@ export async function getInforFile(filePath: string) {
 
     return {
       success: true,
-      fileInfo: data, // Thông tin file trả về
+      fileInfo: data,
     };
   } catch (error) {
     console.error('Lỗi khi lấy thông tin file:', error);

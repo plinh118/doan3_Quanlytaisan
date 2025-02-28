@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Table, Button, Modal, Form, Input, Space, Card } from 'antd';
+import { Table, Button, Modal, Form, Input, Space, Card, Divider } from 'antd';
 import { SearchOutlined, ReloadOutlined } from '@ant-design/icons';
 import {
   AddDepartment,
@@ -166,13 +166,13 @@ const DepartmentPage = () => {
         text_btn_add="Thêm đơn vị"
       />
 
-      <hr />
+      <Divider />
 
       {/* Tier 2: Search and Refresh */}
       <div className="py-4">
         <Space size="middle">
           <Input.Search
-            placeholder="Search Departments..."
+            placeholder="Tên đơn vị..."
             allowClear
             enterButton={<SearchOutlined />}
             size="large"
@@ -184,9 +184,7 @@ const DepartmentPage = () => {
             icon={<ReloadOutlined />}
             size="large"
             onClick={handleRefresh}
-          >
-            Refresh
-          </Button>
+          />
         </Space>
       </div>
 

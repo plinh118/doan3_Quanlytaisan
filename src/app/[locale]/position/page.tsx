@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Table, Button, Modal, Form, Input, Space, Card } from 'antd';
+import { Table, Button, Modal, Form, Input, Space, Card, Divider } from 'antd';
 import { SearchOutlined, ReloadOutlined } from '@ant-design/icons';
 import type { GetPosition } from '@/models/position.model';
 import { PositionAPI } from '@/libs/api/position.api';
@@ -152,12 +152,12 @@ const PositionPage = () => {
         text_btn_add="Thêm chức vụ"
       />
 
-      <hr />
+      <Divider />
 
       <div className="py-4">
         <Space size="middle">
           <Input.Search
-            placeholder="Search positions..."
+            placeholder="Tên chức vụ..."
             allowClear
             enterButton={<SearchOutlined />}
             size="large"
@@ -169,9 +169,7 @@ const PositionPage = () => {
             icon={<ReloadOutlined />}
             size="large"
             onClick={handleRefresh}
-          >
-            Refresh
-          </Button>
+          />
         </Space>
       </div>
 
