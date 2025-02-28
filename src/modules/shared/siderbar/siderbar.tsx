@@ -140,7 +140,7 @@ const SiderBar: React.FC<SiderBarProps> = ({ collapsed }) => {
           style={{
             objectFit: 'contain',
             height: 60,
-            marginLeft: collapsed ? '5%' : '20%',
+            marginLeft: collapsed ? '0%' : '20%',
           }}
         />
       </div>
