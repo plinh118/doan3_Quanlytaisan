@@ -19,7 +19,7 @@ import {
   CustomerServiceOutlined,
   TabletOutlined,
 } from '@ant-design/icons';
-import styles from './SiderBar.module.scss';
+import styles from '@/modules/shared/siderbar/siderbar.module.scss';
 
 type MenuItem = Required<MenuProps>['items'][number];
 interface SiderBarProps {
