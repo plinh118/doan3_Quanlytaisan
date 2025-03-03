@@ -14,8 +14,8 @@ import {
 } from '@ant-design/icons';
 import ThemeChanger from '@/modules/shared/changetheme';
 import { useEffect, useState } from 'react';
-import type { IStatistics } from '@/models/boasBoard.model';
-import { doashBoardAPI } from '@/libs/api/doashBoard.api';
+import type { IStatistics } from '@/models/dashboarf.model';
+import { doashBoardAPI } from '@/libs/api/dashBoard.api';
 
 const { Title, Text } = Typography;
 

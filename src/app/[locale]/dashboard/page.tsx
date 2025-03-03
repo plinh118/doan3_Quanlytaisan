@@ -1,286 +1,251 @@
 'use client';
-
 import type React from 'react';
-import { Card, Row, Col, Typography, Divider } from 'antd';
-import {
-  UserOutlined,
-  TeamOutlined,
-  ShoppingOutlined,
-  ProjectOutlined,
-  BookOutlined,
-  ReadOutlined,
-  CustomerServiceOutlined,
-  CopyrightOutlined,
-} from '@ant-design/icons';
-import ThemeChanger from '@/modules/shared/changetheme';
 import { useEffect, useState } from 'react';
-import type { IStatistics } from '@/models/boasBoard.model';
-import { doashBoardAPI } from '@/libs/api/doashBoard.api';
+import { Button, Divider } from 'antd';
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
+import { doashBoardAPI } from '@/libs/api/dashBoard.api';
+import Link from 'next/link';
+import ThemeChanger from '@/modules/shared/changetheme';
 
-const { Title, Text } = Typography;
-
-const styles: {
-  mainStat: React.CSSProperties;
-  cardTitle: React.CSSProperties;
-  statText: React.CSSProperties;
-  icon: React.CSSProperties;
-  divider: React.CSSProperties;
-} = {
-  mainStat: {
-    fontSize: '28px',
-    fontWeight: 'bold',
-    marginBottom: '16px',
-    textAlign: 'center',
-    color: '#ffffff',
-  },
-  cardTitle: { margin: 0, color: '#ffffff' },
-  statText: { color: '#ffffff', marginTop: '8px' },
-  icon: { fontSize: '24px', color: '#ffffff', marginRight: '8px' },
-  divider: { margin: '12px 0', borderColor: '#ffffff' },
-};
-const StatCard: React.FC<{
-  title: string;
-  icon: React.ReactNode;
-  mainStat: number;
-  mainLabel: string;
-  subStats: { label: string; value: number }[];
-  backgroundColor: string;
-  height?: string | number;
-}> = ({
-  title,
-  icon,
-  mainStat,
-  mainLabel,
-  subStats,
-  backgroundColor,
-  height,
-}) => (
-  <Card style={{ background: backgroundColor, height: height || 'auto' }}>
-    <div
-      style={{ display: 'flex', alignItems: 'center', marginBottom: '12px' }}
-    >
-      {icon}
-      <Title level={4} style={styles.cardTitle}>
-        {title}
-      </Title>
-    </div>
-    <Divider style={styles.divider} />
-    <div style={styles.mainStat}>
-      <h1>{mainLabel}</h1>
-      {mainStat}
-    </div>
-    {subStats.map((stat, index) => (
-      <div key={index} style={styles.statText}>
-        <Text style={styles.statText}>
-          {stat.label}: {stat.value}
-        </Text>
-      </div>
-    ))}
-  </Card>
-);
-
-const DashboardPage: React.FC = () => {
-  const [statistics, setStatistics] = useState<IStatistics | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+const Dashboard: React.FC = () => {
+  const [statistics, setStatistics] = useState<any>(null);
 
   useEffect(() => {
-    getStatistics();
+    const fetchData = async () => {
+      const data = await doashBoardAPI.getAlldoashBoard();
+      setStatistics(data);
+    };
+    fetchData();
   }, []);
 
-  const getStatistics = async () => {
-    try {
-      const data = await doashBoardAPI.getAlldoashBoard();
-      if (data && data.length > 0) {
-        setStatistics(data[0]);
-      } else {
-        setError('Không có dữ liệu từ server!');
-      }
-    } catch (error) {
-      setError('Không thể tải dữ liệu, vui lòng thử lại sau!');
-    } finally {
-      setLoading(false);
-    }
-  };
+  if (!statistics) return <p>Loading...</p>;
 
-  if (loading) {
-    return (
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100vh',
-        }}
-      >
-        Đang tải...
-      </div>
-    );
-  }
+  const projectData = [
+    { name: 'Đang thực hiện', value: Number(statistics.active_projects) },
+    { name: 'Đã Hoàn thành', value: Number(statistics.completed_projects) },
+    { name: 'Đã Hủy', value: Number(statistics.cancel_projects) },
+  ];
 
-  if (error) {
-    return (
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100vh',
-        }}
-      >
-        {error}
-      </div>
-    );
-  }
+  const productData = [
+    { name: 'Đang thực hiện', value: Number(statistics.available_products) },
+    { name: 'Đã Hoàn thành', value: Number(statistics.completed_products) },
+    { name: 'Đã Hủy', value: Number(statistics.cancel_products) },
+  ];
 
-  if (!statistics) {
-    return (
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100vh',
-        }}
-      >
-        Không có dữ liệu để hiển thị
-      </div>
-    );
-  }
+  const topicData = [
+    { name: 'Đang thực hiện', value: Number(statistics.active_topics) },
+    { name: 'Đã Hoàn thành', value: Number(statistics.completed_topics) },
+    { name: 'Đã Hủy', value: Number(statistics.cancel_topics) },
+  ];
 
   return (
-    <div style={{ padding: '20px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Title level={2}>Bảng Thống Kê</Title>
+    <div className="bg-white rounded-lg shadow-md p-6">
+      <div
+        className="flex justify-between items-center"
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          fontWeight: 'bolder',
+          paddingBottom: '16px',
+        }}
+      >
+        <div
+          style={{ display: 'flex', alignItems: 'center', lineHeight: '49px' }}
+        >
+          <Link
+            href="/vi/dashboard"
+            className="hover:text-purple-600 flex items-center justify-center"
+          >
+            <Button type="default" icon={<HomeIcon />} />
+          </Link>
+          <div>/ DashBoard</div>
+        </div>
         <ThemeChanger />
       </div>
-      <Row gutter={[16, 16]} style={{ marginBottom: '32px' }}>
-        {/* Nhân Viên */}
-        <Col xs={24} sm={12} md={8} lg={6}>
-          <StatCard
-            title="Nhân Viên"
-            icon={<UserOutlined style={styles.icon} />}
-            mainStat={statistics.active_personnel}
-            mainLabel="Đang làm việc"
-            subStats={[
-              { label: 'Tổng số nhân viên', value: statistics.total_personnel },
-              { label: 'Đã nghỉ việc', value: statistics.inactive_personnel },
-            ]}
-            backgroundColor="rgb(88, 107, 177)"
-          />
-        </Col>
 
-        {/* Đối Tác */}
-        <Col xs={24} sm={12} md={8} lg={6}>
-          <StatCard
-            title="Đối Tác"
-            icon={<TeamOutlined style={styles.icon} />}
-            mainStat={statistics.active_partners}
-            mainLabel="Đang hợp tác"
-            subStats={[
-              { label: 'Tổng số đối tác', value: statistics.total_partners },
-              { label: 'Đã dừng hợp tác', value: statistics.inactive_partners },
-            ]}
-            backgroundColor="rgb(64, 169, 255)"
-          />
-        </Col>
-
-        {/* Khách Hàng */}
-        <Col xs={24} sm={12} md={8} lg={6}>
-          <StatCard
-            title="Khách Hàng"
-            icon={<ShoppingOutlined style={styles.icon} />}
-            mainStat={statistics.total_customers}
-            mainLabel="Tổng số khách hàng"
-            subStats={[]}
-            backgroundColor="rgb(114, 46, 209)"
-            height={'100%'}
-          />
-        </Col>
-
-        {/* Dự Án */}
-        <Col xs={24} sm={12} md={8} lg={6}>
-          <StatCard
-            title="Dự Án"
-            icon={<ProjectOutlined style={styles.icon} />}
-            mainStat={statistics.active_projects}
-            mainLabel="Đang triển khai"
-            subStats={[
-              { label: 'Tổng số dự án', value: statistics.total_projects },
-              { label: 'Đã hoàn thành', value: statistics.completed_projects },
-            ]}
-            backgroundColor="rgb(245, 34, 45)"
-          />
-        </Col>
-
-        {/* Đề Tài */}
-        <Col xs={24} sm={12} md={8} lg={6}>
-          <StatCard
-            title="Đề Tài"
-            icon={<BookOutlined style={styles.icon} />}
-            mainStat={statistics.active_topics}
-            mainLabel="Đang nghiên cứu"
-            subStats={[
-              { label: 'Tổng số đề tài', value: statistics.total_topics },
-              { label: 'Đã nghiệm thu', value: statistics.completed_topics },
-            ]}
-            backgroundColor="rgb(19, 194, 194)"
-          />
-        </Col>
-
-        {/* Khóa Đào Tạo */}
-        <Col xs={24} sm={12} md={8} lg={6}>
-          <StatCard
-            title="Khóa Đào Tạo"
-            icon={<ReadOutlined style={styles.icon} />}
-            mainStat={statistics.active_courses}
-            mainLabel="Đang diễn ra"
-            subStats={[
-              {
-                label: 'Tổng số khóa đào tạo',
-                value: statistics.total_courses,
-              },
-              { label: 'Đã hoàn thành', value: statistics.completed_courses },
-            ]}
-            backgroundColor="rgb(250, 140, 22)"
-          />
-        </Col>
-
-        {/* Sản Phẩm */}
-        <Col xs={24} sm={12} md={8} lg={6}>
-          <StatCard
-            title="Sản Phẩm"
-            icon={<CustomerServiceOutlined style={styles.icon} />}
-            mainStat={statistics.available_products}
-            mainLabel="Đang cung cấp"
-            subStats={[
-              { label: 'Tổng số sản phẩm', value: statistics.total_products },
-              { label: 'Đã hoàn thành', value: statistics.completed_products },
-            ]}
-            backgroundColor="rgb(250, 173, 20)"
-          />
-        </Col>
-
-        {/* Sở Hữu Trí Tuệ */}
-        <Col xs={24} sm={12} md={8} lg={6}>
-          <StatCard
-            title="Sở Hữu Trí Tuệ"
-            icon={<CopyrightOutlined style={styles.icon} />}
-            mainStat={statistics.granted_ip}
-            mainLabel="Đã được cấp"
-            subStats={[
-              {
-                label: 'Tổng số bằng sáng chế/SHTT',
-                value: statistics.total_ip,
-              },
-              { label: 'Đang xét duyệt', value: statistics.pending_ip },
-            ]}
-            backgroundColor="rgb(47, 84, 235)"
-          />
-        </Col>
-      </Row>
+      <Divider />
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(3, 1fr)',
+          gap: 16,
+        }}
+      >
+        <DashboardCard
+          title="Dự án"
+          data={projectData}
+          total={statistics.total_projects}
+        />
+        <DashboardCard
+          title="Sản phẩm"
+          data={productData}
+          total={statistics.total_products}
+        />
+        <DashboardCard
+          title="Đề tài"
+          data={topicData}
+          total={statistics.total_topics}
+        />
+      </div>
     </div>
   );
 };
 
-export default DashboardPage;
+const HomeIcon = () => (
+  <span role="img" aria-label="home" className="anticon anticon-home">
+    <svg
+      viewBox="64 64 896 896"
+      focusable="false"
+      data-icon="home"
+      width="1em"
+      height="1em"
+      fill="currentColor"
+      aria-hidden="true"
+    >
+      <path d="M946.5 505L560.1 118.8l-25.9-25.9a31.5 31.5 0 00-44.4 0L77.5 505a63.9 63.9 0 00-18.8 46c.4 35.2 29.7 63.3 64.9 63.3h42.5V940h691.8V614.3h43.4c17.1 0 33.2-6.7 45.3-18.8a63.6 63.6 0 0018.7-45.3c0-17-6.7-33.1-18.8-45.2zM568 868H456V664h112v204zm217.9-325.7V868H632V640c0-22.1-17.9-40-40-40H432c-22.1 0-40 17.9-40 40v228H238.1V542.3h-96l370-369.7 23.1 23.1L882 542.3h-96.1z" />
+    </svg>
+  </span>
+);
+
+interface DashboardCardProps {
+  title: string;
+  data: { name: any; value: number }[];
+  total: number;
+}
+
+const DashboardCard: React.FC<DashboardCardProps> = ({
+  title,
+  data,
+  total,
+}) => {
+  const colors = [
+    'rgb(129, 207, 224)', // Xanh baby blue - Đang thực hiện
+    'rgb(169, 223, 191)', // Xanh mint - Đã hoàn thành
+    'rgb(245, 183, 177)', // Đỏ hồng pastel - Đã hủy
+  ];
+
+  return (
+    <div
+      className="bg-white rounded-lg shadow border p-4"
+      style={{ borderRadius: 12, border: '1px black solid' }}
+    >
+      <h2 className="text-lg font-medium mb-4" style={{ marginLeft: '5%' }}>
+        {title}
+      </h2>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div style={{ width: '70%', height: 220, marginLeft: '-20px' }}>
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie
+                data={data}
+                cx="50%"
+                cy="50%"
+                innerRadius={50}
+                outerRadius={100}
+                paddingAngle={5}
+                dataKey="value"
+                labelLine={false}
+                label={({
+                  cx,
+                  cy,
+                  midAngle,
+                  innerRadius,
+                  outerRadius,
+                  index,
+                }) => {
+                  if (data[index].value === 0) return null;
+
+                  const isActive = data[index].name === 'Đang thực hiện';
+
+                  const effectiveOuterRadius = isActive
+                    ? outerRadius + 15
+                    : outerRadius;
+
+                  const radius =
+                    innerRadius + (effectiveOuterRadius - innerRadius) / 2;
+                  const x = cx + radius * Math.cos(-midAngle * (Math.PI / 180));
+                  const y = cy + radius * Math.sin(-midAngle * (Math.PI / 180));
+
+                  return (
+                    <text
+                      x={x}
+                      y={y}
+                      fill="#fff"
+                      textAnchor="middle"
+                      dominantBaseline="central"
+                      style={{ fontWeight: 'bold', fontSize: 14 }}
+                    >
+                      {data[index].value}
+                    </text>
+                  );
+                }}
+              >
+                {data.map((entry, index) => {
+                  const isActive = entry.name === 'Đang thực hiện';
+                  return (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={colors[index % colors.length]}
+                      stroke={isActive ? 'black' : undefined}
+                      strokeWidth={isActive ? 2 : 1}
+                      {...(isActive ? { cornerRadius: 5 } : {})}
+                    />
+                  );
+                })}
+              </Pie>
+
+              {/* Tổng số ở giữa */}
+              <text
+                x="50%"
+                y="50%"
+                textAnchor="middle"
+                dominantBaseline="middle"
+                style={{ fontSize: '18px', fontWeight: 'bold', fill: '#333' }}
+              >
+                {total}
+              </text>
+              <Tooltip />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* Legend với highlight đặc biệt cho "Đang thực hiện" */}
+        <div style={{ width: '30%' }}>
+          {data.map((item, index) => (
+            <div
+              key={index}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                marginBottom: 6,
+                fontWeight: item.name === 'Đang thực hiện' ? 'bold' : 'normal',
+                color:
+                  item.name === 'Đang thực hiện'
+                    ? 'rgb(33, 150, 57)'
+                    : 'inherit',
+              }}
+            >
+              <div
+                style={{
+                  width: 14,
+                  height: 14,
+                  backgroundColor: colors[index % colors.length],
+                  marginRight: 6,
+                  borderRadius: 3,
+                  border:
+                    item.name === 'Đang thực hiện'
+                      ? '2px solid black'
+                      : undefined,
+                }}
+              />
+              <span style={{ fontSize: 14 }}>{item.name}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Dashboard;

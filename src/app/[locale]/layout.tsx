@@ -1,5 +1,4 @@
 'use client';
-import '@ant-design/v5-patch-for-react-19';
 import '@/assets/scss/_global.scss';
 import AppProvider from './AppProvider';
 import { Layout, ConfigProvider } from 'antd';

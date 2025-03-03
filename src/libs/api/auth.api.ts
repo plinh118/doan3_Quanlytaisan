@@ -48,7 +48,8 @@ export const authAPI = {
       }
 
       const data = await response.json();
-
+      console.log(data);
+      localStorage.setItem('ID', data.user.id);
       localStorage.setItem('ACCESS_TOKEN', data.token);
       localStorage.setItem('ROLE', data.user.role);
       localStorage.setItem('Email', data.user.email);

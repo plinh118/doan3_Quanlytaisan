@@ -110,8 +110,8 @@ export const ProductForm: React.FC<ReusableFormProps> = ({
         rules={RULES_FORM.required}
       >
         <Select>
-          <Select.Option value="Đang thực hiện">Đang thực hiện</Select.Option>
           <Select.Option value="Đã hoàn thành">Đã hoàn thành</Select.Option>
+          <Select.Option value="Đang thực hiện">Đang thực hiện</Select.Option>
           <Select.Option value="Hủy">Hủy</Select.Option>
         </Select>
       </Form.Item>

@@ -256,7 +256,7 @@ const ProductPage = () => {
       <div className="py-4">
         <Space size="middle">
           <Input.Search
-            placeholder="Search Products..."
+            placeholder="Tên sản phẩm..."
             allowClear
             enterButton={<SearchOutlined />}
             size="large"
