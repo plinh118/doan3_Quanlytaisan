@@ -1,12 +1,12 @@
 import ThemeChanger from '@/modules/shared/changetheme';
 import { Button } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import Link from 'next/link'; // Thêm import Link từ next/link
+import Link from 'next/link';
 
 interface HeaderProps {
   title: string;
-  onAdd: () => void;
-  text_btn_add: string;
+  onAdd?: () => void;
+  text_btn_add: string | null;
 }
 
 const Header_Children: React.FC<HeaderProps> = ({
@@ -17,12 +17,13 @@ const Header_Children: React.FC<HeaderProps> = ({
   return (
     <>
       <div
-        className="flex justify-between items-center "
+        className="flex justify-between items-center"
         style={{
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
           fontWeight: 'bolder',
+          paddingBottom: '16px',
         }}
       >
         <div
@@ -47,26 +48,22 @@ const Header_Children: React.FC<HeaderProps> = ({
           alignItems: 'center',
         }}
       >
-        <h1
-          className="text-2xl font-bold"
-          style={{ fontSize: '20px', fontWeight: 'bold' }}
-        >
-          {title}
-        </h1>
-        <Button
-          type="primary"
-          icon={<PlusOutlined />}
-          className="bg-purple-600"
-          onClick={onAdd}
-        >
-          {text_btn_add}
-        </Button>
+        <h1 style={{ fontSize: '20px', fontWeight: 'bold' }}>{title}</h1>
+        {text_btn_add && (
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            className="bg-purple-600"
+            onClick={onAdd}
+          >
+            {text_btn_add}
+          </Button>
+        )}
       </div>
     </>
   );
 };
 
-// Component con để tái sử dụng icon Home
 const HomeIcon = () => (
   <span role="img" aria-label="home" className="anticon anticon-home">
     <svg

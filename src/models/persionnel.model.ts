@@ -22,7 +22,7 @@ export interface AddPersonnel {
   PersonnelName: string;
   PositionId: number;
   DateOfBirth: string | null;
-  Picture: string;
+  Picture: string | null;
   Email: string;
   Description: string | null;
   PhoneNumber: string;

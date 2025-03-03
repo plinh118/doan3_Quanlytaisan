@@ -38,7 +38,7 @@ const ThemeChanger = () => {
       await authAPI.logout();
       push('/vi');
     } else if (e.key === 'settings') {
-      console.log('Đi đến trang cài đặt');
+      push('/vi/resetPassword');
     }
     setIsMenuOpen(false);
   };

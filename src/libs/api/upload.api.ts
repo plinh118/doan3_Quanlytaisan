@@ -45,7 +45,7 @@ export const uploadFile = async (
   // Append files to FormData with key 'file'
   documents.forEach((doc) => {
     if (doc.DocumentFile instanceof File) {
-      formData.append('file', doc.DocumentFile); // Dùng key 'file'
+      formData.append('file', doc.DocumentFile);
       hasFiles = true;
     }
   });
