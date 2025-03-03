@@ -14,7 +14,7 @@ export const PartnerForm: React.FC<ReusableFormProps> = ({ formdulieu }) => {
           <Form.Item
             name="PartnerName"
             label="Tên đối tác"
-            rules={RULES_FORM.department_name}
+            rules={RULES_FORM.required}
           >
             <Input />
           </Form.Item>

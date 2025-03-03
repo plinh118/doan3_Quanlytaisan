@@ -1,7 +1,17 @@
 'use client';
 
 import type React from 'react';
-import { Form, Input, Button, Row, Col, Upload, Select, Card,Typography } from 'antd';
+import {
+  Form,
+  Input,
+  Button,
+  Row,
+  Col,
+  Upload,
+  Select,
+  Card,
+  Typography,
+} from 'antd';
 import { FileOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import { RULES_FORM } from '@/utils/validator';
 import { documentAPI } from '@/libs/api/document.api';
@@ -56,7 +66,7 @@ export const ProductForm: React.FC<ReusableFormProps> = ({
           <Form.Item
             name="ProductName"
             label="Tên sản phẩm"
-            rules={RULES_FORM.department_name}
+            rules={RULES_FORM.required}
           >
             <Input />
           </Form.Item>
@@ -102,17 +112,25 @@ export const ProductForm: React.FC<ReusableFormProps> = ({
         <Select>
           <Select.Option value="Đang thực hiện">Đang thực hiện</Select.Option>
           <Select.Option value="Đã hoàn thành">Đã hoàn thành</Select.Option>
+          <Select.Option value="Hủy">Hủy</Select.Option>
         </Select>
       </Form.Item>
 
       <Card title="Tài liệu đính kèm">
         {documents.map((doc, index) => (
-          <Row gutter={16} key={index} align="middle" style={{ marginBottom: 16 }}>
+          <Row
+            gutter={16}
+            key={index}
+            align="middle"
+            style={{ marginBottom: 16 }}
+          >
             <Col span={11}>
               <Form.Item label="Tên tài liệu" required>
                 <Input
                   value={doc.DocumentName}
-                  onChange={(e) => updateDocument(index, 'DocumentName', e.target.value)}
+                  onChange={(e) =>
+                    updateDocument(index, 'DocumentName', e.target.value)
+                  }
                 />
               </Form.Item>
             </Col>
@@ -138,7 +156,11 @@ export const ProductForm: React.FC<ReusableFormProps> = ({
                 ) : doc.DocumentLink ? (
                   <Text>
                     <FileOutlined style={{ marginRight: 8 }} />
-                    <a href={doc.DocumentLink} target="_blank" rel="noopener noreferrer">
+                    <a
+                      href={doc.DocumentLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       {doc.DocumentLink.replace('/uploads/', '').length > 20
                         ? `${doc.DocumentLink.replace('/uploads/', '').substring(0, 17)}...`
                         : doc.DocumentLink.replace('/uploads/', '')}
@@ -165,7 +187,12 @@ export const ProductForm: React.FC<ReusableFormProps> = ({
             </Col>
           </Row>
         ))}
-        <Button type="dashed" onClick={addDocument} block icon={<PlusOutlined />}>
+        <Button
+          type="dashed"
+          onClick={addDocument}
+          block
+          icon={<PlusOutlined />}
+        >
           Thêm tài liệu
         </Button>
       </Card>

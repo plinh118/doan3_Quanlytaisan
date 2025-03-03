@@ -119,6 +119,7 @@ const ProjectForm: React.FC<ReusableFormProps> = ({
                 <Select.Option value="Đã hoàn thành">
                   Đã hoàn thành
                 </Select.Option>
+                <Select.Option value="Hủy">Hủy</Select.Option>
               </Select>
             </Form.Item>
           </Col>

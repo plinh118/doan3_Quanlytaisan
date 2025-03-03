@@ -67,7 +67,7 @@ export const TopicForm: React.FC<ReusableFormProps> = ({
           <Form.Item
             name="TopicName"
             label="Tên đề tài"
-            rules={RULES_FORM.department_name}
+            rules={RULES_FORM.required}
           >
             <Input />
           </Form.Item>
@@ -113,6 +113,7 @@ export const TopicForm: React.FC<ReusableFormProps> = ({
         <Select>
           <Select.Option value="Đang nghiên cứu">Đang nghiên cứu</Select.Option>
           <Select.Option value="Đã nghiệm thu">Đã nghiệm thu</Select.Option>
+          <Select.Option value="Hủy">Hủy</Select.Option>
         </Select>
       </Form.Item>
 
