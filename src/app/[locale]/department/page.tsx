@@ -158,7 +158,7 @@ const DepartmentPage = () => {
   });
 
   return (
-    <Card className="p-6">
+    <>
       {/* Tier 1: Title and Add Button */}
       <Header_Children
         title={'Quản lý đơn vị'}
@@ -220,7 +220,7 @@ const DepartmentPage = () => {
       >
         <DepartmentForm formdulieu={form} isEditing={isEditing} />
       </Modal>
-    </Card>
+    </>
   );
 };
 

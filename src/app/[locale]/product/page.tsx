@@ -244,7 +244,7 @@ const ProductPage = () => {
   });
 
   return (
-    <Card className="p-6">
+    <>
       <Header_Children
         title={'Quản lý sản phẩm'}
         onAdd={openCreateModal}
@@ -306,7 +306,7 @@ const ProductPage = () => {
           departments={departments}
         />
       </Modal>
-    </Card>
+    </>
   );
 };
 

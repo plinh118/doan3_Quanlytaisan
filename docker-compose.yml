@@ -1,11 +1,13 @@
+
 services:
   app:
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "80:80"
+      - "80:80"  # Map port 80 của host vào port 80 của container
     environment:
+      - NODE_ENV=production
       - MYSQL_HOST=db
       - MYSQL_PORT=3306
       - MYSQL_DATABASE=Academi_v4
@@ -13,26 +15,28 @@ services:
       - MYSQL_PASSWORD=aiavn@123
     depends_on:
       db:
-        condition: service_healthy
+        condition: service_healthy  # Chờ MySQL sẵn sàng
     volumes:
-      - ./public/uploads:/app/public/uploads
+      - ./public/uploads:/app/public/uploads  # Đồng bộ thư mục uploads
+    restart: unless-stopped  # Tự khởi động lại nếu crash
 
   db:
-    image: mysql:8  
+    image: mysql:8
     ports:
-      - "13311:3306"
+      - "13311:3306"  # Map port 13311 của host vào 3306 của MySQL
     environment:
       - MYSQL_ROOT_PASSWORD=aiavn@123
       - MYSQL_DATABASE=Academi_v4
       - MYSQL_USER=ams
       - MYSQL_PASSWORD=aiavn@123
     volumes:
-      - mysql-data:/var/lib/mysql
+      - mysql-data:/var/lib/mysql  # Lưu trữ dữ liệu MySQL
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 5s
       timeout: 5s
       retries: 10
+    restart: unless-stopped
 
 volumes:
   mysql-data:

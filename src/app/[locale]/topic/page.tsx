@@ -257,7 +257,7 @@ const TopicPage = () => {
   });
 
   return (
-    <Card className="p-6">
+    <>
       <Header_Children
         title={'Quản lý đề tài'}
         onAdd={openCreateModal}
@@ -319,7 +319,7 @@ const TopicPage = () => {
           departments={departments}
         />
       </Modal>
-    </Card>
+    </>
   );
 };
 

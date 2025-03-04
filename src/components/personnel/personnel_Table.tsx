@@ -39,14 +39,6 @@ export const Personnel_Colum: ColumnType[] = [
     dataIndex: 'PositionName',
     key: 'PositionName',
   },
-  {
-    title: 'Ngày sinh',
-    dataIndex: 'DateOfBirth',
-    key: 'DateOfBirth',
-    render: (text) => (
-      <span>{text ? moment(text).format('DD/MM/YYYY') : ''}</span>
-    ),
-  },
 
   {
     title: 'Email',
@@ -57,14 +49,6 @@ export const Personnel_Colum: ColumnType[] = [
     title: 'Số điện thoại',
     dataIndex: 'PhoneNumber',
     key: 'PhoneNumber',
-  },
-  {
-    title: 'Ngày vào làm',
-    dataIndex: 'JoinDate',
-    key: 'JoinDate',
-    render: (text) => (
-      <span>{text ? moment(text).format('DD/MM/YYYY') : ''}</span>
-    ),
   },
   {
     title: 'Trạng thái công việc',

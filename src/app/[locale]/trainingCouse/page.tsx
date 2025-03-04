@@ -166,7 +166,7 @@ const TrainingCousePage = () => {
   });
 
   return (
-    <Card className="p-6">
+    <>
       {/* Tier 1: Title and Add Button */}
       <Header_Children
         title={'Quản lý khóa học'}
@@ -228,7 +228,7 @@ const TrainingCousePage = () => {
       >
         <TrainingCouseForm formdata={form} personnels={persionnels} />
       </Modal>
-    </Card>
+    </>
   );
 };
 

@@ -237,7 +237,7 @@ const IntellectualPropertyPage = () => {
   });
 
   return (
-    <Card className="p-6">
+    <>
       <Header_Children
         title={'Quản lý bản quyền'}
         onAdd={openCreateModal}
@@ -298,7 +298,7 @@ const IntellectualPropertyPage = () => {
       >
         <IntellectualPropertyForm formData={form} departments={departments} />
       </Modal>
-    </Card>
+    </>
   );
 };
 
