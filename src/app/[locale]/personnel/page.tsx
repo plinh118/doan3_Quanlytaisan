@@ -234,7 +234,7 @@ const PersonnelPage = () => {
 
       const dataToSubmit = {
         ...values,
-        Picture: imageUrl,
+        Picture: imageUrl?imageUrl:null,
       };
 
       if (editingPersonnel) {
