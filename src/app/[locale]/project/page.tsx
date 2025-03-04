@@ -252,7 +252,7 @@ const ProjectPage = () => {
   });
 
   return (
-    <Card className="p-6">
+    <>
       <Header_Children
         title={'Quản lý dự án'}
         onAdd={openCreateModal}
@@ -315,7 +315,7 @@ const ProjectPage = () => {
           departments={departments}
         />
       </Modal>
-    </Card>
+    </>
   );
 };
 

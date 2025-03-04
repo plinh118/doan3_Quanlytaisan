@@ -152,7 +152,7 @@ const ServicePage = () => {
   });
 
   return (
-    <Card className="p-6">
+    <>
       <Header_Children
         title={'Quản lý dịch vụ'}
         onAdd={openCreateModal}
@@ -211,7 +211,7 @@ const ServicePage = () => {
       >
         <ServicesForm formdulieu={form} />
       </Modal>
-    </Card>
+    </>
   );
 };
 

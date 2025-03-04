@@ -172,7 +172,7 @@ const PartnerPage = () => {
   });
 
   return (
-    <Card className="p-6">
+    <>
       <Header_Children
         title={'Quản lý đối tác'}
         onAdd={openCreateModal}
@@ -231,7 +231,7 @@ const PartnerPage = () => {
       >
         <PartnerForm formdulieu={form} />
       </Modal>
-    </Card>
+    </>
   );
 };
 

@@ -152,7 +152,7 @@ const UserPage = () => {
   });
 
   return (
-    <Card className="p-6">
+    <>
       <Header_Children
         title={'Quản lý người dùng'}
         onAdd={openCreateModal}
@@ -211,7 +211,7 @@ const UserPage = () => {
       >
         <UserForm formdulieu={form} />
       </Modal>
-    </Card>
+    </>
   );
 };
 

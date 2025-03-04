@@ -178,7 +178,7 @@ const DivisionPage = () => {
   });
 
   return (
-    <Card className="p-6">
+    <>
       {/* Tier 1: Title and Add Button */}
       <Header_Children
         title={'Quản lý bộ phận'}
@@ -239,7 +239,7 @@ const DivisionPage = () => {
       >
         <DivisiontForm formdata={form} departments={departments} />
       </Modal>
-    </Card>
+    </>
   );
 };
 

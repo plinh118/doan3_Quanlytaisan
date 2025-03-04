@@ -156,7 +156,7 @@ const CustomerPage = () => {
   });
 
   return (
-    <Card className="p-6">
+    <>
       <Header_Children
         title={'Quản lý khách hàng'}
         onAdd={openCreateModal}
@@ -215,7 +215,7 @@ const CustomerPage = () => {
       >
         <CustomerForm formdulieu={form} />
       </Modal>
-    </Card>
+    </>
   );
 };
 

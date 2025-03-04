@@ -145,7 +145,7 @@ const PositionPage = () => {
   });
 
   return (
-    <Card className="p-6">
+    <>
       <Header_Children
         title={'Quản lý chức vụ'}
         onAdd={openCreateModal}
@@ -204,7 +204,7 @@ const PositionPage = () => {
       >
         <PositionForm formdulieu={form} isEditing={isEditing} />
       </Modal>
-    </Card>
+    </>
   );
 };
 

@@ -171,7 +171,7 @@ const AssetPage = () => {
   });
 
   return (
-    <Card className="p-6">
+    <>
       {/* Tier 1: Title and Add Button */}
       <Header_Children
         title={'Quản lý tài sản'}
@@ -232,7 +232,7 @@ const AssetPage = () => {
       >
         <AssetForm formdata={form} divisions={divisions} />
       </Modal>
-    </Card>
+    </>
   );
 };
 

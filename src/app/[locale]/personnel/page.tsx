@@ -223,8 +223,11 @@ const PersonnelPage = () => {
       const values: any = await form.validateFields();
       setLoading(true);
       debugger;
-      let imageUrl = '';
-      if (values.Picture[0].url) {
+      let imageUrl;
+      if(values.Picture===undefined) {
+        imageUrl=null;
+      }
+     else if (values.Picture[0].url) {
         imageUrl = values.Picture[0].url;
       } else if (values.Picture && values.Picture.length > 0) {
         const fileObj = values.Picture[0].originFileObj;
@@ -234,7 +237,7 @@ const PersonnelPage = () => {
 
       const dataToSubmit = {
         ...values,
-        Picture: imageUrl?imageUrl:null,
+        Picture: imageUrl,
       };
 
       if (editingPersonnel) {
@@ -262,7 +265,7 @@ const PersonnelPage = () => {
   });
 
   return (
-    <Card className="p-6">
+    < >
       <Header_Children
         title={'Quản lý nhân viên'}
         onAdd={openCreateModal}
@@ -325,7 +328,7 @@ const PersonnelPage = () => {
           positions={positions}
         />
       </Modal>
-    </Card>
+    </>
   );
 };
 
