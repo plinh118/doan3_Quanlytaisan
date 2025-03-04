@@ -34,8 +34,31 @@ export async function GET() {
       FROM Topic 
       WHERE IsDeleted = 0
     `);
-
-    // Tạo response theo interface IStatistics
+    const monthlyStats = await executeQuery<any[]>(`
+      SELECT 
+        DATE_FORMAT(created_at, '%Y-%m') AS month,
+        SUM(CASE WHEN table_name = 'Personnel' THEN 1 ELSE 0 END) AS personnel_count,
+        SUM(CASE WHEN table_name = 'Partner' THEN 1 ELSE 0 END) AS partner_count,
+        SUM(CASE WHEN table_name = 'Customer' THEN 1 ELSE 0 END) AS customer_count,
+        SUM(CASE WHEN table_name = 'TrainingCourse' THEN 1 ELSE 0 END) AS training_course_count,
+        SUM(CASE WHEN table_name = 'Service' THEN 1 ELSE 0 END) AS service_count,
+        SUM(CASE WHEN table_name = 'IntellectualProperty' THEN 1 ELSE 0 END) AS intellectual_property_count
+      FROM (
+        SELECT 'Personnel' AS table_name, created_at FROM Personnel WHERE IsDeleted = 0
+        UNION ALL
+        SELECT 'Partner', created_at FROM Partner WHERE IsDeleted = 0
+        UNION ALL
+        SELECT 'Customer', created_at FROM Customer WHERE IsDeleted = 0
+        UNION ALL
+        SELECT 'TrainingCourse', created_at FROM TrainingCourse WHERE IsDeleted = 0
+        UNION ALL
+        SELECT 'Service', created_at FROM Service WHERE IsDeleted = 0
+        UNION ALL
+        SELECT 'IntellectualProperty', created_at FROM IntellectualProperty WHERE IsDeleted = 0
+      ) AS combined
+      GROUP BY DATE_FORMAT(created_at, '%Y-%m')
+      ORDER BY month ASC
+    `);
     const statistics = {
       total_projects: projects[0].total_projects || 0,
       active_projects: projects[0].active_projects || 0,
@@ -49,22 +72,9 @@ export async function GET() {
       active_topics: topics[0].active_topics || 0,
       completed_topics: topics[0].completed_topics || 0,
       cancel_topics: topics[0].canceled_topics || 0,
-
-      // Giả định các trường khác (bạn có thể thêm nếu cần)
-      total_personnel: 0,
-      active_personnel: 0,
-      inactive_personnel: 0,
-      total_partners: 0,
-      active_partners: 0,
-      inactive_partners: 0,
-      total_customers: 0,
-      total_courses: 0,
-      active_courses: 0,
-      completed_courses: 0,
-      total_ip: 0,
-      granted_ip: 0,
-      pending_ip: 0,
+      monthly_stats: monthlyStats,
     };
+    console.log(statistics);
     return NextResponse.json(statistics);
   } catch (error) {
     console.error('Error fetching dashboard statistics:', error);
