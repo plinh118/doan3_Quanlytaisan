@@ -1,18 +1,13 @@
 import { NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
-import multer from 'multer';
 import fs from 'node:fs/promises';
 import path from 'path';
 
-const upload = multer({
-  storage: multer.diskStorage({
-    destination: path.join(process.cwd(), 'public/uploads'),
-    filename: (req, file, cb) => {
-      const fileName = file.originalname;
-      cb(null, fileName);
-    },
-  }),
-});
+
+export const dynamic = 'force-dynamic'; 
+export const runtime = 'nodejs'; 
+export const fetchCache = 'force-no-store'; 
+export const preferredRegion = 'auto'; 
 
 export async function POST(req: Request) {
   console.log('API route called');
@@ -22,10 +17,7 @@ export async function POST(req: Request) {
 
     if (!files.length) {
       console.log('No files uploaded');
-      return NextResponse.json(
-        { status: 'fail', error: 'No files uploaded' },
-        { status: 400 },
-      );
+      return NextResponse.json({ status: 'fail', error: 'No files uploaded' }, { status: 400 });
     }
 
     const uploadedPaths: string[] = [];
@@ -46,10 +38,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ status: 'success', uploadedPaths });
   } catch (e) {
     console.error('Error in API route:', e);
-    return NextResponse.json(
-      { status: 'fail', error: String(e) },
-      { status: 500 },
-    );
+    return NextResponse.json({ status: 'fail', error: String(e) }, { status: 500 });
   }
 }
 
@@ -58,10 +47,7 @@ export async function GET(req: Request) {
   const filePath = searchParams.get('path');
 
   if (!filePath) {
-    return NextResponse.json(
-      { error: 'Thiếu đường dẫn file' },
-      { status: 400 },
-    );
+    return NextResponse.json({ error: 'Thiếu đường dẫn file' }, { status: 400 });
   }
 
   const fullPath = path.join(process.cwd(), 'public', filePath);
@@ -70,10 +56,7 @@ export async function GET(req: Request) {
     const stats = await fs.stat(fullPath);
 
     if (!stats.isFile()) {
-      return NextResponse.json(
-        { error: 'File không tồn tại' },
-        { status: 404 },
-      );
+      return NextResponse.json({ error: 'File không tồn tại' }, { status: 404 });
     }
 
     return NextResponse.json({
@@ -86,9 +69,3 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: 'File không tồn tại' }, { status: 404 });
   }
 }
-
-export const config = {
-  api: {
-    bodyParser: false, // Tắt bodyParser mặc định
-  },
-};
