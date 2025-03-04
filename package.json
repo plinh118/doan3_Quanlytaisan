@@ -58,7 +58,7 @@
     "@types/ws": "^8.5.14",
     "eslint": "^8.57.1",
     "eslint-config-next": "^14.1.0",
-    "husky": "^9.1.6",
+    "husky": "^8.0.0",
     "lint-staged": "^15.2.10",
     "prettier": "^3.3.3",
     "sass": "^1.80.4",
