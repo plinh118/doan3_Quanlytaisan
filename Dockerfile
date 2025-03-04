@@ -6,7 +6,7 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY package.json pnpm-lock.yaml* ./
 RUN npm i -g pnpm
-RUN pnpm i --no-frozen-lockfile  # Tắt --frozen-lockfile để tránh lỗi CI
+RUN pnpm i 
 
 # Giai đoạn 2: Build ứng dụng
 FROM base AS builder

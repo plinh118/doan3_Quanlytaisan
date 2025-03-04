@@ -77,8 +77,7 @@ export async function PATCH(request: NextRequest) {
     const formattedJoinDate = body.JoinDate ? body.JoinDate : null;
     const Description = body.Description ? body.Description : null;
     const image = body.Picture ? body.Picture : null;
-
-    return db_Provider<any>(
+    const value=db_Provider<any>(
       'CALL UpdatePersonnel(?,?,?,?,?,?,?,?,?,?,?,?)',
       [
         body.Id,
@@ -96,6 +95,10 @@ export async function PATCH(request: NextRequest) {
       ],
       true,
     );
+    console.log(image);
+
+    console.log(value);
+    return value;
   } catch (error) {
     console.error('Lỗi khi cập nhật nhân viên:', error);
     return NextResponse.json(

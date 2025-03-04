@@ -44,11 +44,11 @@ export async function GET() {
       total_products: products[0].total_products || 0,
       available_products: products[0].available_products || 0,
       completed_products: products[0].completed_products || 0,
-      cancel_products: projects[0].canceled_products || 0,
+      cancel_products: products[0].canceled_products || 0,
       total_topics: topics[0].total_topics || 0,
       active_topics: topics[0].active_topics || 0,
       completed_topics: topics[0].completed_topics || 0,
-      cancel_topics: projects[0].canceled_topics || 0,
+      cancel_topics: topics[0].canceled_topics || 0,
 
       // Giả định các trường khác (bạn có thể thêm nếu cần)
       total_personnel: 0,
