@@ -1,0 +1,300 @@
+// Variables
+$primary-color: rgb(99, 102, 241);
+$secondary-color: rgb(20, 184, 166);
+$success-color: rgb(76, 175, 80);
+$info-color: rgb(33, 150, 243);
+$warning-color: rgb(255, 152, 0);
+$danger-color: rgb(255, 87, 34);
+$dark-color: rgb(33, 33, 33);
+$light-color: rgb(245, 245, 245);
+$text-color: rgb(51, 51, 51);
+$text-light: rgb(255, 255, 255);
+$border-radius: 8px;
+$box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+$box-shadow-hover: 0 10px 15px rgba(0, 0, 0, 0.1);
+$transition: all 0.3s ease;
+
+// Mixins
+@mixin flex($direction: row, $justify: flex-start, $align: stretch) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify;
+  align-items: $align;
+}
+
+@mixin grid($columns: 1, $gap: 1rem) {
+  display: grid;
+  grid-template-columns: repeat($columns, 1fr);
+  gap: $gap;
+}
+
+@mixin gradient($start-color, $end-color) {
+  background: linear-gradient(135deg, $start-color, $end-color);
+}
+
+// Base styles
+.dashboard-container {
+  background: linear-gradient(to bottom right, rgb(249, 250, 251), rgb(243, 244, 246));
+  min-height: 100vh;
+  border-radius: $border-radius;
+
+  [data-theme="dark"] & {
+    background: linear-gradient(to bottom right, rgb(17, 24, 39), rgb(31, 41, 55));
+    color: $text-light;
+  }
+}
+
+// Header
+.dashboard-header {
+  @include flex(row, space-between, center);
+  margin-bottom: 1.5rem;
+  background-color: rgb(255, 255, 255);
+  padding: 1rem;
+  border-radius: $border-radius;
+  box-shadow: $box-shadow;
+
+  [data-theme="dark"] & {
+    background-color: rgb(31, 41, 55);
+  }
+
+  .header-navigation {
+    @include flex(row, flex-start, center);
+    gap: 0.5rem;
+  }
+
+  .home-link {
+    &:hover {
+      color: $primary-color;
+    }
+  }
+
+  .home-button {
+    @include flex(row, center, center);
+    background-color: $primary-color;
+    
+    &:hover {
+      background-color: darken($primary-color, 10%);
+    }
+  }
+
+  .home-icon {
+    height: 1.25rem;
+    width: 1.25rem;
+  }
+
+  .header-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+
+    [data-theme="dark"] & {
+      color: $text-light;
+    }
+  }
+}
+
+// Stats Grid
+.stats-grid {
+  @include grid(1, 1.5rem);
+  margin-bottom: 1.5rem;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+// Stat Card
+.stat-card {
+  border-radius: $border-radius;
+  box-shadow: $box-shadow;
+  padding: 1.5rem;
+  color: $text-light;
+  transition: $transition;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: $box-shadow-hover;
+  }
+
+  &.purple-gradient {
+    @include gradient(rgb(124, 58, 237), rgb(79, 70, 229));
+  }
+
+  &.blue-gradient {
+    @include gradient(rgb(59, 130, 246), rgb(37, 99, 235));
+  }
+
+  &.green-gradient {
+    @include gradient(rgb(16, 185, 129), rgb(5, 150, 105));
+  }
+
+  .stat-content {
+    @include flex(row, space-between, center);
+  }
+
+  .stat-title {
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+    opacity: 0.9;
+  }
+
+  .stat-value {
+    font-size: 1.875rem;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .stat-icon {
+    font-size: 2.5rem;
+  }
+}
+
+// Charts Grid
+.charts-grid {
+  @include grid(1, 1.5rem);
+  margin-bottom: 1.5rem;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+// Dashboard Card
+.dashboard-card {
+  background-color: rgb(255, 255, 255);
+  border-radius: $border-radius;
+  box-shadow: $box-shadow;
+  padding: 1.5rem;
+  transition: $transition;
+
+  &:hover {
+    box-shadow: $box-shadow-hover;
+  }
+
+  [data-theme="dark"] & {
+    background-color: rgb(31, 41, 55);
+  }
+
+  .card-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: $text-color;
+
+    [data-theme="dark"] & {
+      color: $text-light;
+    }
+  }
+
+  .card-content {
+    @include flex(column, flex-start, center);
+
+    @media (min-width: 768px) {
+      flex-direction: row;
+    }
+  }
+
+  .pie-chart-container {
+    width: 100%;
+    height: 200px;
+
+    @media (min-width: 768px) {
+      width: 66.666667%;
+    }
+  }
+
+  .total-text {
+    font-size: 22px;
+    font-weight: bold;
+    fill: $text-color;
+    filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.2));
+
+    [data-theme="dark"] & {
+      fill: $text-light;
+    }
+  }
+
+  .legend-container {
+    width: 100%;
+    margin-top: 1rem;
+
+    @media (min-width: 768px) {
+      width: 33.333333%;
+      margin-top: 0;
+    }
+  }
+
+  .legend-item {
+    @include flex(row, flex-start, center);
+    margin-bottom: 0.75rem;
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: translateX(0.25rem);
+    }
+
+    &.active {
+      .legend-label {
+        color: $success-color;
+        font-weight: 700;
+      }
+    }
+  }
+
+  .legend-color {
+    width: 1rem;
+    height: 1rem;
+    margin-right: 0.75rem;
+    border-radius: 0.25rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  .legend-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: $text-color;
+
+    [data-theme="dark"] & {
+      color: rgb(209, 213, 219);
+    }
+  }
+}
+
+// Bar Chart
+.bar-chart-container {
+  background-color: rgb(255, 255, 255);
+  border-radius: $border-radius;
+  box-shadow: $box-shadow;
+  padding: 1.5rem;
+
+  [data-theme="dark"] & {
+    background-color: rgb(31, 41, 55);
+  }
+
+  .chart-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: $text-color;
+
+    [data-theme="dark"] & {
+      color: $text-light;
+    }
+  }
+
+  .bar-chart {
+    height: 400px;
+  }
+}
+
+// Loading and Error states
+.loading-container, .error-container {
+  @include flex(column, center, center);
+  height: 80vh;
+}
+
+.error-container p {
+  font-size: 1.125rem;
+  font-weight: 500;
+}
+
