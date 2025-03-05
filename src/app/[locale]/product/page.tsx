@@ -48,8 +48,12 @@ const ProductPage = () => {
         orderType,
         searchText,
       );
-      setTotal(data[0].TotalRecords);
-      setProducts(data);
+      if (data.length > 0) {
+        setTotal(data[0].TotalRecords);
+    } else {
+        setTotal(0);
+    }
+    setProducts(data || []);
     } catch (error) {
       show({
         result: 1,
@@ -298,6 +302,9 @@ const ProductPage = () => {
         onCancel={closeModal}
         width="60%"
         confirmLoading={loading}
+        centered
+        okText="Lưu"
+        cancelText="Hủy"
       >
         <ProductForm
           formdata={form}

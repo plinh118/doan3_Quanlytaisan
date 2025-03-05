@@ -45,8 +45,12 @@ const ServicePage = () => {
         orderType,
         ServiceName,
       );
-      setTotal(data[0].TotalRecords);
-      setServices(data);
+      if (data.length > 0) {
+        setTotal(data[0].TotalRecords);
+    } else {
+        setTotal(0);
+    }
+    setServices(data || []);
     } catch (error) {
       show({
         result: 1,
@@ -208,6 +212,9 @@ const ServicePage = () => {
         onOk={handleSave}
         onCancel={closeModal}
         width="60%"
+        centered
+        okText="Lưu"
+        cancelText="Hủy"
       >
         <ServicesForm formdulieu={form} />
       </Modal>

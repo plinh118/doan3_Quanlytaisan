@@ -48,8 +48,12 @@ const DepartmentPage = () => {
         orderType,
         departmentName,
       );
-      setTotal(data[0].TotalRecords);
-      setDepartments(data);
+      if (data.length > 0) {
+        setTotal(data[0].TotalRecords);
+    } else {
+        setTotal(0);
+    }
+    setDepartments(data || []);
     } catch (error) {
       show({
         result: 1,
@@ -217,6 +221,9 @@ const DepartmentPage = () => {
         onOk={handleSave}
         onCancel={closeModal}
         width="60%"
+        centered
+        okText="Lưu"
+        cancelText="Hủy"
       >
         <DepartmentForm formdulieu={form} isEditing={isEditing} />
       </Modal>

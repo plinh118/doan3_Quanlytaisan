@@ -64,6 +64,9 @@ export const TrainingCouseForm: React.FC<ReusableFormProps> = ({
               <Select.Option key="2" value="Đã hoàn thành">
                 Đã hoàn thành
               </Select.Option>
+              <Select.Option key="3" value="Hủy">
+              Hủy
+              </Select.Option>
             </Select>
           </Form.Item>
         </Col>

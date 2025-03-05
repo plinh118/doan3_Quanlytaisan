@@ -23,7 +23,6 @@ const Header_Children: React.FC<HeaderProps> = ({
           justifyContent: 'space-between',
           alignItems: 'center',
           fontWeight: 'bolder',
-          paddingBottom: '16px',
         }}
       >
         <div

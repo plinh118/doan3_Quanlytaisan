@@ -55,8 +55,12 @@ const ProjectPage = () => {
           orderType,
           searchText,
         );
-        setTotal(data[0].TotalRecords);
-        setProjects(data);
+        if (data.length > 0) {
+          setTotal(data[0].TotalRecords);
+      } else {
+          setTotal(0);
+      }
+      setProjects(data || []);
       } catch (error) {
         show({ result: 1, messageError: 'Lỗi tải danh sách dự án' });
       } finally {
@@ -306,6 +310,9 @@ const ProjectPage = () => {
         onOk={handleSave}
         onCancel={closeModal}
         width="60%"
+        centered
+        okText="Lưu"
+        cancelText="Hủy"
       >
         <ProjectForm
           formdata={form}

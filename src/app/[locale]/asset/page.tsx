@@ -52,8 +52,12 @@ const AssetPage = () => {
         orderType,
         AssetName,
       );
-      setTotal(data[0].TotalRecords);
-      setAssets(data);
+      if (data.length > 0) {
+        setTotal(data[0].TotalRecords);
+    } else {
+        setTotal(0);
+    }
+    setAssets(data || []);
     } catch (error) {
       show({
         result: 1,
@@ -229,6 +233,9 @@ const AssetPage = () => {
         onOk={handleSave}
         onCancel={closeModal}
         width="60%"
+        centered
+        okText="Lưu"
+        cancelText="Hủy"
       >
         <AssetForm formdata={form} divisions={divisions} />
       </Modal>

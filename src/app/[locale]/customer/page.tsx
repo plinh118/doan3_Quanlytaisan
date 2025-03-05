@@ -44,8 +44,12 @@ const CustomerPage = () => {
         orderType,
         CustomerName,
       );
-      setTotal(data[0].TotalRecords);
-      setCustomers(data);
+      if (data.length > 0) {
+        setTotal(data[0].TotalRecords);
+    } else {
+        setTotal(0);
+    }
+      setCustomers(data || []);
     } catch (error) {
       show({
         result: 1,
@@ -212,6 +216,9 @@ const CustomerPage = () => {
         onOk={handleSave}
         onCancel={closeModal}
         width="60%"
+        centered
+        okText="Lưu"
+        cancelText="Hủy"
       >
         <CustomerForm formdulieu={form} />
       </Modal>

@@ -45,8 +45,12 @@ const PositionPage = () => {
         orderType,
         positionName,
       );
-      setTotal(data[0].TotalRecords);
-      setPositions(data);
+      if (data.length > 0) {
+        setTotal(data[0].TotalRecords);
+    } else {
+        setTotal(0);
+    }
+    setPositions(data || []);
     } catch (error) {
       show({
         result: 1,
@@ -201,6 +205,9 @@ const PositionPage = () => {
         onOk={handleSave}
         onCancel={closeModal}
         width="60%"
+        centered
+        okText="Lưu"
+        cancelText="Hủy"
       >
         <PositionForm formdulieu={form} isEditing={isEditing} />
       </Modal>
