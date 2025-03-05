@@ -51,8 +51,12 @@ const TrainingCousePage = () => {
         orderType,
         TrainingCouseName,
       );
-      setTotal(data[0].TotalRecords);
-      setTrainingCouses(data);
+      if (data.length > 0) {
+        setTotal(data[0].TotalRecords);
+    } else {
+        setTotal(0);
+    }
+    setTrainingCouses(data || []);
     } catch (error) {
       show({
         result: 1,
@@ -225,6 +229,9 @@ const TrainingCousePage = () => {
         onOk={handleSave}
         onCancel={closeModal}
         width="60%"
+        centered
+        okText="Lưu"
+        cancelText="Hủy"
       >
         <TrainingCouseForm formdata={form} personnels={persionnels} />
       </Modal>

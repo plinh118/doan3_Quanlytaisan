@@ -295,6 +295,9 @@ const IntellectualPropertyPage = () => {
         onOk={handleSave}
         onCancel={closeModal}
         width="60%"
+        centered
+        okText="Lưu"
+        cancelText="Hủy"
       >
         <IntellectualPropertyForm formData={form} departments={departments} />
       </Modal>

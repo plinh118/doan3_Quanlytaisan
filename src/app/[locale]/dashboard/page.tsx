@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react"
 import type React from "react"
 
-import { Button, Spin } from "antd"
+import { Button, Spin, Select } from "antd"
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Legend } from "recharts"
 import { doashBoardAPI } from "@/libs/api/dashBoard.api"
 import Link from "next/link"
@@ -13,11 +13,13 @@ import "./dashboard.scss"
 const Dashboard = () => {
   const [statistics, setStatistics] = useState<any>(null)
   const [loading, setLoading] = useState(true)
+  const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear())
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await doashBoardAPI.getAlldoashBoard()
+        setLoading(true)
+        const data = await doashBoardAPI.getAlldoashBoard(selectedYear)
         setStatistics(data)
       } catch (error) {
         console.error("Failed to fetch dashboard data:", error)
@@ -26,7 +28,7 @@ const Dashboard = () => {
       }
     }
     fetchData()
-  }, [])
+  }, [selectedYear])
 
   if (loading) {
     return (
@@ -61,7 +63,12 @@ const Dashboard = () => {
     { name: "Đã Hoàn thành", value: Number(statistics.completed_topics) },
     { name: "Đã Hủy", value: Number(statistics.cancel_topics) },
   ]
-
+ 
+  const trainingCouseData = [
+    { name: "Đang thực hiện", value: Number(statistics.active_trainingCouse) },
+    { name: "Đã Hoàn thành", value: Number(statistics.completed_trainingCouse) },
+    { name: "Đã Hủy", value: Number(statistics.cancel_trainingCouse) },
+  ]
   // Vibrant color palette for charts using RGB
   const pieColors = ["rgb(76, 175, 80)", "rgb(33, 150, 243)", "rgb(255, 87, 34)"]
 
@@ -85,8 +92,28 @@ const Dashboard = () => {
           </Link>
           <div className="header-title">/ Dashboard</div>
         </div>
+        <div className="year-selector-container">
+        <label htmlFor="year-select">Chọn năm: </label>
+        <Select
+          id="year-select"
+          value={selectedYear}
+          onChange={(value) => setSelectedYear(value)}
+          style={{ width: 120 }}
+          options={[
+            { value: 2020, label: "2020" },
+            { value: 2021, label: "2021" },
+            { value: 2022, label: "2022" },
+            { value: 2023, label: "2023" },
+            { value: 2024, label: "2024" },
+            { value: 2025, label: "2025" },
+
+          ]}
+        />
+      </div>
         <ThemeChanger />
       </div>
+
+      
 
       {/* Stats Summary */}
       <div className="stats-grid">
@@ -97,9 +124,35 @@ const Dashboard = () => {
 
       {/* Pie Charts */}
       <div className="charts-grid">
-        <DashboardCard title="Dự án" data={projectData} total={statistics.total_projects} colors={pieColors} link="/vi/project" />
-        <DashboardCard title="Sản phẩm" data={productData} total={statistics.total_products} colors={pieColors} link="/vi/product"/>
-        <DashboardCard title="Đề tài" data={topicData} total={statistics.total_topics} colors={pieColors} link="/vi/topic"/>
+      <DashboardCard
+          title="Sản phẩm"
+          data={productData}
+          total={statistics.total_products}
+          colors={pieColors}
+          link="/vi/product"
+        />
+        <DashboardCard
+          title="Dự án"
+          data={projectData}
+          total={statistics.total_projects}
+          colors={pieColors}
+          link="/vi/project"
+        />
+        
+        <DashboardCard
+          title="Đề tài"
+          data={topicData}
+          total={statistics.total_topics}
+          colors={pieColors}
+          link="/vi/topic"
+        />
+        <DashboardCard
+          title="Khóa học"
+          data={trainingCouseData}
+          total={statistics.total_trainingCouse}
+          colors={pieColors}
+          link="/vi/trainingCouse"
+        />
       </div>
 
       {/* Bar Chart */}
@@ -199,76 +252,76 @@ interface DashboardCardProps {
   data: { name: string; value: number }[]
   total: number
   colors: string[]
-  link:string
+  link: string
 }
 
-const DashboardCard: React.FC<DashboardCardProps> = ({ title, data, total, colors,link }) => {
+const DashboardCard: React.FC<DashboardCardProps> = ({ title, data, total, colors, link }) => {
   return (
     <Link href={link} className="home-link">
-    <div className="dashboard-card">
-      <h2 className="card-title">{title}</h2>
-      <div className="card-content">
-        <div className="pie-chart-container">
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={data}
-                cx="50%"
-                cy="50%"
-                innerRadius={50}
-                outerRadius={80}
-                paddingAngle={5}
-                dataKey="value"
-                labelLine={false}
-                label={({ cx, cy, midAngle, innerRadius, outerRadius, index }) => {
-                  if (data[index].value === 0) return null
-                  const radius = innerRadius + (outerRadius - innerRadius) * 0.5
-                  const x = cx + radius * Math.cos(-midAngle * (Math.PI / 180))
-                  const y = cy + radius * Math.sin(-midAngle * (Math.PI / 180))
-                  return (
-                    <text
-                      x={x}
-                      y={y}
-                      fill="#fff"
-                      textAnchor="middle"
-                      dominantBaseline="central"
-                      style={{ fontWeight: "bold", fontSize: 14, textShadow: "0 1px 2px rgba(0,0,0,0.5)" }}
-                    >
-                      {data[index].value}
-                    </text>
-                  )
-                }}
-              >
-                {data.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={colors[index % colors.length]} stroke="#fff" strokeWidth={2} />
-                ))}
-              </Pie>
-              <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" className="total-text">
-                {total}
-              </text>
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "rgba(255, 255, 255, 0.9)",
-                  borderRadius: "8px",
-                  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-                  border: "none",
-                }}
-              />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
-        <div className="legend-container">
-          {data.map((item, index) => (
-            <div key={index} className={`legend-item ${item.name === "Đang thực hiện" ? "active" : ""}`}>
-              <div className="legend-color" style={{ backgroundColor: colors[index % colors.length] }} />
-              <span className="legend-label">
-                {item.name} ({item.value})
-              </span>
-            </div>
-          ))}
+      <div className="dashboard-card">
+        <h2 className="card-title">{title}</h2>
+        <div className="card-content">
+          <div className="pie-chart-container">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={data}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={50}
+                  outerRadius={80}
+                  paddingAngle={5}
+                  dataKey="value"
+                  labelLine={false}
+                  label={({ cx, cy, midAngle, innerRadius, outerRadius, index }) => {
+                    if (data[index].value === 0) return null
+                    const radius = innerRadius + (outerRadius - innerRadius) * 0.5
+                    const x = cx + radius * Math.cos(-midAngle * (Math.PI / 180))
+                    const y = cy + radius * Math.sin(-midAngle * (Math.PI / 180))
+                    return (
+                      <text
+                        x={x}
+                        y={y}
+                        fill="#fff"
+                        textAnchor="middle"
+                        dominantBaseline="central"
+                        style={{ fontWeight: "bold", fontSize: 14, textShadow: "0 1px 2px rgba(0,0,0,0.5)" }}
+                      >
+                        {data[index].value}
+                      </text>
+                    )
+                  }}
+                >
+                  {data.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={colors[index % colors.length]} stroke="#fff" strokeWidth={2} />
+                  ))}
+                </Pie>
+                <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" className="total-text">
+                  {total}
+                </text>
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "rgba(255, 255, 255, 0.9)",
+                    borderRadius: "8px",
+                    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                    border: "none",
+                  }}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+          <div className="legend-container">
+            {data.map((item, index) => (
+              <div key={index} className={`legend-item ${item.name === "Đang thực hiện" ? "active" : ""}`}>
+                <div className="legend-color" style={{ backgroundColor: colors[index % colors.length] }} />
+                <span className="legend-label">
+                  {item.name} ({item.value})
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
-    </div>
     </Link>
   )
 }

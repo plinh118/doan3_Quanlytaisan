@@ -64,7 +64,11 @@ const PersonnelPage = () => {
         orderType,
         PersonnelName,
       );
-      setTotal(data[0].TotalRecords);
+      if (data.length > 0) {
+        setTotal(data[0].TotalRecords);
+      } else {
+        setTotal(0);
+      }
       setPersonnels(data || []);
     } catch (error) {
       show({
@@ -224,10 +228,9 @@ const PersonnelPage = () => {
       setLoading(true);
       debugger;
       let imageUrl;
-      if(values.Picture===undefined) {
-        imageUrl=null;
-      }
-     else if (values.Picture[0].url) {
+      if (values.Picture === undefined) {
+        imageUrl = null;
+      } else if (values.Picture[0].url) {
         imageUrl = values.Picture[0].url;
       } else if (values.Picture && values.Picture.length > 0) {
         const fileObj = values.Picture[0].originFileObj;
@@ -265,7 +268,7 @@ const PersonnelPage = () => {
   });
 
   return (
-    < >
+    <>
       <Header_Children
         title={'Quản lý nhân viên'}
         onAdd={openCreateModal}
@@ -314,13 +317,15 @@ const PersonnelPage = () => {
           }}
         />
       </div>
-
       <Modal
         title={editingPersonnel ? 'Cập nhập nhân viên' : 'Thêm nhân viên'}
         open={modalVisible}
         onOk={handleSave}
         onCancel={closeModal}
         width="60%"
+        centered
+        okText="Lưu"
+        cancelText="Hủy"
       >
         <PersonnelForm
           formdata={form}

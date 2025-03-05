@@ -55,8 +55,12 @@ const DivisionPage = () => {
         divisionName,
         departmentName,
       );
-      setTotal(data[0].TotalRecords);
-      setDivisions(data);
+      if (data.length > 0) {
+        setTotal(data[0].TotalRecords);
+    } else {
+        setTotal(0);
+    }
+    setDivisions(data || []);
     } catch (error) {
       show({
         result: 1,
@@ -236,6 +240,9 @@ const DivisionPage = () => {
         onOk={handleSave}
         onCancel={closeModal}
         width="60%"
+        centered
+        okText="Lưu"
+        cancelText="Hủy"
       >
         <DivisiontForm formdata={form} departments={departments} />
       </Modal>

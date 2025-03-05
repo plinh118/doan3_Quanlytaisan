@@ -45,8 +45,12 @@ const PartnerPage = () => {
         orderType,
         PartnerName,
       );
-      setTotal(data[0].TotalRecords);
-      setPartners(data);
+      if (data.length > 0) {
+        setTotal(data[0].TotalRecords);
+    } else {
+        setTotal(0);
+    }
+    setPartners(data || []);
     } catch (error) {
       show({
         result: 1,
@@ -228,6 +232,9 @@ const PartnerPage = () => {
         onOk={handleSave}
         onCancel={closeModal}
         width="60%"
+        centered
+        okText="Lưu"
+        cancelText="Hủy"
       >
         <PartnerForm formdulieu={form} />
       </Modal>
