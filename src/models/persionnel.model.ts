@@ -8,6 +8,7 @@ export interface GetPersonnel {
   DivisionName: string;
   PositionName: string;
   DateOfBirth: string | null;
+  Gender:string|null;
   Email: string;
   PhoneNumber: string;
   JoinDate: string | null;
@@ -25,6 +26,7 @@ export interface AddPersonnel {
   Picture: string | null;
   Email: string;
   Description: string | null;
+  Gender:string|null;
   PhoneNumber: string;
   JoinDate: string | null;
   EndDate: string | null;
@@ -39,6 +41,7 @@ export interface UpPersonnel {
   DateOfBirth: string | null;
   Picture: string;
   Email: string;
+  Gender:string|null;
   Description: string;
   PhoneNumber: string;
   JoinDate: string | null;

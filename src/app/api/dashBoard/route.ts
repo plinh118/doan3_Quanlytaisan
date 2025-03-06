@@ -52,7 +52,45 @@ export async function GET(request: Request) {
       FROM TrainingCourse 
       WHERE IsDeleted = 0 AND YEAR(created_at) = ?
     `, [year]);
+    const persionnel = await executeQuery<any[]>(`
+      SELECT 
+        COUNT(*) AS total_Personnel,
+        SUM(CASE WHEN Gender = 'Nam' THEN 1 ELSE 0 END) AS male_Personnel,
+        SUM(CASE WHEN Gender = 'Nữ' THEN 1 ELSE 0 END) AS female_Personnel,
+        SUM(CASE WHEN Gender = 'Khác' THEN 1 ELSE 0 END) AS other_Personnel
+      FROM Personnel 
+      WHERE IsDeleted = 0 AND YEAR(created_at) = ?
+    `, [year]);
 
+    const Partner = await executeQuery<any[]>(`
+      SELECT 
+        COUNT(*) AS total_Partner,
+        SUM(CASE WHEN PartnershipStatus = 'Đang hợp tác' THEN 1 ELSE 0 END) AS completed_Partner,
+        SUM(CASE WHEN PartnershipStatus = 'Dừng hợp tác' THEN 1 ELSE 0 END) AS active_Partner,
+        SUM(CASE WHEN PartnershipStatus = 'Hủy hợp tác' THEN 1 ELSE 0 END) AS canceled_Partner
+      FROM Partner 
+      WHERE IsDeleted = 0 AND YEAR(created_at) = ?
+    `, [year]);
+
+    const Customer = await executeQuery<any[]>(`
+      SELECT 
+        COUNT(*) AS total_Customer,
+        SUM(CASE WHEN CustomerStatut = 'Đang hợp tác'  THEN 1 ELSE 0 END) AS completed_Customer,
+        SUM(CASE WHEN CustomerStatut = 'Dừng hợp tác' THEN 1 ELSE 0 END) AS active_Customer,
+        SUM(CASE WHEN CustomerStatut = 'Hủy hợp tác' THEN 1 ELSE 0 END) AS canceled_Customer
+      FROM Customer 
+      WHERE IsDeleted = 0 AND YEAR(created_at) = ?
+    `, [year]);
+
+    const Service = await executeQuery<any[]>(`
+      SELECT 
+        COUNT(*) AS total_Service,
+        SUM(CASE WHEN ServiceStatus = 'Đang phát triển' THEN 1 ELSE 0 END) AS completed_Service,
+        SUM(CASE WHEN ServiceStatus = 'Đang cung cấp' THEN 1 ELSE 0 END) AS active_Service,
+        SUM(CASE WHEN ServiceStatus = 'Hủy dịch vụ' THEN 1 ELSE 0 END) AS canceled_Service
+      FROM Service 
+      WHERE IsDeleted = 0 AND YEAR(created_at) = ?
+    `, [year]);
 
     // Thống kê theo tháng trong năm được chọn
     const monthlyStats = await executeQuery<any[]>(`
@@ -100,6 +138,26 @@ export async function GET(request: Request) {
       active_trainingCouse: trainingCouse[0]?.active_trainingCouse || 0,
       completed_trainingCouse: trainingCouse[0]?.completed_trainingCouse || 0,
       cancel_trainingCouse: trainingCouse[0]?.canceled_trainingCouse || 0,
+      
+      male_Personnel: persionnel[0]?.male_Personnel || 0,
+      female_Personnel: persionnel[0]?.female_Personnel || 0,
+      other_Personnel: persionnel[0]?.other_Personnel || 0,
+      total_Personnel: persionnel[0]?.total_Personnel || 0,
+      
+      total_Partner: Partner[0]?.total_Partner || 0,
+      active_Partner: Partner[0]?.active_Partner || 0,
+      completed_Partner: Partner[0]?.completed_Partner || 0,
+      cancel_Partner: Partner[0]?.canceled_Partner || 0,
+
+      total_Customer: Customer[0]?.total_Customer || 0,
+      active_Customer: Customer[0]?.active_Customer || 0,
+      completed_Customer: Customer[0]?.completed_Customer || 0,
+      cancel_Customer: Customer[0]?.canceled_Customer || 0,
+
+      total_Service: Service[0]?.total_Service || 0,
+      active_Service: Service[0]?.active_Service || 0,
+      completed_Service: Service[0]?.completed_Service || 0,
+      cancel_Service: Service[0]?.canceled_Service || 0,
       monthly_stats: monthlyStats,
     };
 

@@ -113,7 +113,9 @@ export const PersonnelForm: React.FC<ReusableFormProps> = ({
           </Form.Item>
         </Col>
       </Row>
-      <Form.Item
+      <Row gutter={16}>
+        <Col span={12}>
+        <Form.Item
         name="WorkStatus"
         label="Trạng thái "
         rules={RULES_FORM.required}
@@ -127,6 +129,27 @@ export const PersonnelForm: React.FC<ReusableFormProps> = ({
           </Select.Option>
         </Select>
       </Form.Item>
+        </Col>
+        <Col span={12}>
+        <Form.Item
+        name="Gender"
+        label="Giới tính "
+      >
+        <Select>
+          <Select.Option key="1" value="Nam">
+            Nam
+          </Select.Option>
+          <Select.Option key="2" value="Nữ">
+           Nữ
+          </Select.Option>
+          <Select.Option key="3" value="Khác">
+          Khác
+          </Select.Option>
+        </Select>
+      </Form.Item>
+        </Col>
+      </Row>
+     
       <Row gutter={16}>
         <Col span={24}>
           <Form.Item

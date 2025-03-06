@@ -302,7 +302,7 @@ const PersonnelPage = () => {
           dataSource={Personnels}
           rowKey="Id"
           loading={loading}
-          scroll={{ x: 800, y: 400 }}
+          scroll={{ x: 1200, y: 1200 }}
           pagination={{
             current: currentPage,
             pageSize: pageSize,

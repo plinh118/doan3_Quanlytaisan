@@ -185,7 +185,7 @@ const PartnerPage = () => {
 
       <Divider />
 
-      <div className="py-4">
+      <div className="py-4" style={{ marginTop: '20px' }}>
         <Space size="middle">
           <Input.Search
             placeholder="Tên đối tác..."

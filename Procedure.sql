@@ -482,7 +482,8 @@ CREATE PROCEDURE AddCustomer(
     IN p_CustomerName NVARCHAR(50),
     IN p_PhoneNumber VARCHAR(10),
     IN p_Email NVARCHAR(50),
-    IN p_Address NVARCHAR(100)
+    IN p_Address NVARCHAR(100),
+	IN p_statust  VARCHAR(20)
 )
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION 
@@ -490,8 +491,8 @@ BEGIN
         SELECT 1 AS RESULT;
     END;
 
-    INSERT INTO Customer (CustomerName, PhoneNumber, Email, Address)
-    VALUES (p_CustomerName, p_PhoneNumber, p_Email, p_Address);
+    INSERT INTO Customer (CustomerName, PhoneNumber, Email, Address,CustomerStatut)
+    VALUES (p_CustomerName, p_PhoneNumber, p_Email, p_Address,p_statust);
 
     SELECT 0 AS RESULT;
 END$$
@@ -502,7 +503,8 @@ CREATE PROCEDURE UpdateCustomer(
     IN p_CustomerName NVARCHAR(50),
     IN p_PhoneNumber VARCHAR(10),
     IN p_Email NVARCHAR(50),
-    IN p_Address NVARCHAR(100)
+    IN p_Address NVARCHAR(100),
+	IN p_statust  VARCHAR(20)
 )
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION 
@@ -515,7 +517,8 @@ BEGIN
         CustomerName = p_CustomerName,
         PhoneNumber = p_PhoneNumber,
         Email = p_Email,
-        Address = p_Address
+        Address = p_Address,
+        CustomerStatut=p_statust
     WHERE Id = p_Id AND IsDeleted = 0;
 
     SELECT 0 AS RESULT;
@@ -980,18 +983,18 @@ DELIMITER ;
 DELIMITER $$
 
 CREATE PROCEDURE GetPersonnelByPageOrder(
-    IN p_PageIndex INT,         -- Trang hiện tại
-    IN p_PageSize INT,          -- Số dòng trên mỗi trang
-    IN p_OrderType VARCHAR(4),  -- 'ASC' hoặc 'DESC'
-    IN p_PersonnelName VARCHAR(255)  -- Tên nhân sự cần tìm (có thể NULL)
+    IN p_PageIndex INT,
+    IN p_PageSize INT,
+    IN p_OrderType VARCHAR(4),
+    IN p_PersonnelName VARCHAR(255)
 )
 BEGIN
     DECLARE v_Offset INT;
     SET v_Offset = (p_PageIndex - 1) * p_PageSize;
 
-    -- Xây dựng câu SQL động
     SET @sql = CONCAT(
-        'SELECT p.Id, p.PersonnelName, p.DivisionId, p.PositionId,p.Picture,p.Description, ',
+        'SELECT p.Id, p.PersonnelName, p.DivisionId, p.PositionId, p.Picture, p.Description, ',
+        'p.Gender, ',  -- Thêm Gender vào đây
         'd.DivisionName, pos.PositionName, p.DateOfBirth, p.Email, p.PhoneNumber, ',
         'p.JoinDate, p.EndDate, p.WorkStatus, COUNT(*) OVER () AS TotalRecords ',
         'FROM Personnel p ',
@@ -1000,19 +1003,13 @@ BEGIN
         'WHERE p.IsDeleted = 0 '
     );
 
-    -- Nếu có tên nhân sự, thêm điều kiện tìm kiếm
     IF p_PersonnelName IS NOT NULL AND p_PersonnelName != '' THEN
         SET @sql = CONCAT(@sql, ' AND p.PersonnelName LIKE ''%', p_PersonnelName, '%'' ');
     END IF;
 
-    -- Thêm sắp xếp, giới hạn và offset (chèn trực tiếp vào chuỗi SQL)
     SET @sql = CONCAT(@sql, ' ORDER BY p.PersonnelName ', p_OrderType, 
                       ' LIMIT ', p_PageSize, ' OFFSET ', v_Offset);
 
-    -- Debug câu SQL (chạy SELECT @sql; để kiểm tra)
-    -- SELECT @sql;
-
-    -- Chuẩn bị và thực thi câu SQL động
     PREPARE stmt FROM @sql;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
@@ -1020,15 +1017,14 @@ END$$
 
 DELIMITER ;
 
-
 DELIMITER $$
 
--- Thêm Personnel
 CREATE PROCEDURE AddPersonnel(
     IN p_DivisionId INT,
     IN p_PersonnelName NVARCHAR(50),
     IN p_PositionId INT,
     IN p_DateOfBirth DATE,
+    IN p_Gender NVARCHAR(10),   -- Thêm Gender vào đây
     IN p_Picture NVARCHAR(255),
     IN p_Email NVARCHAR(50),
     IN p_Description TEXT,
@@ -1042,20 +1038,23 @@ BEGIN
     BEGIN
         SELECT 1 AS RESULT;
     END;
-    
-    INSERT INTO Personnel (DivisionId, PersonnelName, PositionId, DateOfBirth, Picture, Email, Description, PhoneNumber, JoinDate, EndDate, WorkStatus)
-    VALUES (p_DivisionId, p_PersonnelName, p_PositionId, p_DateOfBirth, p_Picture, p_Email, p_Description, p_PhoneNumber, p_JoinDate, p_EndDate, p_WorkStatus);
-    
+
+    INSERT INTO Personnel (DivisionId, PersonnelName, PositionId, DateOfBirth, Gender, Picture, Email, Description, PhoneNumber, JoinDate, EndDate, WorkStatus)
+    VALUES (p_DivisionId, p_PersonnelName, p_PositionId, p_DateOfBirth, p_Gender, p_Picture, p_Email, p_Description, p_PhoneNumber, p_JoinDate, p_EndDate, p_WorkStatus);
+
     SELECT 0 AS RESULT;
 END$$
 
--- Cập nhật Personnel
+DELIMITER ;
+DELIMITER $$
+
 CREATE PROCEDURE UpdatePersonnel(
     IN p_Id INT,
     IN p_DivisionId INT,
     IN p_PersonnelName NVARCHAR(50),
     IN p_PositionId INT,
     IN p_DateOfBirth DATE,
+    IN p_Gender NVARCHAR(10),   -- Thêm Gender vào đây
     IN p_Picture NVARCHAR(255),
     IN p_Email NVARCHAR(50),
     IN p_Description TEXT,
@@ -1069,12 +1068,13 @@ BEGIN
     BEGIN
         SELECT 1 AS RESULT;
     END;
-    
+
     UPDATE Personnel
     SET DivisionId = p_DivisionId,
         PersonnelName = p_PersonnelName,
         PositionId = p_PositionId,
         DateOfBirth = p_DateOfBirth,
+        Gender = p_Gender,   -- Thêm Gender vào đây
         Picture = p_Picture,
         Email = p_Email,
         Description = p_Description,
@@ -1083,11 +1083,13 @@ BEGIN
         EndDate = p_EndDate,
         WorkStatus = p_WorkStatus
     WHERE Id = p_Id AND IsDeleted = 0;
-    
+
     SELECT 0 AS RESULT;
 END$$
 
--- Xóa mềm Personnel
+DELIMITER ;
+DELIMITER $$
+
 CREATE PROCEDURE DeletePersonnel(
     IN p_Id INT
 )
@@ -1096,16 +1098,16 @@ BEGIN
     BEGIN
         SELECT 1 AS RESULT;
     END;
-    
+
     UPDATE Personnel
     SET IsDeleted = 1
     WHERE Id = p_Id;
-    
+
     SELECT 0 AS RESULT;
 END$$
 
-
 DELIMITER ;
+
 -- IntellectualPropertyImage
 
 DELIMITER $$

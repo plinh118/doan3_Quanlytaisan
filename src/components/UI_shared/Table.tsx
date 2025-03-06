@@ -19,7 +19,8 @@ const createColumns = <T,>({
     {
       title: 'Tác vụ',
       key: 'action',
-      width: '10%',
+      width: '100px',
+      fixed: 'right',
       render: (_: any, record: T) => (
         <Space size="middle">
           <Tooltip title="Chỉnh sửa">
