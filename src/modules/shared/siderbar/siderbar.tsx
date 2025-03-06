@@ -24,7 +24,6 @@ import styles from '@/modules/shared/siderbar/siderbar.module.scss';
 type MenuItem = Required<MenuProps>['items'][number];
 interface SiderBarProps {
   collapsed: boolean;
-  setCollapsed: (collapsed: boolean) => void;
 }
 
 const routeMap: Record<string, string> = {
@@ -140,7 +139,7 @@ const SiderBar: React.FC<SiderBarProps> = ({ collapsed }) => {
           style={{
             objectFit: 'contain',
             height: 60,
-            marginLeft: collapsed ? '0%' : '20%',
+            marginLeft: collapsed ? '-50%' : '20%',
           }}
         />
       </div>

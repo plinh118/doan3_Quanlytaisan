@@ -213,7 +213,7 @@ const DivisionPage = () => {
       </div>
 
       {/* Tier 3: Data Table */}
-      <div className="py-4">
+      <div className="py-4" style={{ marginTop: '20px' }}>
         <Table
           columns={columns}
           dataSource={Divisions}

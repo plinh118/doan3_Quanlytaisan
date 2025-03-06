@@ -69,6 +69,9 @@ export const PartnerForm: React.FC<ReusableFormProps> = ({ formdulieu }) => {
           <Select.Option key="2" value="Dừng hợp tác">
             Dừng hợp tác
           </Select.Option>
+          <Select.Option key="3" value="Hủy hợp tác">
+            Hủy hợp tác
+          </Select.Option>
         </Select>
       </Form.Item>
     </Form>

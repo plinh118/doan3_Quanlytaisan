@@ -36,13 +36,16 @@ export async function POST(request: NextRequest) {
     const formattedJoinDate = body.JoinDate ? body.JoinDate : null;
     const Description = body.Description ? body.Description : null;
     const image = body.Picture ? body.Picture : null;
+    const gender = body.Gender ? body.Gender : null;
+
     return db_Provider<any>(
-      'CALL AddPersonnel(?,?,?,?,?,?,?,?,?,?,?)',
+      'CALL AddPersonnel(?,?,?,?,?,?,?,?,?,?,?,?)',
       [
         body.DivisionId,
         body.PersonnelName,
         body.PositionId,
         formattedDateOfBirth,
+        gender,
         image,
         body.Email,
         Description,
@@ -77,14 +80,16 @@ export async function PATCH(request: NextRequest) {
     const formattedJoinDate = body.JoinDate ? body.JoinDate : null;
     const Description = body.Description ? body.Description : null;
     const image = body.Picture ? body.Picture : null;
+    const gender = body.Gender ? body.Gender : null;
     const value=db_Provider<any>(
-      'CALL UpdatePersonnel(?,?,?,?,?,?,?,?,?,?,?,?)',
+      'CALL UpdatePersonnel(?,?,?,?,?,?,?,?,?,?,?,?,?)',
       [
         body.Id,
         body.DivisionId,
         body.PersonnelName,
         body.PositionId,
         formattedDateOfBirth,
+        gender,
         image,
         body.Email,
         Description,
@@ -95,9 +100,6 @@ export async function PATCH(request: NextRequest) {
       ],
       true,
     );
-    console.log(image);
-
-    console.log(value);
     return value;
   } catch (error) {
     console.error('Lỗi khi cập nhật nhân viên:', error);

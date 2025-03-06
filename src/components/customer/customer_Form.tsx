@@ -40,6 +40,23 @@ export const CustomerForm: React.FC<ReusableFormProps> = ({ formdulieu }) => {
           </Form.Item>
         </Col>
       </Row>
+      <Form.Item
+              name="CustomerStatut"
+              label="Trạng thái hợp tác"
+              rules={RULES_FORM.required}
+            >
+              <Select>
+                <Select.Option key="1" value="Đang hợp tác">
+                  Đang hợp tác
+                </Select.Option>
+                <Select.Option key="2" value="Dừng hợp tác">
+                  Dừng hợp tác
+                </Select.Option>
+                <Select.Option key="3" value="Hủy hợp tác">
+                  Hủy hợp tác
+                </Select.Option>
+              </Select>
+            </Form.Item>
     </Form>
   );
 };

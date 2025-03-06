@@ -24,12 +24,16 @@ export const ServicesForm: React.FC<ReusableFormProps> = ({ formdulieu }) => (
       rules={RULES_FORM.required}
     >
       <Select>
+      <Select.Option key="2" value="Đang phát triển">
+          Đang phát triển
+        </Select.Option>
         <Select.Option key="1" value="Đang cung cấp">
           Đang cung cấp
         </Select.Option>
-        <Select.Option key="2" value="Đang phát triển">
-          Đang phát triển
+        <Select.Option key="3" value="Hủy dịch vụ">
+        Hủy dịch vụ
         </Select.Option>
+       
       </Select>
     </Form.Item>
   </Form>
