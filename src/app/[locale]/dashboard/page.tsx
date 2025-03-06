@@ -22,7 +22,7 @@ const Dashboard = () => {
   const fetchData = async () => {
     try {
       setLoading(true)
-      const data = await doashBoardAPI.getAlldoashBoard(selectedYear)
+      const data = await doashBoardAPI.getAlldoashBoard(selectedYear);
       setStatistics(data)
     } catch (error) {
     } finally {
