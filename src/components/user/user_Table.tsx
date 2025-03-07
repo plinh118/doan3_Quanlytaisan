@@ -25,6 +25,9 @@ export const User_Colum: ColumnType[] = [
     title: 'Vai trò',
     dataIndex: 'Role',
     key: 'Role',
+    render: (text) => (
+      <span>{text==='user'?'Người dùng' : 'Quản trị viên'}</span>
+    ),
   },
   {
     title: 'Ngày tạo',

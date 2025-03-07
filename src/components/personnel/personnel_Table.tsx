@@ -31,6 +31,7 @@ export const Personnel_Colum: ColumnType[] = [
     dataIndex: 'PersonnelName',
     key: 'PersonnelName',
     width:'250px',
+    fixed:'left',
     ellipsis: {
       showTitle: false, 
     },

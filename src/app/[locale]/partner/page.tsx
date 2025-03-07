@@ -199,7 +199,7 @@ const PartnerPage = () => {
           dataSource={Partners}
           rowKey="Id"
           loading={loading}
-          scroll={{ x: 800, y: 400 }}
+          scroll={{ x: 900, y: 400 }}
           pagination={{
             current: currentPage,
             pageSize: pageSize,

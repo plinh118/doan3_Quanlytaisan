@@ -123,6 +123,7 @@ const CustomerPage = () => {
         PhoneNumber: Customer.PhoneNumber,
         Email: Customer.Email,
         Address: Customer.Address,
+        CustomerStatut:Customer.CustomerStatut
       };
       const result: any = await CustomerAPI.updateCustomer(newCustomer);
       show({

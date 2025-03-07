@@ -1,11 +1,11 @@
-import { Tag } from 'antd';
+import { Tag, Tooltip } from 'antd';
 import { ColumnType } from '../UI_shared/ColumType';
 
 export const Customer_Colum: ColumnType[] = [
   {
     title: 'STT',
     key: 'stt',
-    width: '5%',
+    width: '80px',
     align: 'center',
     render: (_text, _record, index) => (
       <span>{index !== undefined ? index + 1 : ''}</span>
@@ -15,29 +15,57 @@ export const Customer_Colum: ColumnType[] = [
     title: 'Tên khách hàng',
     dataIndex: 'CustomerName',
     key: 'Id',
+    width:'200px',
+    fixed:'left',
+    ellipsis: {
+      showTitle: false, 
+    },
+    render: (text) => (
+      <Tooltip placement="topLeft" title={text}>
+        {text}
+      </Tooltip>
+    ),
   },
   {
     title: 'Số điện thoại',
     dataIndex: 'PhoneNumber',
     key: 'PhoneNumber',
     align: 'center',
-    width: '10%',
+    width: '150px',
   },
   {
     title: 'Email',
     dataIndex: 'Email',
     key: 'Email',
+    width:'200px',
+    ellipsis: {
+      showTitle: false, 
+    },
+    render: (text) => (
+      <Tooltip placement="topLeft" title={text}>
+        {text}
+      </Tooltip>
+    ),
   },
   {
     title: 'Địa chỉ',
     dataIndex: 'Address',
     key: 'Address',
+    width:'200px',
+    ellipsis: {
+      showTitle: false, 
+    },
+    render: (text) => (
+      <Tooltip placement="topLeft" title={text}>
+        {text}
+      </Tooltip>
+    ),
   },
   {
     title: 'Trạng thái',
     dataIndex: 'CustomerStatut',
     key: 'CustomerStatut',
-    width: '10%',
+    width: '150px',
     render: (status) => {
       let color = 'default';
       if (status === 'Đang hợp tác') color = 'green';

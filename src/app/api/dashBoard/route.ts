@@ -92,33 +92,6 @@ export async function GET(request: Request) {
       WHERE IsDeleted = 0 AND YEAR(created_at) = ?
     `, [year]);
 
-    // Thống kê theo tháng trong năm được chọn
-    const monthlyStats = await executeQuery<any[]>(`
-      SELECT 
-        DATE_FORMAT(created_at, '%Y-%m') AS month,
-        SUM(CASE WHEN table_name = 'Personnel' THEN 1 ELSE 0 END) AS personnel_count,
-        SUM(CASE WHEN table_name = 'Partner' THEN 1 ELSE 0 END) AS partner_count,
-        SUM(CASE WHEN table_name = 'Customer' THEN 1 ELSE 0 END) AS customer_count,
-        SUM(CASE WHEN table_name = 'TrainingCourse' THEN 1 ELSE 0 END) AS training_course_count,
-        SUM(CASE WHEN table_name = 'Service' THEN 1 ELSE 0 END) AS service_count,
-        SUM(CASE WHEN table_name = 'IntellectualProperty' THEN 1 ELSE 0 END) AS intellectual_property_count
-      FROM (
-        SELECT 'Personnel' AS table_name, created_at FROM Personnel WHERE IsDeleted = 0 AND YEAR(created_at) = ?
-        UNION ALL
-        SELECT 'Partner', created_at FROM Partner WHERE IsDeleted = 0 AND YEAR(created_at) = ?
-        UNION ALL
-        SELECT 'Customer', created_at FROM Customer WHERE IsDeleted = 0 AND YEAR(created_at) = ?
-        UNION ALL
-        SELECT 'TrainingCourse', created_at FROM TrainingCourse WHERE IsDeleted = 0 AND YEAR(created_at) = ?
-        UNION ALL
-        SELECT 'Service', created_at FROM Service WHERE IsDeleted = 0 AND YEAR(created_at) = ?
-        UNION ALL
-        SELECT 'IntellectualProperty', created_at FROM IntellectualProperty WHERE IsDeleted = 0 AND YEAR(created_at) = ?
-      ) AS combined
-      GROUP BY DATE_FORMAT(created_at, '%Y-%m')
-      ORDER BY month ASC
-    `, [year, year, year, year, year, year]);
-
     const statistics = {
       year,
       total_projects: projects[0]?.total_projects || 0,
@@ -158,7 +131,7 @@ export async function GET(request: Request) {
       active_Service: Service[0]?.active_Service || 0,
       completed_Service: Service[0]?.completed_Service || 0,
       cancel_Service: Service[0]?.canceled_Service || 0,
-      monthly_stats: monthlyStats,
+      
     };
 
     return NextResponse.json(statistics);
