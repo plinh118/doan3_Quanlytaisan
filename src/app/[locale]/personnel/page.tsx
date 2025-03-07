@@ -107,7 +107,6 @@ const PersonnelPage = () => {
   };
 
   const openEditModal = async (record: GetPersonnel) => {
-    debugger;
     setEditingPersonnel(record);
     setIsEditing(true);
 
@@ -118,30 +117,49 @@ const PersonnelPage = () => {
       DateOfBirth: showDateFormat(record.DateOfBirth),
     };
 
-    if (
-      formattedValues.Picture &&
-      typeof formattedValues.Picture === 'string'
-    ) {
-      try {
-        const fileInfo = await getInforFile(formattedValues.Picture);
+    if (formattedValues.Picture && typeof formattedValues.Picture === 'string') {
+        try {
+            const fileInfo = await getInforFile(formattedValues.Picture);
 
-        if (!fileInfo.success)
-          throw new Error(fileInfo.error || 'Lỗi khi lấy thông tin file');
-
+            if (fileInfo.success) {
+                formattedValues.Picture = [
+                    {
+                        uid: fileInfo.fileInfo.uid,
+                        name: fileInfo.fileInfo.name,
+                        status: 'done',
+                        url: fileInfo.fileInfo.url,
+                    },
+                ];
+            } else {
+                throw new Error(fileInfo.error || 'Lỗi khi lấy thông tin file');
+            }
+        } catch (error) {
+            // Tạo thông tin file ảo nếu lỗi
+            formattedValues.Picture = [
+                {
+                    uid: '-1',
+                    name: 'no-image.png',
+                    status: 'done',
+                    url: '/images/no-image.png', // Đường dẫn ảnh mặc định
+                },
+            ];
+        }
+    } else {
+        // Nếu Picture ban đầu không có gì thì cũng set file ảo luôn
         formattedValues.Picture = [
-          {
-            uid: fileInfo.fileInfo.uid,
-            name: fileInfo.fileInfo.name,
-            status: 'done',
-            url: fileInfo.fileInfo.url,
-          },
+            {
+                uid: '-1',
+                name: 'no-image.png',
+                status: 'done',
+                url: '/images/no-image.png',
+            },
         ];
-      } catch (error) {}
     }
 
     form.setFieldsValue(formattedValues);
     setModalVisible(true);
-  };
+};
+
 
   const closeModal = () => {
     setModalVisible(false);
@@ -276,7 +294,7 @@ const PersonnelPage = () => {
           dataSource={Personnels}
           rowKey="Id"
           loading={loading}
-          scroll={{ x: 1200, y: 1200 }}
+          scroll={{ x: 1200, y: 400 }}
           pagination={{
             current: currentPage,
             pageSize: pageSize,

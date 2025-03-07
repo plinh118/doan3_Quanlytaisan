@@ -251,3 +251,26 @@ INSERT INTO Document (DocumentName, DocumentLink, RelatedId, RelatedType, IsDele
 INSERT INTO Customer_Link (CustomerId, RelatedId, RelatedType) VALUES
 (1, 1, 'Project'),
 (2, 2, 'Project');
+
+
+CALL AddPersonnel(7, N'Nguyễn Văn A', 17, '1990-01-15', N'Nam', 'https://example.com/pic1.jpg', 'a@example.com', 'Nhân viên phòng kỹ thuật', '0987654321', '2024-01-01', NULL, N'Đang làm việc');
+CALL AddPersonnel(7, N'Trần Thị B', 17, '1992-03-22', N'Nữ', 'https://example.com/pic2.jpg', 'b@example.com', 'Nhân viên phòng hành chính', '0987654322', '2024-01-02', NULL, N'Đang làm việc');
+CALL AddPersonnel(7, N'Phạm Văn C', 17, '1988-07-11', N'Nam', 'https://example.com/pic3.jpg', 'c@example.com', 'Nhân viên phòng kinh doanh', '0987654323', '2024-01-03', NULL, N'Đang làm việc');
+CALL AddPersonnel(8, N'Lê Thị D', 18, '1995-05-14', N'Nữ', 'https://example.com/pic4.jpg', 'd@example.com', 'Nhân viên phòng tài chính', '0987654324', '2024-01-04', NULL, N'Đang làm việc');
+CALL AddPersonnel(8, N'Hoàng Văn E', 18, '1985-09-30', N'Nam', 'https://example.com/pic5.jpg', 'e@example.com', 'Nhân viên phòng kỹ thuật', '0987654325', '2024-01-05', NULL, N'Đang làm việc');
+CALL AddPersonnel(8, N'Vũ Thị F', 18, '1997-08-19', N'Nữ', 'https://example.com/pic6.jpg', 'f@example.com', 'Nhân viên phòng hành chính', '0987654326', '2024-01-06', NULL, N'Đang làm việc');
+CALL AddPersonnel(9, N'Đặng Văn G', 19, '1991-12-12', N'Nam', 'https://example.com/pic7.jpg', 'g@example.com', 'Nhân viên phòng kinh doanh', '0987654327', '2024-01-07', NULL, N'Đang làm việc');
+CALL AddPersonnel(9, N'Bùi Thị H', 20, '1989-04-18', N'Nữ', 'https://example.com/pic8.jpg', 'h@example.com', 'Nhân viên phòng tài chính', '0987654328', '2024-01-08', NULL, N'Đang làm việc');
+CALL AddPersonnel(9, N'Ngô Văn I', 20, '1994-06-25', N'Nam', 'https://example.com/pic9.jpg', 'i@example.com', 'Nhân viên phòng kỹ thuật', '0987654329', '2024-01-09', NULL, N'Đang làm việc');
+CALL AddPersonnel(12, N'Phan Thị J', 21, '1993-11-09', N'Nữ', 'https://example.com/pic10.jpg', 'j@example.com', 'Nhân viên phòng hành chính', '0987654330', '2024-01-10', NULL, N'Đang làm việc');
+CALL AddPersonnel(12, N'Nguyễn Văn K', 18, '1990-02-01', N'Nam', 'https://example.com/pic11.jpg', 'k@example.com', 'Nhân viên phòng kỹ thuật', '0987654331', '2024-01-11', NULL, N'Đang làm việc');
+CALL AddPersonnel(12, N'Trần Thị L', 22, '1992-03-03', N'Nữ', 'https://example.com/pic12.jpg', 'l@example.com', 'Nhân viên phòng hành chính', '0987654332', '2024-01-12', NULL, N'Đang làm việc');
+CALL AddPersonnel(12, N'Phạm Văn M', 23, '1988-07-07', N'Nam', 'https://example.com/pic13.jpg', 'm@example.com', 'Nhân viên phòng kinh doanh', '0987654333', '2024-01-13', NULL, N'Đang làm việc');
+CALL AddPersonnel(9, N'Lê Thị N', 18, '1995-05-05', N'Nữ', 'https://example.com/pic14.jpg', 'n@example.com', 'Nhân viên phòng tài chính', '0987654334', '2024-01-14', NULL, N'Đang làm việc');
+CALL AddPersonnel(8, N'Hoàng Văn O', 17, '1985-09-09', N'Nam', 'https://example.com/pic15.jpg', 'o@example.com', 'Nhân viên phòng kỹ thuật', '0987654335', '2024-01-15', NULL, N'Đang làm việc');
+CALL AddPersonnel(8, N'Vũ Thị P', 18, '1997-08-08', N'Nữ', 'https://example.com/pic16.jpg', 'p@example.com', 'Nhân viên phòng hành chính', '0987654336', '2024-01-16', NULL, N'Đang làm việc');
+CALL AddPersonnel(7, N'Đặng Văn Q', 19, '1991-12-12', N'Nam', 'https://example.com/pic17.jpg', 'q@example.com', 'Nhân viên phòng kinh doanh', '0987654337', '2024-01-17', NULL, N'Đang làm việc');
+CALL AddPersonnel(8, N'Bùi Thị R', 20, '1989-04-04', N'Nữ', 'https://example.com/pic18.jpg', 'r@example.com', 'Nhân viên phòng tài chính', '0987654338', '2024-01-18', NULL, N'Đang làm việc');
+CALL AddPersonnel(9, N'Ngô Văn S', 21, '1994-06-06', N'Nam', 'https://example.com/pic19.jpg', 's@example.com', 'Nhân viên phòng kỹ thuật', '0987654339', '2024-01-19', NULL, N'Đang làm việc');
+CALL AddPersonnel(7, N'Phan Thị T', 22, '1993-11-11', N'Nữ', 'https://example.com/pic20.jpg', 't@example.com', 'Nhân viên phòng hành chính', '0987654340', '2024-01-20', NULL, N'Đang làm việc');
+
