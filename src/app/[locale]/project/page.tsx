@@ -25,6 +25,7 @@ import {
   useAddDocuments,
   useUpdateDocuments,
 } from '../../../modules/shared/document/add_documentHooks';
+import { validateDates } from '@/utils/validator';
 
 const ProjectPage = () => {
   const [projects, setProjects] = useState<Get_project[]>([]);
@@ -151,25 +152,19 @@ const ProjectPage = () => {
 
   const updateProject = async (Id: number, project: Add_project) => {
     if (
-      project.ProjectEndDate &&
-      project.ProjectEndDate < project.ProjectStartDate
-    ) {
-      show({ result: 1, messageError: 'Ngày kết thúc phải sau ngày bắt đầu' });
+      !validateDates(project.ProjectStartDate, project.ProjectEndDate, show)
+    )
       return null;
-    }
     const newProject = { Id, ...project };
     const result: any = await projectAPI.updateproject(newProject);
     return result.result;
   };
 
   const addProject = useCallback(async (newProject: any) => {
-    if (
-      newProject.ProjectEndDate &&
-      newProject.ProjectEndDate < newProject.ProjectStartDate
-    ) {
-      show({ result: 1, messageError: 'Ngày kết thúc phải sau ngày bắt đầu' });
-      return null;
-    }
+       if (
+            !validateDates(newProject.ProjectStartDate, newProject.ProjectEndDate, show)
+          )
+            return null;
     const result: any = await projectAPI.createproject(newProject);
     return result.result;
   }, []);

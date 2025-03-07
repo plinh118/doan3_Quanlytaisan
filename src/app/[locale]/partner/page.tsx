@@ -11,6 +11,7 @@ import { PartnerForm } from '@/components/partner/partner_Form';
 import { useNotification } from '../../../components/UI_shared/Notification';
 import Header_Children from '@/components/UI_shared/Children_Head';
 import { showDateFormat } from '@/utils/date';
+import { validateDates } from '@/utils/validator';
 const PartnerPage = () => {
   const [Partners, setPartners] = useState<Partner_DTO[]>([]);
   const [loading, setLoading] = useState(false);
@@ -113,28 +114,14 @@ const PartnerPage = () => {
     }
   };
   const AddPartner = async (value: any) => {
-    debugger;
-    if (value.EndDate == undefined) {
+     if (!validateDates(value.StartDate, value.EndDate, show))
+          return null;
       const result: any = await PartnerAPI.createPartner(value);
       show({
         result: result.result,
         messageDone: 'Thêm đối tác thành công',
         messageError: 'Thêm đối tác thất bại',
       });
-    }
-    if (value.EndDate > value.StartDate) {
-      const result: any = await PartnerAPI.createPartner(value);
-      show({
-        result: result.result,
-        messageDone: 'Thêm đối tác thành công',
-        messageError: 'Thêm đối tác thất bại',
-      });
-    } else {
-      show({
-        result: 1,
-        messageError: 'Ngày kết thúc phải sau ngày bắt đầu',
-      });
-    }
   };
 
   const UpdatePartner = async (Id: number, value: any) => {
@@ -142,6 +129,8 @@ const PartnerPage = () => {
       Id: Id,
       ...value,
     };
+     if (!validateDates(newPartner.StartDate, newPartner.EndDate, show))
+     return null;
     const result: any = await PartnerAPI.updatePartner(newPartner);
     show({
       result: result.result,

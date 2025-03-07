@@ -26,6 +26,7 @@ import { GetPosition } from '@/models/position.model';
 import { PositionAPI } from '@/libs/api/position.api';
 import { divisionAPI } from '@/libs/api/division.api';
 import { getInforFile, uploadFilesImage } from '@/libs/api/upload.api';
+import { validateDates } from '@/utils/validator';
 const PersonnelPage = () => {
   const [Personnels, setPersonnels] = useState<GetPersonnel[]>([]);
   const [loading, setLoading] = useState(false);
@@ -166,7 +167,9 @@ const PersonnelPage = () => {
     }
   };
   const AddPersonnel = async (value: any) => {
-    if (!value.EndDate) {
+    if (!validateDates(value.StartDate, value.EndDate, show))
+      return null;
+
       const result: any = await personnelAPI.createpersonnel(value);
       show({
         result: result.result,
@@ -174,21 +177,6 @@ const PersonnelPage = () => {
         messageError: 'Thêm nhân viên thất bại',
       });
       return;
-    }
-
-    if (value.EndDate > value.StartDate) {
-      const result: any = await personnelAPI.createpersonnel(value);
-      show({
-        result: result.result,
-        messageDone: 'Thêm nhân viên thành công',
-        messageError: 'Thêm nhân viên thất bại',
-      });
-    } else {
-      show({
-        result: 1,
-        messageError: 'Ngày kết thúc phải sau ngày bắt đầu',
-      });
-    }
   };
 
   const UpdatePersonnel = async (Id: number, value: any) => {
@@ -196,30 +184,16 @@ const PersonnelPage = () => {
       Id: Id,
       ...value,
     };
+    if (!validateDates(newPersonnel.StartDate, newPersonnel.EndDate, show))
+      return null;
 
-    if (!value.EndDate) {
-      const result: any = await personnelAPI.updatepersonnel(newPersonnel);
-      show({
-        result: result.result,
-        messageDone: 'Cập nhật nhân viên thành công',
-        messageError: 'Cập nhật nhân viên thất bại',
-      });
-      return;
-    }
-
-    if (value.EndDate > value.StartDate) {
-      const result: any = await personnelAPI.updatepersonnel(newPersonnel);
-      show({
-        result: result.result,
-        messageDone: 'Cập nhật nhân viên thành công',
-        messageError: 'Cập nhật nhân viên thất bại',
-      });
-    } else {
-      show({
-        result: 1,
-        messageError: 'Ngày kết thúc phải sau ngày bắt đầu',
-      });
-    }
+    const result: any = await personnelAPI.updatepersonnel(newPersonnel);
+    show({
+      result: result.result,
+      messageDone: 'Cập nhật nhân viên thành công',
+      messageError: 'Cập nhật nhân viên thất bại',
+    });
+    return;
   };
 
   const handleSave = async () => {

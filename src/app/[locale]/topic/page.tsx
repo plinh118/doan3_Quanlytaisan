@@ -29,6 +29,7 @@ import {
   useAddDocuments,
   useUpdateDocuments,
 } from '../../../modules/shared/document/add_documentHooks';
+import { validateDates } from '@/utils/validator';
 
 const TopicPage = () => {
   const [Topics, setTopics] = useState<GetTopic[]>([]);
@@ -154,27 +155,18 @@ const TopicPage = () => {
 
   const addTopic = useCallback(async (newTopic: AddTopic) => {
     if (
-      newTopic.TopicEndDate &&
-      newTopic.TopicEndDate < newTopic.TopicStartDate
-    ) {
-      show({
-        result: 1,
-        messageError: 'Ngày kết thúc phải lớn hơn ngày bắt đầu',
-      });
+      !validateDates(newTopic.TopicStartDate, newTopic.TopicEndDate, show)
+    )
       return null;
-    }
     const result: any = await topicAPI.createtopic(newTopic);
     return result.result;
   }, []);
 
   const updateTopic = useCallback(async (Id: number, Topic: AddTopic) => {
-    if (Topic.TopicEndDate && Topic.TopicEndDate < Topic.TopicStartDate) {
-      show({
-        result: 1,
-        messageError: 'Ngày kết thúc phải lớn hơn ngày bắt đầu',
-      });
-      return null;
-    }
+     if (
+          !validateDates(Topic.TopicStartDate, Topic.TopicEndDate, show)
+        )
+          return null;
     const newTopic = { Id, ...Topic };
     const result: any = await topicAPI.updatetopic(newTopic);
     return result.result;
