@@ -1,6 +1,6 @@
 import { ColumnType } from '../UI_shared/ColumType';
 import moment from 'moment';
-import { Tag } from 'antd';
+import { Tag, Tooltip } from 'antd';
 export const Partner_Colum: ColumnType[] = [
   {
     title: 'STT',
@@ -15,6 +15,14 @@ export const Partner_Colum: ColumnType[] = [
     title: 'Tên đối tác',
     dataIndex: 'PartnerName',
     key: 'PartnerName',
+    ellipsis: {
+      showTitle: false, 
+    },
+    render: (text) => (
+      <Tooltip placement="topLeft" title={text}>
+        {text}
+      </Tooltip>
+    ),
   },
   {
     title: 'Số điện thoại',
@@ -27,11 +35,27 @@ export const Partner_Colum: ColumnType[] = [
     title: 'Email',
     dataIndex: 'Email',
     key: 'Email',
+    ellipsis: {
+      showTitle: false, 
+    },
+    render: (text) => (
+      <Tooltip placement="topLeft" title={text}>
+        {text}
+      </Tooltip>
+    ),
   },
   {
     title: 'Địa chỉ',
     dataIndex: 'Address',
     key: 'Address',
+    ellipsis: {
+      showTitle: false, 
+    },
+    render: (text) => (
+      <Tooltip placement="topLeft" title={text}>
+        {text}
+      </Tooltip>
+    ),
   },
   {
     title: 'Ngày bắt đầu',
@@ -48,8 +72,12 @@ export const Partner_Colum: ColumnType[] = [
     dataIndex: 'PartnershipStatus',
     key: 'PartnershipStatus',
     width: '10%',
-    render: (status) => (
-      <Tag color={status === 'Đang hợp tác' ? 'green' : 'red'}>{status}</Tag>
-    ),
+    render: (status) => {
+      let color = 'default';
+      if (status === 'Đang hợp tác') color = 'green';
+      else if (status === 'Dừng hợp tác') color = 'orange';
+      else if (status === 'Hủy hợp tác') color = 'red';
+      return <Tag color={color}>{status}</Tag>;
+  },
   },
 ];

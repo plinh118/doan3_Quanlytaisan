@@ -10,4 +10,5 @@ export type ColumnType = {
   render?: (text: any, record: any, index?: number) => React.JSX.Element;
   width?: string;
   fixed?:fixedType| undefined;
+  ellipsis?: boolean | { showTitle?: boolean }; 
 };

@@ -57,10 +57,10 @@ const ProjectPage = () => {
         );
         if (data.length > 0) {
           setTotal(data[0].TotalRecords);
-      } else {
+        } else {
           setTotal(0);
-      }
-      setProjects(data || []);
+        }
+        setProjects(data || []);
       } catch (error) {
         show({ result: 1, messageError: 'Lỗi tải danh sách dự án' });
       } finally {
@@ -304,24 +304,39 @@ const ProjectPage = () => {
           }}
         />
       </div>
-      <Modal
-        title={editingProject ? 'Cập nhật dự án' : 'Thêm dự án'}
-        open={modalVisible}
-        onOk={handleSave}
-        onCancel={closeModal}
-        width="60%"
-        centered
-        okText="Lưu"
-        cancelText="Hủy"
-      >
-        <ProjectForm
-          formdata={form}
-          documents={documents}
-          setDocuments={setDocuments}
-          partners={partners}
-          departments={departments}
-        />
-      </Modal>
+
+      {modalVisible && (
+        <div
+          onKeyDown={(e) => {
+            if (
+              e.key === 'Enter' &&
+              e.target instanceof HTMLTextAreaElement === false
+            ) {
+              e.preventDefault();
+              handleSave();
+            }
+          }}
+        >
+          <Modal
+            title={editingProject ? 'Cập nhật dự án' : 'Thêm dự án'}
+            open={modalVisible}
+            onOk={handleSave}
+            onCancel={closeModal}
+            width="60%"
+            centered
+            okText="Lưu"
+            cancelText="Hủy"
+          >
+            <ProjectForm
+              formdata={form}
+              documents={documents}
+              setDocuments={setDocuments}
+              partners={partners}
+              departments={departments}
+            />
+          </Modal>
+        </div>
+      )}
     </>
   );
 };

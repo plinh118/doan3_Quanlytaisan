@@ -1,6 +1,6 @@
 import { ColumnType } from '../UI_shared/ColumType';
 import moment from 'moment';
-import { Tag } from 'antd';
+import { Tag, Tooltip } from 'antd';
 
 export const Project_Colum: ColumnType[] = [
   {
@@ -26,11 +26,14 @@ export const Project_Colum: ColumnType[] = [
     title: 'Tên đối tác',
     dataIndex: 'PartnerName',
     key: 'PartnerId',
-  },
-  {
-    title: 'Mô tả',
-    dataIndex: 'Description',
-    key: 'Description',
+    ellipsis: {
+      showTitle: false, 
+    },
+    render: (text) => (
+      <Tooltip placement="topLeft" title={text}>
+        {text}
+      </Tooltip>
+    ),
   },
   {
     title: 'Ngày bắt đầu',
@@ -47,8 +50,12 @@ export const Project_Colum: ColumnType[] = [
     dataIndex: 'ProjectStatus',
     key: 'ProjectStatus',
     width: '10%',
-    render: (status) => (
-      <Tag color={status === 'Đang triển khai' ? 'green' : 'red'}>{status}</Tag>
-    ),
+    render: (status) => {
+      let color = 'default';
+      if (status === 'Đã hoàn thành') color = 'green';
+      else if (status === 'Đang thực hiện') color = 'blue';
+      else if (status === 'Hủy') color = 'red';
+      return <Tag color={color}>{status}</Tag>;
+  },
   },
 ];

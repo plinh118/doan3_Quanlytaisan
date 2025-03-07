@@ -47,10 +47,10 @@ const PositionPage = () => {
       );
       if (data.length > 0) {
         setTotal(data[0].TotalRecords);
-    } else {
+      } else {
         setTotal(0);
-    }
-    setPositions(data || []);
+      }
+      setPositions(data || []);
     } catch (error) {
       show({
         result: 1,
@@ -199,18 +199,32 @@ const PositionPage = () => {
         />
       </div>
 
-      <Modal
-        title={editingPosition ? 'Cập nhập chức vụ' : 'Thêm chức vụ'}
-        open={modalVisible}
-        onOk={handleSave}
-        onCancel={closeModal}
-        width="60%"
-        centered
-        okText="Lưu"
-        cancelText="Hủy"
-      >
-        <PositionForm formdulieu={form} isEditing={isEditing} />
-      </Modal>
+      {modalVisible && (
+        <div
+          onKeyDown={(e) => {
+            if (
+              e.key === 'Enter' &&
+              e.target instanceof HTMLTextAreaElement === false
+            ) {
+              e.preventDefault();
+              handleSave();
+            }
+          }}
+        >
+          <Modal
+            title={editingPosition ? 'Cập nhập chức vụ' : 'Thêm chức vụ'}
+            open={modalVisible}
+            onOk={handleSave}
+            onCancel={closeModal}
+            width="60%"
+            centered
+            okText="Lưu"
+            cancelText="Hủy"
+          >
+            <PositionForm formdulieu={form} isEditing={isEditing} />
+          </Modal>
+        </div>
+      )}
     </>
   );
 };

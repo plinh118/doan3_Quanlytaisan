@@ -46,9 +46,9 @@ const CustomerPage = () => {
       );
       if (data.length > 0) {
         setTotal(data[0].TotalRecords);
-    } else {
+      } else {
         setTotal(0);
-    }
+      }
       setCustomers(data || []);
     } catch (error) {
       show({
@@ -209,19 +209,32 @@ const CustomerPage = () => {
           }}
         />
       </div>
-
-      <Modal
-        title={editingCustomer ? 'Cập nhập khách hàng' : 'Thêm khách hàng'}
-        open={modalVisible}
-        onOk={handleSave}
-        onCancel={closeModal}
-        width="60%"
-        centered
-        okText="Lưu"
-        cancelText="Hủy"
-      >
-        <CustomerForm formdulieu={form} />
-      </Modal>
+      {modalVisible && (
+        <div
+          onKeyDown={(e) => {
+            if (
+              e.key === 'Enter' &&
+              e.target instanceof HTMLTextAreaElement === false
+            ) {
+              e.preventDefault();
+              handleSave();
+            }
+          }}
+        >
+          <Modal
+            title={editingCustomer ? 'Cập nhập khách hàng' : 'Thêm khách hàng'}
+            open={modalVisible}
+            onOk={handleSave}
+            onCancel={closeModal}
+            width="60%"
+            centered
+            okText="Lưu"
+            cancelText="Hủy"
+          >
+            <CustomerForm formdulieu={form} />
+          </Modal>
+        </div>
+      )}
     </>
   );
 };

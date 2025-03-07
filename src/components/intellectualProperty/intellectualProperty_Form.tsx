@@ -36,7 +36,7 @@ export const IntellectualPropertyForm: React.FC<ReusableFormProps> = ({
           <Form.Item
             name="IntellectualPropertyName"
             label="Tên chứng nhận"
-            rules={RULES_FORM.required}
+            rules={RULES_FORM.required_max50}
           >
             <Input />
           </Form.Item>

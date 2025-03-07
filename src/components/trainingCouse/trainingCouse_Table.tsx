@@ -28,16 +28,15 @@ export const trainingCouse_Colum: ColumnType[] = [
     key: 'Duration',
   },
   {
-    title: 'Mô tả',
-    dataIndex: 'Description',
-    key: 'Description',
-  },
-  {
     title: 'Trạng thái',
     dataIndex: 'ServiceStatus',
     key: 'ServiceStatus',
-    render: (status) => (
-      <Tag color={status === 'Đang diễn ra' ? 'green' : 'red'}>{status}</Tag>
-    ),
+    render: (status) => {
+      let color = 'default';
+      if (status === 'Đã hoàn thành') color = 'green';
+      else if (status === 'Đang diễn ra') color = 'blue';
+      else if (status === 'Hủy') color = 'red';
+      return <Tag color={color}>{status}</Tag>;
+  },
   },
 ];

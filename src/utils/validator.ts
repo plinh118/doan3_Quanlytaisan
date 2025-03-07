@@ -12,6 +12,8 @@ interface keyValidator {
   people_name?: any;
   full_name?: any;
   department_name?: any;
+  required_max50?:any;
+  no_space?:any;
 }
 
 export const RULES_FORM: Record<keyof keyValidator, FormRule[]> = {
@@ -96,6 +98,25 @@ export const RULES_FORM: Record<keyof keyValidator, FormRule[]> = {
       message: 'Tên phải tối thiểu 5 ký tự',
     },
   ],
+  required_max50: [
+    {
+      required: true,
+      message: 'Không được để trống',
+
+    },
+    {
+      min: 5,
+      message: 'Tên phải tối thiểu 5 ký tự',
+    },
+    {
+      max: 50,
+      message: 'Tối đa 50 ký tự',
+    },
+  ],
+  no_space:[{
+    message: 'Không được chứa toàn khoảng tr khoảng trắng',
+    pattern: /^(?!\s+$).*/gm
+  }]
 };
 
 export const validateDates = (

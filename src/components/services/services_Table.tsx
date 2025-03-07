@@ -26,8 +26,12 @@ export const Services_Colum: ColumnType[] = [
     title: 'Trạng thái',
     dataIndex: 'ServiceStatus',
     key: 'ServiceStatus',
-    render: (status) => (
-      <Tag color={status === 'Đang cung cấp' ? 'green' : 'red'}>{status}</Tag>
-    ),
+    render: (status) => {
+      let color = 'default';
+      if (status === 'Đang cung cấp') color = 'green';
+      else if (status === 'Đang phát triển') color = 'blue';
+      else if (status === 'Hủy dịch vụ') color = 'red';
+      return <Tag color={color}>{status}</Tag>;
+  },
   },
 ];
