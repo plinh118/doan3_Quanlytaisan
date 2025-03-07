@@ -36,8 +36,12 @@ export const Topic_Colum: ColumnType[] = [
     dataIndex: 'TopicStatus',
     key: 'TopicStatus',
     width: '10%',
-    render: (status) => (
-      <Tag color={status === 'Đã nghiệm thu' ? 'green' : 'red'}>{status}</Tag>
-    ),
+    render: (status) => {
+      let color = 'default';
+      if (status === 'Đã hoàn thành') color = 'green';
+      else if (status === 'Đang thực hiện') color = 'blue';
+      else if (status === 'Hủy') color = 'red';
+      return <Tag color={color}>{status}</Tag>;
+  },
   },
 ];

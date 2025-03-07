@@ -47,10 +47,10 @@ const ServicePage = () => {
       );
       if (data.length > 0) {
         setTotal(data[0].TotalRecords);
-    } else {
+      } else {
         setTotal(0);
-    }
-    setServices(data || []);
+      }
+      setServices(data || []);
     } catch (error) {
       show({
         result: 1,
@@ -206,18 +206,32 @@ const ServicePage = () => {
         />
       </div>
 
-      <Modal
-        title={editingService ? 'Cập nhập dịch vụ' : 'Thêm dịch vụ'}
-        open={modalVisible}
-        onOk={handleSave}
-        onCancel={closeModal}
-        width="60%"
-        centered
-        okText="Lưu"
-        cancelText="Hủy"
-      >
-        <ServicesForm formdulieu={form} />
-      </Modal>
+      {modalVisible && (
+        <div
+          onKeyDown={(e) => {
+            if (
+              e.key === 'Enter' &&
+              e.target instanceof HTMLTextAreaElement === false
+            ) {
+              e.preventDefault();
+              handleSave();
+            }
+          }}
+        >
+          <Modal
+            title={editingService ? 'Cập nhập dịch vụ' : 'Thêm dịch vụ'}
+            open={modalVisible}
+            onOk={handleSave}
+            onCancel={closeModal}
+            width="60%"
+            centered
+            okText="Lưu"
+            cancelText="Hủy"
+          >
+            <ServicesForm formdulieu={form} />
+          </Modal>
+        </div>
+      )}
     </>
   );
 };

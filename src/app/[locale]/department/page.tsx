@@ -50,14 +50,14 @@ const DepartmentPage = () => {
       );
       if (data.length > 0) {
         setTotal(data[0].TotalRecords);
-    } else {
+      } else {
         setTotal(0);
-    }
-    setDepartments(data || []);
+      }
+      setDepartments(data || []);
     } catch (error) {
       show({
         result: 1,
-        messageError: 'Lỗi tải danh sách phòng ban',
+        messageError: 'Lỗi tải danh sách đơn vị',
       });
     } finally {
       setLoading(false);
@@ -148,7 +148,7 @@ const DepartmentPage = () => {
     } catch (error) {
       show({
         result: 1,
-        messageError: 'Lỗi lưu phòng ban',
+        messageError: 'Lỗi lưu đơn vị',
       });
     } finally {
       setLoading(false);
@@ -195,6 +195,7 @@ const DepartmentPage = () => {
       {/* Tier 3: Data Table */}
       <div className="py-4" style={{ marginTop: '20px' }}>
         <Table
+          style={{height:'500px'}}
           columns={columns}
           dataSource={Departments}
           rowKey="Id"
@@ -215,18 +216,33 @@ const DepartmentPage = () => {
       </div>
 
       {/* Modal Form */}
-      <Modal
-        title={editingDepartment ? 'Cập nhập đơn vị' : 'Thêm đơn vị'}
-        open={modalVisible}
-        onOk={handleSave}
-        onCancel={closeModal}
-        width="60%"
-        centered
-        okText="Lưu"
-        cancelText="Hủy"
-      >
-        <DepartmentForm formdulieu={form} isEditing={isEditing} />
-      </Modal>
+
+      {modalVisible && (
+        <div
+          onKeyDown={(e) => {
+            if (
+              e.key === 'Enter' &&
+              e.target instanceof HTMLTextAreaElement === false
+            ) {
+              e.preventDefault();
+              handleSave();
+            }
+          }}
+        >
+          <Modal
+            title={editingDepartment ? 'Cập nhập đơn vị' : 'Thêm đơn vị'}
+            open={modalVisible}
+            onOk={handleSave}
+            onCancel={closeModal}
+            width="60%"
+            centered
+            okText="Lưu"
+            cancelText="Hủy"
+          >
+            <DepartmentForm formdulieu={form} isEditing={isEditing} />
+          </Modal>
+        </div>
+      )}
     </>
   );
 };

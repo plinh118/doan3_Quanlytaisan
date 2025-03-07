@@ -206,18 +206,32 @@ const UserPage = () => {
         />
       </div>
 
-      <Modal
-        title={editingUser ? 'Cập nhập người dùng' : 'Thêm người dùng'}
-        open={modalVisible}
-        onOk={handleSave}
-        onCancel={closeModal}
-        width="60%"
-        centered 
-        okText="Lưu" 
-        cancelText="Hủy" 
-      >
-        <UserForm formdulieu={form} />
-      </Modal>
+      {modalVisible && (
+        <div
+          onKeyDown={(e) => {
+            if (
+              e.key === 'Enter' &&
+              e.target instanceof HTMLTextAreaElement === false
+            ) {
+              e.preventDefault();
+              handleSave();
+            }
+          }}
+        >
+          <Modal
+            title={editingUser ? 'Cập nhập người dùng' : 'Thêm người dùng'}
+            open={modalVisible}
+            onOk={handleSave}
+            onCancel={closeModal}
+            width="60%"
+            centered
+            okText="Lưu"
+            cancelText="Hủy"
+          >
+            <UserForm formdulieu={form} />
+          </Modal>
+        </div>
+      )}
     </>
   );
 };

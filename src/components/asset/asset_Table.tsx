@@ -25,9 +25,13 @@ export const Asset_Colum: ColumnType[] = [
     title: 'Tình trạng',
     dataIndex: 'StatusAsset',
     key: 'StatusAsset',
-    render: (status) => (
-      <Tag color={status === 'Tốt' ? 'green' : 'red'}>{status}</Tag>
-    ),
+    render: (status) => {
+      let color = 'default';
+      if (status === 'Tốt') color = 'green';
+      else if (status === 'Đang sửa chữa') color = 'orange';
+      else if (status === 'Cần thay thế') color = 'red';
+      return <Tag color={color}>{status}</Tag>;
+  },
   },
   {
     title: 'Số lượng',

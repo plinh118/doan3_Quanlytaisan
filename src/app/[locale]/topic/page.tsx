@@ -58,10 +58,10 @@ const TopicPage = () => {
       );
       if (data.length > 0) {
         setTotal(data[0].TotalRecords);
-    } else {
+      } else {
         setTotal(0);
-    }
-    setTopics(data || []);
+      }
+      setTopics(data || []);
     } catch (error) {
       show({
         result: 1,
@@ -308,24 +308,38 @@ const TopicPage = () => {
         />
       </div>
 
-      <Modal
-        title={editingTopic ? 'Cập nhập đề tài' : 'Thêm đề tài'}
-        open={modalVisible}
-        onOk={handleSave}
-        onCancel={closeModal}
-        width="60%"
-        confirmLoading={loading}
-        centered
-        okText="Lưu"
-        cancelText="Hủy"
-      >
-        <TopicForm
-          formdata={form}
-          documents={documents}
-          setDocuments={setDocuments}
-          departments={departments}
-        />
-      </Modal>
+      {modalVisible && (
+        <div
+          onKeyDown={(e) => {
+            if (
+              e.key === 'Enter' &&
+              e.target instanceof HTMLTextAreaElement === false
+            ) {
+              e.preventDefault();
+              handleSave();
+            }
+          }}
+        >
+          <Modal
+            title={editingTopic ? 'Cập nhập đề tài' : 'Thêm đề tài'}
+            open={modalVisible}
+            onOk={handleSave}
+            onCancel={closeModal}
+            width="60%"
+            confirmLoading={loading}
+            centered
+            okText="Lưu"
+            cancelText="Hủy"
+          >
+            <TopicForm
+              formdata={form}
+              documents={documents}
+              setDocuments={setDocuments}
+              departments={departments}
+            />
+          </Modal>
+        </div>
+      )}
     </>
   );
 };

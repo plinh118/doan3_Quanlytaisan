@@ -57,10 +57,10 @@ const DivisionPage = () => {
       );
       if (data.length > 0) {
         setTotal(data[0].TotalRecords);
-    } else {
+      } else {
         setTotal(0);
-    }
-    setDivisions(data || []);
+      }
+      setDivisions(data || []);
     } catch (error) {
       show({
         result: 1,
@@ -234,18 +234,32 @@ const DivisionPage = () => {
         />
       </div>
 
-      <Modal
-        title={editingDivision ? 'Cập nhập bộ phận' : 'Thêm bộ phận'}
-        open={modalVisible}
-        onOk={handleSave}
-        onCancel={closeModal}
-        width="60%"
-        centered
-        okText="Lưu"
-        cancelText="Hủy"
-      >
-        <DivisiontForm formdata={form} departments={departments} />
-      </Modal>
+      {modalVisible && (
+        <div
+          onKeyDown={(e) => {
+            if (
+              e.key === 'Enter' &&
+              e.target instanceof HTMLTextAreaElement === false
+            ) {
+              e.preventDefault();
+              handleSave();
+            }
+          }}
+        >
+          <Modal
+            title={editingDivision ? 'Cập nhập bộ phận' : 'Thêm bộ phận'}
+            open={modalVisible}
+            onOk={handleSave}
+            onCancel={closeModal}
+            width="60%"
+            centered
+            okText="Lưu"
+            cancelText="Hủy"
+          >
+            <DivisiontForm formdata={form} departments={departments} />
+          </Modal>
+        </div>
+      )}
     </>
   );
 };

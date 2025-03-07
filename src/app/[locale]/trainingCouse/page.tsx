@@ -53,10 +53,10 @@ const TrainingCousePage = () => {
       );
       if (data.length > 0) {
         setTotal(data[0].TotalRecords);
-    } else {
+      } else {
         setTotal(0);
-    }
-    setTrainingCouses(data || []);
+      }
+      setTrainingCouses(data || []);
     } catch (error) {
       show({
         result: 1,
@@ -201,7 +201,7 @@ const TrainingCousePage = () => {
       </div>
 
       {/* Tier 3: Data Table */}
-      <div className="py-4" style={{ marginTop: '20px' }} >
+      <div className="py-4" style={{ marginTop: '20px' }}>
         <Table
           columns={columns}
           dataSource={TrainingCouses}
@@ -223,18 +223,33 @@ const TrainingCousePage = () => {
       </div>
 
       {/* Modal Form */}
-      <Modal
-        title={editingTrainingCouse ? 'Cập nhập khóa học' : 'Thêm khóa học'}
-        open={modalVisible}
-        onOk={handleSave}
-        onCancel={closeModal}
-        width="60%"
-        centered
-        okText="Lưu"
-        cancelText="Hủy"
-      >
-        <TrainingCouseForm formdata={form} personnels={persionnels} />
-      </Modal>
+
+      {modalVisible && (
+        <div
+          onKeyDown={(e) => {
+            if (
+              e.key === 'Enter' &&
+              e.target instanceof HTMLTextAreaElement === false
+            ) {
+              e.preventDefault();
+              handleSave();
+            }
+          }}
+        >
+          <Modal
+            title={editingTrainingCouse ? 'Cập nhập khóa học' : 'Thêm khóa học'}
+            open={modalVisible}
+            onOk={handleSave}
+            onCancel={closeModal}
+            width="60%"
+            centered
+            okText="Lưu"
+            cancelText="Hủy"
+          >
+            <TrainingCouseForm formdata={form} personnels={persionnels} />
+          </Modal>
+        </div>
+      )}
     </>
   );
 };

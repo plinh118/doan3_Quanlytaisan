@@ -50,10 +50,10 @@ const ProductPage = () => {
       );
       if (data.length > 0) {
         setTotal(data[0].TotalRecords);
-    } else {
+      } else {
         setTotal(0);
-    }
-    setProducts(data || []);
+      }
+      setProducts(data || []);
     } catch (error) {
       show({
         result: 1,
@@ -295,24 +295,38 @@ const ProductPage = () => {
         />
       </div>
 
-      <Modal
-        title={editingProduct ? 'Cập nhập sản phẩm' : 'Thêm sản phẩm'}
-        open={modalVisible}
-        onOk={handleSave}
-        onCancel={closeModal}
-        width="60%"
-        confirmLoading={loading}
-        centered
-        okText="Lưu"
-        cancelText="Hủy"
-      >
-        <ProductForm
-          formdata={form}
-          documents={documents}
-          setDocuments={setDocuments}
-          departments={departments}
-        />
-      </Modal>
+      {modalVisible && (
+        <div
+          onKeyDown={(e) => {
+            if (
+              e.key === 'Enter' &&
+              e.target instanceof HTMLTextAreaElement === false
+            ) {
+              e.preventDefault();
+              handleSave();
+            }
+          }}
+        >
+          <Modal
+            title={editingProduct ? 'Cập nhập sản phẩm' : 'Thêm sản phẩm'}
+            open={modalVisible}
+            onOk={handleSave}
+            onCancel={closeModal}
+            width="60%"
+            confirmLoading={loading}
+            centered
+            okText="Lưu"
+            cancelText="Hủy"
+          >
+            <ProductForm
+              formdata={form}
+              documents={documents}
+              setDocuments={setDocuments}
+              departments={departments}
+            />
+          </Modal>
+        </div>
+      )}
     </>
   );
 };

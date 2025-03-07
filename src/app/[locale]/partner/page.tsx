@@ -47,10 +47,10 @@ const PartnerPage = () => {
       );
       if (data.length > 0) {
         setTotal(data[0].TotalRecords);
-    } else {
+      } else {
         setTotal(0);
-    }
-    setPartners(data || []);
+      }
+      setPartners(data || []);
     } catch (error) {
       show({
         result: 1,
@@ -226,18 +226,32 @@ const PartnerPage = () => {
         />
       </div>
 
-      <Modal
-        title={editingPartner ? 'Cập nhập đối tác' : 'Thêm đối tác'}
-        open={modalVisible}
-        onOk={handleSave}
-        onCancel={closeModal}
-        width="60%"
-        centered
-        okText="Lưu"
-        cancelText="Hủy"
-      >
-        <PartnerForm formdulieu={form} />
-      </Modal>
+      {modalVisible && (
+        <div
+          onKeyDown={(e) => {
+            if (
+              e.key === 'Enter' &&
+              e.target instanceof HTMLTextAreaElement === false
+            ) {
+              e.preventDefault();
+              handleSave();
+            }
+          }}
+        >
+          <Modal
+            title={editingPartner ? 'Cập nhập đối tác' : 'Thêm đối tác'}
+            open={modalVisible}
+            onOk={handleSave}
+            onCancel={closeModal}
+            width="60%"
+            centered
+            okText="Lưu"
+            cancelText="Hủy"
+          >
+            <PartnerForm formdulieu={form} />
+          </Modal>
+        </div>
+      )}
     </>
   );
 };

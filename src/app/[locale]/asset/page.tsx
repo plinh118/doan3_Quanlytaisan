@@ -54,10 +54,10 @@ const AssetPage = () => {
       );
       if (data.length > 0) {
         setTotal(data[0].TotalRecords);
-    } else {
+      } else {
         setTotal(0);
-    }
-    setAssets(data || []);
+      }
+      setAssets(data || []);
     } catch (error) {
       show({
         result: 1,
@@ -83,7 +83,6 @@ const AssetPage = () => {
     );
   };
 
-  // Modal Functions
   const openCreateModal = () => {
     setEditingAsset(null);
     setIsEditing(false);
@@ -226,19 +225,32 @@ const AssetPage = () => {
           }}
         />
       </div>
-
-      <Modal
-        title={editingAsset ? 'Cập nhập tài sản' : 'Thêm tài sản'}
-        open={modalVisible}
-        onOk={handleSave}
-        onCancel={closeModal}
-        width="60%"
-        centered
-        okText="Lưu"
-        cancelText="Hủy"
-      >
-        <AssetForm formdata={form} divisions={divisions} />
-      </Modal>
+      {modalVisible && (
+        <div
+          onKeyDown={(e) => {
+            if (
+              e.key === 'Enter' &&
+              e.target instanceof HTMLTextAreaElement === false
+            ) {
+              e.preventDefault();
+              handleSave();
+            }
+          }}
+        >
+          <Modal
+            title={editingAsset ? 'Cập nhập tài sản' : 'Thêm tài sản'}
+            open={modalVisible}
+            onOk={handleSave}
+            onCancel={closeModal}
+            width="60%"
+            centered
+            okText="Lưu"
+            cancelText="Hủy"
+          >
+            <AssetForm formdata={form} divisions={divisions} />
+          </Modal>
+        </div>
+      )}
     </>
   );
 };

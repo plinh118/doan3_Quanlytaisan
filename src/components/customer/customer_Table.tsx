@@ -1,3 +1,4 @@
+import { Tag } from 'antd';
 import { ColumnType } from '../UI_shared/ColumType';
 
 export const Customer_Colum: ColumnType[] = [
@@ -31,5 +32,18 @@ export const Customer_Colum: ColumnType[] = [
     title: 'Địa chỉ',
     dataIndex: 'Address',
     key: 'Address',
+  },
+  {
+    title: 'Trạng thái',
+    dataIndex: 'CustomerStatut',
+    key: 'CustomerStatut',
+    width: '10%',
+    render: (status) => {
+      let color = 'default';
+      if (status === 'Đang hợp tác') color = 'green';
+      else if (status === 'Dừng hợp tác') color = 'orange';
+      else if (status === 'Hủy hợp tác') color = 'red';
+      return <Tag color={color}>{status}</Tag>;
+  },
   },
 ];

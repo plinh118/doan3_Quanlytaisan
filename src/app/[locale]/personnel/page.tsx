@@ -317,22 +317,37 @@ const PersonnelPage = () => {
           }}
         />
       </div>
-      <Modal
-        title={editingPersonnel ? 'Cập nhập nhân viên' : 'Thêm nhân viên'}
-        open={modalVisible}
-        onOk={handleSave}
-        onCancel={closeModal}
-        width="60%"
-        centered
-        okText="Lưu"
-        cancelText="Hủy"
-      >
-        <PersonnelForm
-          formdata={form}
-          divisions={divisions}
-          positions={positions}
-        />
-      </Modal>
+
+      {modalVisible && (
+        <div
+          onKeyDown={(e) => {
+            if (
+              e.key === 'Enter' &&
+              e.target instanceof HTMLTextAreaElement === false
+            ) {
+              e.preventDefault();
+              handleSave();
+            }
+          }}
+        >
+          <Modal
+            title={editingPersonnel ? 'Cập nhập nhân viên' : 'Thêm nhân viên'}
+            open={modalVisible}
+            onOk={handleSave}
+            onCancel={closeModal}
+            width="60%"
+            centered
+            okText="Lưu"
+            cancelText="Hủy"
+          >
+            <PersonnelForm
+              formdata={form}
+              divisions={divisions}
+              positions={positions}
+            />
+          </Modal>
+        </div>
+      )}
     </>
   );
 };
