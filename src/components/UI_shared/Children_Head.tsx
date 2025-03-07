@@ -40,11 +40,12 @@ const Header_Children: React.FC<HeaderProps> = ({
       </div>
 
       <div
-        className="flex justify-between items-center mb-6"
+        className="flex justify-between items-center"
         style={{
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
+          lineHeight:'20px'
         }}
       >
         <h1 style={{ fontSize: '20px', fontWeight: 'bold' }}>{title}</h1>

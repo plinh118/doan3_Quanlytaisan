@@ -1,6 +1,6 @@
 import moment from 'moment';
 import { ColumnType } from '../UI_shared/ColumType';
-import { Tag } from 'antd';
+import { Tag, Tooltip } from 'antd';
 
 export const Personnel_Colum: ColumnType[] = [
   {
@@ -30,27 +30,52 @@ export const Personnel_Colum: ColumnType[] = [
     title: 'Tên nhân sự',
     dataIndex: 'PersonnelName',
     key: 'PersonnelName',
-    width:'250px'
+    width:'250px',
+    ellipsis: {
+      showTitle: false, 
+    },
+    render: (text) => (
+      <Tooltip placement="topLeft" title={text}>
+        {text}
+      </Tooltip>
+    ),
   },
   {
     title: 'Tên bộ phận',
     dataIndex: 'DivisionName',
     key: 'DivisionName',
-    width:'200px'
+    width:'200px',
+    ellipsis: {
+      showTitle: false, 
+    },
+    render: (text) => (
+      <Tooltip placement="topLeft" title={text}>
+        {text}
+      </Tooltip>
+    ),
   },
 
   {
     title: 'Chức vụ',
     dataIndex: 'PositionName',
     key: 'PositionName',
-    width:'150px'
+    width:'200px',
+
   },
 
   {
     title: 'Email',
     dataIndex: 'Email',
     key: 'Email',
-    width:'200px'
+    width:'200px',
+    ellipsis: {
+      showTitle: false, 
+    },
+    render: (text) => (
+      <Tooltip placement="topLeft" title={text}>
+        {text}
+      </Tooltip>
+    ),
   },
   {
     title: 'Số điện thoại',
