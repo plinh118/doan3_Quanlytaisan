@@ -41,6 +41,7 @@ export const PersonnelForm: React.FC<ReusableFormProps> = ({
             name="PersonnelName"
             label="Tên nhân sự"
             rules={RULES_FORM.department_name}
+            normalize={(value) => value.trim()} 
           >
             <Input />
           </Form.Item>
@@ -99,7 +100,7 @@ export const PersonnelForm: React.FC<ReusableFormProps> = ({
       </Row>
       <Row gutter={16}>
         <Col span={12}>
-          <Form.Item name="Email" label="Email" rules={RULES_FORM.email}>
+          <Form.Item name="Email" label="Email" rules={RULES_FORM.email}   normalize={(value) => value.trim()} >
             <Input />
           </Form.Item>
         </Col>
@@ -108,6 +109,7 @@ export const PersonnelForm: React.FC<ReusableFormProps> = ({
             name="PhoneNumber"
             label="Số điện thoại"
             rules={RULES_FORM.phone}
+            normalize={(value) => value.trim()} 
           >
             <Input />
           </Form.Item>

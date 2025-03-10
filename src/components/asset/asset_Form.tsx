@@ -20,6 +20,7 @@ export const AssetForm: React.FC<ReusableFormProps> = ({
             name="AssetName"
             label="Tên tài sản"
             rules={RULES_FORM.required_max50}
+            normalize={(value) => value.trim()} 
           >
             <Input />
           </Form.Item>

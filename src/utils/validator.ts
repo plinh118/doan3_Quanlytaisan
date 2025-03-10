@@ -112,6 +112,10 @@ export const RULES_FORM: Record<keyof keyValidator, FormRule[]> = {
       max: 50,
       message: 'Tối đa 50 ký tự',
     },
+    {
+      message: 'Không được chứa toàn khoảng khoảng trắng',
+      pattern: /^(?!\s+$).*/gm
+    }
   ],
   no_space:[{
     message: 'Không được chứa toàn khoảng tr khoảng trắng',
