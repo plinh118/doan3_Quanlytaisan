@@ -76,6 +76,7 @@ const ProjectForm: React.FC<ReusableFormProps> = ({
               name="ProjectName"
               label="Tên dự án"
               rules={RULES_FORM.required_max50}
+              normalize={(value) => value.trim()} 
             >
               <Input />
             </Form.Item>

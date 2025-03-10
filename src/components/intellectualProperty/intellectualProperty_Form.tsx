@@ -37,6 +37,7 @@ export const IntellectualPropertyForm: React.FC<ReusableFormProps> = ({
             name="IntellectualPropertyName"
             label="Tên chứng nhận"
             rules={RULES_FORM.required_max50}
+            normalize={(value) => value.trim()} 
           >
             <Input />
           </Form.Item>
