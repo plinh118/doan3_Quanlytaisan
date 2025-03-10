@@ -1,10 +1,11 @@
+import { Tooltip } from 'antd';
 import { ColumnType } from '../UI_shared/ColumType';
 
 export const Department_Colum: ColumnType[] = [
   {
-    title: 'Số thứ tự',
+    title: 'STT',
     key: 'stt',
-    width: '10%',
+    width: '80PX',
     align: 'center',
     render: (_text, _record, index) => (
       <span>{index !== undefined ? index + 1 : ''}</span>
@@ -14,13 +15,21 @@ export const Department_Colum: ColumnType[] = [
     title: 'Tên đơn vị',
     dataIndex: 'DepartmentName',
     key: 'DepartmentName',
-    width: '60%',
+    width:'200px',
+    ellipsis: {
+      showTitle: false, 
+    },
+    render: (text) => (
+      <Tooltip placement="topLeft" title={text}>
+        {text}
+      </Tooltip>
+    ),
   },
   {
     title: 'Số bộ phận',
     dataIndex: 'TotalDivisions',
     key: 'DepartmentId',
-    width: '20%',
+    width: '150px',
     align: 'center',
   },
 ];
