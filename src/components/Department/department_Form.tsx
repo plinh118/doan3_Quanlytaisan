@@ -13,11 +13,11 @@ export const DepartmentForm: React.FC<ReusableFormProps> = ({ formdulieu }) => (
       name="DepartmentName"
       label="Tên đơn vị"
       rules={RULES_FORM.required_max50}
-      normalize={(value) => value.trim()} 
+     
     >
       <Input />
     </Form.Item>
-    <Form.Item name="Description" label="Mô tả"   normalize={(value) => value.trim()} >
+    <Form.Item name="Description" label="Mô tả"  >
       <TextArea />
     </Form.Item>
   </Form>

@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
     return db_Provider<any>(
       'CALL AddTrainingCourse(?,?,?,?,?)',
       [
-        body.CourseName,
+        body.CourseName.trim(),
         body.ServiceStatus,
         Description,
         body.Duration,
@@ -64,7 +64,7 @@ export async function PATCH(request: NextRequest) {
       'CALL UpdateTrainingCourse(?,?,?,?,?,?)',
       [
         body.Id,
-        body.CourseName,
+        body.CourseName.trim(),
         body.ServiceStatus,
         Description,
         body.Duration,

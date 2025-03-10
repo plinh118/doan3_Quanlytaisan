@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
 
   return db_Provider<any>(
     'CALL AddDivision(?,?,?)',
-    [body.DivisionName, body.DepartmentId, Description],
+    [body.DivisionName.trim(), body.DepartmentId, Description],
     true,
   );
 }
@@ -44,7 +44,7 @@ export async function PATCH(request: NextRequest) {
 
   return db_Provider<any>(
     'CALL UpdateDivision(?,?,?,?)',
-    [body.Id, body.DivisionName, body.DepartmentId, Description],
+    [body.Id, body.DivisionName.trim(), body.DepartmentId, Description],
     true,
   );
 }

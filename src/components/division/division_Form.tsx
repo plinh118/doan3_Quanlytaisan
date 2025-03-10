@@ -34,7 +34,7 @@ export const DivisiontForm: React.FC<ReusableFormProps> = ({
             name="DivisionName"
             label="Tên phòng ban"
             rules={RULES_FORM.required_max50}
-            normalize={(value) => value.trim()} 
+           
           >
             <Input />
           </Form.Item>

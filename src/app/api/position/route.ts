@@ -25,14 +25,14 @@ export async function GET(req: NextRequest) {
 
 export async function POST(request: NextRequest) {
   const body: AddPosistion = await request.json();
-  return db_Provider<any>('CALL AddPosition(?)', [body.PositionName], true);
+  return db_Provider<any>('CALL AddPosition(?)', [body.PositionName.trim()], true);
 }
 
 export async function PATCH(request: NextRequest) {
   const body: GetPosition = await request.json();
   return db_Provider<any>(
     'CALL UpdatePosition(?,?)',
-    [body.Id, body.PositionName],
+    [body.Id, body.PositionName.trim()],
     true,
   );
 }

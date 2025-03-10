@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
     return db_Provider<any>(
       'CALL AddProject(?,?,?,?,?,?,?)',
       [
-        body.ProjectName,
+        body.ProjectName.trim(),
         body.DepartmentId,
         body.PartnerId,
         Description,
@@ -69,7 +69,7 @@ export async function PATCH(request: NextRequest) {
       'CALL UpdateProject(?,?,?,?,?,?,?,?)',
       [
         body.Id,
-        body.ProjectName,
+        body.ProjectName.trim(),
         body.DepartmentId,
         body.PartnerId,
         Description,

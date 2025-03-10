@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
     return db_Provider<any>(
       'CALL AddTopic(?,?,?,?,?,?)',
       [
-        body.TopicName,
+        body.TopicName.trim(),
         body.DepartmentId,
         body.TopicStartDate,
         formattedEndDate,
@@ -71,7 +71,7 @@ export async function PATCH(request: NextRequest) {
       'CALL UpdateTopic(?,?,?,?,?,?,?)',
       [
         body.Id,
-        body.TopicName,
+        body.TopicName.trim(),
         body.DepartmentId,
         body.TopicStartDate,
         formattedEndDate,

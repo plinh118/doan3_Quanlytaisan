@@ -22,7 +22,7 @@ export const TrainingCouseForm: React.FC<ReusableFormProps> = ({
             name="CourseName"
             label="Tên khóa học"
             rules={RULES_FORM.required_max50}
-            normalize={(value) => value.trim()} 
+           
           >
             <Input />
           </Form.Item>
