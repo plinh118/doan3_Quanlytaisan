@@ -15,7 +15,7 @@ export const PartnerForm: React.FC<ReusableFormProps> = ({ formdulieu }) => {
             name="PartnerName"
             label="Tên đối tác"
             rules={RULES_FORM.required_max50}
-            normalize={(value) => value.trim()} 
+           
           >
             <Input />
           </Form.Item>
@@ -25,7 +25,7 @@ export const PartnerForm: React.FC<ReusableFormProps> = ({ formdulieu }) => {
             name="PhoneNumber"
             label="Số điện thoại"
             rules={RULES_FORM.phone}
-            normalize={(value) => value.trim()} 
+           
           >
             <Input />
           </Form.Item>
@@ -33,12 +33,12 @@ export const PartnerForm: React.FC<ReusableFormProps> = ({ formdulieu }) => {
       </Row>
       <Row gutter={16}>
         <Col span={12}>
-          <Form.Item name="Email" label="Email" rules={RULES_FORM.email}   normalize={(value) => value.trim()} >
+          <Form.Item name="Email" label="Email" rules={RULES_FORM.email}  >
             <Input />
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item name="Address" label="Địa chỉ" rules={RULES_FORM.required}   normalize={(value) => value.trim()} >
+          <Form.Item name="Address" label="Địa chỉ" rules={RULES_FORM.required}  >
             <Input />
           </Form.Item>
         </Col>

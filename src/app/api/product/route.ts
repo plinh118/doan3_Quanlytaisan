@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
     return db_Provider<any>(
       'CALL AddProduct(?,?,?,?,?)',
       [
-        body.ProductName,
+        body.ProductName.trim(),
         body.DepartmentId,
         body.ProductStartDate,
         formattedEndDate,
@@ -66,7 +66,7 @@ export async function PATCH(request: NextRequest) {
       'CALL UpdateProduct(?,?,?,?,?,?)',
       [
         body.Id,
-        body.ProductName,
+        body.ProductName.trim(),
         body.DepartmentId,
         body.ProductStartDate,
         body.ProductEndDate,

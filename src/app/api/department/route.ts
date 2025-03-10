@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
   const Description = body.Description ? body.Description : null;
   return db_Provider<any>(
     'CALL AddDepartment(?,?)',
-    [body.DepartmentName, Description],
+    [body.DepartmentName.trim(), Description],
     true,
   );
 }
@@ -40,7 +40,7 @@ export async function PATCH(request: NextRequest) {
 
   return db_Provider<any>(
     'CALL UpdateDepartment(?,?,?)',
-    [body.Id, body.DepartmentName, Description],
+    [body.Id, body.DepartmentName.trim(), Description],
     true,
   );
 }

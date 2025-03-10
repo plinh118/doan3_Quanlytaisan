@@ -29,9 +29,9 @@ export async function POST(request: NextRequest) {
   return db_Provider<any>(
     'CALL AddAsset(?,?,?,?,?,?)',
     [
-      body.AssetName,
-      body.TypeAsset,
-      body.StatusAsset,
+      body.AssetName.trim(),
+      body.TypeAsset.trim(),
+      body.StatusAsset.trim(),
       body.Quantity,
       body.DivisionId,
       Price,
@@ -48,9 +48,9 @@ export async function PATCH(request: NextRequest) {
     'CALL UpdateAsset(?,?,?,?,?,?,?)',
     [
       body.Id,
-      body.AssetName,
-      body.TypeAsset,
-      body.StatusAsset,
+      body.AssetName.trim(),
+      body.TypeAsset.trim(),
+      body.StatusAsset.trim(),
       body.Quantity,
       body.DivisionId,
       Price,

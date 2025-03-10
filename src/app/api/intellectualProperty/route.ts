@@ -36,8 +36,8 @@ export async function POST(request: NextRequest) {
       'CALL AddIntellectualProperty(?,?,?,?,?)',
       [
         body.DepartmentId,
-        body.IntellectualPropertyName,
-        body.IntellectualPropertyImage,
+        body.IntellectualPropertyName.trim(),
+        body.IntellectualPropertyImage.trim(),
         Description,
         body.IntellectualPropertyStatus,
       ],
@@ -67,7 +67,7 @@ export async function PATCH(request: NextRequest) {
       [
         body.Id,
         body.DepartmentId,
-        body.IntellectualPropertyName,
+        body.IntellectualPropertyName.trim(),
         body.IntellectualPropertyImage,
         Description,
         body.IntellectualPropertyStatus,

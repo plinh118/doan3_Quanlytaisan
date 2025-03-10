@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
 
     return db_Provider<any>(
       'CALL AddCustomer(?,?,?,?,?)',
-      [body.CustomerName, body.PhoneNumber, body.Email, body.Address,body.CustomerStatut],
+      [body.CustomerName.trim(), body.PhoneNumber.trim(), body.Email.trim(), body.Address.trim(),body.CustomerStatut],
       true,
     );
   } catch (error) {
@@ -64,7 +64,7 @@ export async function PATCH(request: NextRequest) {
 
     return db_Provider<any>(
       'CALL UpdateCustomer(?,?,?,?,?,?)',
-      [body.Id, body.CustomerName, body.PhoneNumber, body.Email, body.Address,body.CustomerStatut],
+      [body.Id, body.CustomerName.trim(), body.PhoneNumber.trim(), body.Email.trim(), body.Address.trim(),body.CustomerStatut],
       true,
     );
   } catch (error) {
