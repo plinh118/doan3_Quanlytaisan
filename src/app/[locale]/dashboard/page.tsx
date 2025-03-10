@@ -119,7 +119,7 @@ const Dashboard = () => {
       {/* Stats Summary */}
       <div className="stats-grid">
         <StatCard
-        link="/vi/persionnel"
+        link="/vi/personnel"
           title="Nhân sự"
           value={statistics.total_Personnel}
           icon={<Users />}

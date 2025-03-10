@@ -6,7 +6,7 @@ export const Project_Colum: ColumnType[] = [
   {
     title: 'STT',
     key: 'stt',
-    width: '5%',
+    width: '80px',
     align: 'center',
     render: (_text, _record, index) => (
       <span>{index !== undefined ? index + 1 : ''}</span>
@@ -16,16 +16,35 @@ export const Project_Colum: ColumnType[] = [
     title: 'Tên dự án',
     dataIndex: 'ProjectName',
     key: 'Id',
+    width:'200px',
+    ellipsis: {
+      showTitle: false, 
+    },
+    render: (text) => (
+      <Tooltip placement="topLeft" title={text}>
+        {text}
+      </Tooltip>
+    ),
   },
   {
     title: 'Tên đơn vị',
     dataIndex: 'DepartmentName',
     key: 'DepartmentId',
+    width:'200px',
+    ellipsis: {
+      showTitle: false, 
+    },
+    render: (text) => (
+      <Tooltip placement="topLeft" title={text}>
+        {text}
+      </Tooltip>
+    ),
   },
   {
     title: 'Tên đối tác',
     dataIndex: 'PartnerName',
     key: 'PartnerId',
+    width:'200px',
     ellipsis: {
       showTitle: false, 
     },
@@ -40,7 +59,7 @@ export const Project_Colum: ColumnType[] = [
     dataIndex: 'ProjectStartDate',
     key: 'ProjectStartDate',
     align: 'center',
-    width: '10%',
+    width: '150px',
     render: (text) => (
       <span>{text ? moment(text).format('DD/MM/YYYY') : ''}</span>
     ),
@@ -49,7 +68,7 @@ export const Project_Colum: ColumnType[] = [
     title: 'Trạng thái',
     dataIndex: 'ProjectStatus',
     key: 'ProjectStatus',
-    width: '10%',
+    width: '150px',
     render: (status) => {
       let color = 'default';
       if (status === 'Đã hoàn thành') color = 'green';
