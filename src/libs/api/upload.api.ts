@@ -113,7 +113,6 @@ export const uploadFile = async (
     };
   }
 };
-
 export async function uploadFilesImage(files: File[]): Promise<string[]> {
   const formData = new FormData();
 
@@ -139,7 +138,6 @@ export async function uploadFilesImage(files: File[]): Promise<string[]> {
     throw error;
   }
 }
-
 export async function getInforFile(filePath: string) {
   if (!filePath) {
     throw new Error('Thiếu đường dẫn file');
@@ -147,7 +145,7 @@ export async function getInforFile(filePath: string) {
 
   try {
     const response = await fetch(
-      `/api/uploadfile?path=${encodeURIComponent(filePath)}`,
+     ` /api/uploadfile?path=${encodeURIComponent(filePath)}`,
       { method: 'GET' },
     );
 

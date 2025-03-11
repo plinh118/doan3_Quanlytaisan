@@ -21,7 +21,7 @@ export const TrainingCouseForm: React.FC<ReusableFormProps> = ({
           <Form.Item
             name="CourseName"
             label="Tên khóa học"
-            rules={RULES_FORM.required_max50}
+            rules={RULES_FORM.Description_max50}
            
           >
             <Input />
@@ -73,7 +73,7 @@ export const TrainingCouseForm: React.FC<ReusableFormProps> = ({
         </Col>
       </Row>
 
-      <Form.Item name="Description" label="Mô tả" rules={RULES_FORM.required_max50}>
+      <Form.Item name="Description" label="Mô tả" rules={RULES_FORM.Description_max50}>
         <TextArea />
       </Form.Item>
     </Form>
