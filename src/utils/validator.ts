@@ -13,7 +13,7 @@ interface keyValidator {
   full_name?: any;
   department_name?: any;
   required_max50?:any;
-  no_space?:any;
+  Description_max50?:any;
 }
 
 export const RULES_FORM: Record<keyof keyValidator, FormRule[]> = {
@@ -166,10 +166,20 @@ export const RULES_FORM: Record<keyof keyValidator, FormRule[]> = {
       pattern: /^(?!\s+$).*/gm
     }
   ],
-  no_space:[{
-    message: 'Không được bỏ trống',
-    pattern: /^(?!\s+$).*/gm
-  }]
+  Description_max50: [
+    {
+      min: 1,
+      message: 'Tên phải tối thiểu 1 ký tự',
+    },
+    {
+      max: 50,
+      message: 'Tối đa 50 ký tự',
+    },
+    {
+      message: 'Không được bỏ trống',
+      pattern: /^(?!\s+$).*/gm
+    }
+  ],
 };
 
 export const validateDates = (
