@@ -17,7 +17,7 @@ export const DepartmentForm: React.FC<ReusableFormProps> = ({ formdulieu }) => (
     >
       <Input />
     </Form.Item>
-    <Form.Item name="Description" label="Mô tả"  >
+    <Form.Item name="Description" label="Mô tả" rules={RULES_FORM.required_max50} >
       <TextArea />
     </Form.Item>
   </Form>

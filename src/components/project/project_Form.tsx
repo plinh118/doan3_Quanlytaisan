@@ -141,7 +141,7 @@ const ProjectForm: React.FC<ReusableFormProps> = ({
             </Form.Item>
           </Col>
         </Row>
-        <Form.Item name="Description" label="Mô tả">
+        <Form.Item name="Description" label="Mô tả" rules={RULES_FORM.required_max50}>
           <TextArea />
         </Form.Item>
       </Card>

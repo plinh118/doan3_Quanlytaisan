@@ -12,11 +12,11 @@ export async function GET(req: NextRequest) {
   const pageSize = Number(searchParams.get('pageSize')) || 10;
   const orderType = (searchParams.get('orderType') as 'ASC' | 'DESC') || 'ASC';
   const PersonnelName = searchParams.get('personnelName') || undefined;
-
+  const DivisionId=searchParams.get('divisionId') || undefined;
   try {
     return db_Provider<GetPersonnel[]>(
-      'CALL GetPersonnelByPageOrder(?, ?, ?, ?)',
-      [pageIndex, pageSize, orderType, PersonnelName || null],
+      'CALL GetPersonnelByPageOrder(?, ?, ?, ?,?)',
+      [pageIndex, pageSize, orderType, PersonnelName || null,DivisionId|| null],
     );
   } catch (error) {
     console.error('Lỗi khi lấy danh sách nhân viên:', error);
@@ -42,13 +42,13 @@ export async function POST(request: NextRequest) {
       'CALL AddPersonnel(?,?,?,?,?,?,?,?,?,?,?,?)',
       [
         body.DivisionId,
-        body.PersonnelName,
+        body.PersonnelName.trim(),
         body.PositionId,
         formattedDateOfBirth,
-        gender,
+        gender?.trim(),
         image,
-        body.Email,
-        Description,
+        body.Email.trim(),
+        Description?.trim(),
         body.PhoneNumber,
         formattedJoinDate,
         formattedEndDate,
@@ -89,10 +89,10 @@ export async function PATCH(request: NextRequest) {
         body.PersonnelName.trim(),
         body.PositionId,
         formattedDateOfBirth,
-        gender,
+        gender?.trim(),
         image,
         body.Email.trim(),
-        Description,
+        Description?.trim(),
         body.PhoneNumber,
         formattedJoinDate,
         formattedEndDate,

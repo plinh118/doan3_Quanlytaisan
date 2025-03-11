@@ -986,7 +986,8 @@ CREATE PROCEDURE GetPersonnelByPageOrder(
     IN p_PageIndex INT,
     IN p_PageSize INT,
     IN p_OrderType VARCHAR(4),
-    IN p_PersonnelName VARCHAR(255)
+    IN p_PersonnelName VARCHAR(255),
+    IN p_DivisionId INT  -- Thêm tham số lọc theo đơn vị
 )
 BEGIN
     DECLARE v_Offset INT;
@@ -994,7 +995,7 @@ BEGIN
 
     SET @sql = CONCAT(
         'SELECT p.Id, p.PersonnelName, p.DivisionId, p.PositionId, p.Picture, p.Description, ',
-        'p.Gender, ',  -- Thêm Gender vào đây
+        'p.Gender, ',  
         'd.DivisionName, pos.PositionName, p.DateOfBirth, p.Email, p.PhoneNumber, ',
         'p.JoinDate, p.EndDate, p.WorkStatus, COUNT(*) OVER () AS TotalRecords ',
         'FROM Personnel p ',
@@ -1003,19 +1004,28 @@ BEGIN
         'WHERE p.IsDeleted = 0 '
     );
 
+    -- Lọc theo tên nhân sự (nếu có)
     IF p_PersonnelName IS NOT NULL AND p_PersonnelName != '' THEN
         SET @sql = CONCAT(@sql, ' AND p.PersonnelName LIKE ''%', p_PersonnelName, '%'' ');
     END IF;
 
+    -- Lọc theo DivisionId (nếu có)
+    IF p_DivisionId IS NOT NULL AND p_DivisionId > 0 THEN
+        SET @sql = CONCAT(@sql, ' AND p.DivisionId = ', p_DivisionId);
+    END IF;
+
+    -- Thêm sắp xếp và phân trang
     SET @sql = CONCAT(@sql, ' ORDER BY p.PersonnelName ', p_OrderType, 
                       ' LIMIT ', p_PageSize, ' OFFSET ', v_Offset);
 
+    -- Thực thi câu lệnh SQL động
     PREPARE stmt FROM @sql;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 END$$
 
 DELIMITER ;
+
 
 DELIMITER $$
 
@@ -1428,53 +1438,7 @@ BEGIN
 END$$
 
 DELIMITER ;
--- Thống kê
 
-DELIMITER //
-
-CREATE PROCEDURE GetStatistics()
-BEGIN
-    SELECT 
-        -- Personnel Statistics
-        (SELECT COUNT(*) FROM Personnel WHERE IsDeleted = 0) AS total_personnel,
-        (SELECT COUNT(*) FROM Personnel WHERE WorkStatus = 'Đang làm việc' AND EndDate IS NULL AND IsDeleted = 0) AS active_personnel,
-        (SELECT COUNT(*) FROM Personnel WHERE (WorkStatus != 'Đang làm việc' OR EndDate IS NOT NULL) AND IsDeleted = 0) AS inactive_personnel,
-        
-        -- Partner Statistics
-        (SELECT COUNT(*) FROM Partner WHERE IsDeleted = 0) AS total_partners,
-        (SELECT COUNT(*) FROM Partner WHERE PartnershipStatus = 'Đang hợp tác' AND (EndDate IS NULL OR EndDate > CURDATE()) AND IsDeleted = 0) AS active_partners,
-        (SELECT COUNT(*) FROM Partner WHERE (PartnershipStatus != 'Đang hợp tác' OR (EndDate IS NOT NULL AND EndDate <= CURDATE())) AND IsDeleted = 0) AS inactive_partners,
-        
-        -- Customer Statistics
-        (SELECT COUNT(*) FROM Customer WHERE IsDeleted = 0) AS total_customers,
-        
-        -- Project Statistics
-        (SELECT COUNT(*) FROM Project WHERE IsDeleted = 0) AS total_projects,
-        (SELECT COUNT(*) FROM Project WHERE ProjectStatus = 'Đang triển khai' AND (ProjectEndDate IS NULL OR ProjectEndDate > CURDATE()) AND IsDeleted = 0) AS active_projects,
-        (SELECT COUNT(*) FROM Project WHERE ProjectStatus = 'Đã hoàn thành' AND IsDeleted = 0) AS completed_projects,
-
-        -- Product Statistics
-        (SELECT COUNT(*) FROM Product WHERE IsDeleted = 0) AS total_products,
-        (SELECT COUNT(*) FROM Product WHERE ProductStatus = 'Đang thực hiện' AND IsDeleted = 0) AS available_products,
-        (SELECT COUNT(*) FROM Product WHERE ProductStatus = 'Đã hoàn thành' AND IsDeleted = 0) AS completed_products	,
-
-        -- Topic Statistics
-        (SELECT COUNT(*) FROM Topic WHERE IsDeleted = 0) AS total_topics,
-        (SELECT COUNT(*) FROM Topic WHERE TopicStatus = 'Đang nghiên cứu' AND (TopicEndDate IS NULL OR TopicEndDate > CURDATE()) AND IsDeleted = 0) AS active_topics,
-        (SELECT COUNT(*) FROM Topic WHERE TopicStatus = 'Đã nghiệm thu' AND IsDeleted = 0) AS completed_topics,
-
-        -- Training Course Statistics
-        (SELECT COUNT(*) FROM TrainingCourse WHERE IsDeleted = 0) AS total_courses,
-        (SELECT COUNT(*) FROM TrainingCourse WHERE ServiceStatus = 'Đang diễn ra' AND IsDeleted = 0) AS active_courses,
-        (SELECT COUNT(*) FROM TrainingCourse WHERE ServiceStatus = 'Đã hoàn thành' AND IsDeleted = 0) AS completed_courses,
-
-        -- Intellectual Property Statistics
-        (SELECT COUNT(*) FROM IntellectualProperty WHERE IsDeleted = 0) AS total_ip,
-        (SELECT COUNT(*) FROM IntellectualProperty WHERE IntellectualPropertyStatus = 'Đã được cấp' AND IsDeleted = 0) AS granted_ip,
-        (SELECT COUNT(*) FROM IntellectualProperty WHERE IntellectualPropertyStatus = 'Đang xét duyệt' AND IsDeleted = 0) AS pending_ip;
-END //
-
-DELIMITER ;
 -- user
 
 DELIMITER $$
@@ -1569,3 +1533,133 @@ END$$
 
 DELIMITER ;
 
+DELIMITER $$
+
+-- Thêm tài sản
+CREATE PROCEDURE InsertAsset(
+    IN p_ID NVARCHAR(100),
+    IN p_AssetName NVARCHAR(100),
+    IN p_AssetType NVARCHAR(100),
+    IN p_DivisionId INT,
+    IN P_Quantity INT,
+    IN p_PersonnelId INT,
+    IN p_Price FLOAT,
+    IN p_StatDate DATE,
+    IN p_StatusAsset NVARCHAR(50),
+    IN p_Description TEXT
+)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+    BEGIN
+        SELECT 1 AS RESULT;
+    END;
+    
+    INSERT INTO Asset (ID, AssetName, AssetType, DivisionId, PersonnelId,Quantity, Price, StatDate, StatusAsset, Description)
+    VALUES (p_ID, p_AssetName, p_AssetType, p_DivisionId, p_PersonnelId,P_Quantity, p_Price, p_StatDate, p_StatusAsset, p_Description);
+    
+    SELECT 0 AS RESULT;
+END$$
+
+-- Cập nhật tài sản
+CREATE PROCEDURE UpdateAsset(
+    IN p_ID NVARCHAR(100),
+    IN p_AssetName NVARCHAR(100),
+    IN p_AssetType NVARCHAR(100),
+    IN p_DivisionId INT,
+    IN p_PersonnelId INT,
+    IN P_Quantity INT,
+    IN p_Price FLOAT,
+    IN p_StatDate DATE,
+    IN p_StatusAsset NVARCHAR(50),
+    IN p_Description TEXT
+)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+    BEGIN
+        SELECT 1 AS RESULT;
+    END;
+    
+    UPDATE Asset
+    SET 
+        AssetName = p_AssetName,
+        AssetType = p_AssetType,
+        DivisionId = p_DivisionId,
+        PersonnelId = p_PersonnelId,
+        Quantity=P_Quantity,
+        Price = p_Price,
+        StatDate = p_StatDate,
+        StatusAsset = p_StatusAsset,
+        Description = p_Description,
+        updated_at = CURRENT_TIMESTAMP
+    WHERE ID = p_ID AND IsDeleted = 0;
+    
+    SELECT 0 AS RESULT;
+END$$
+
+-- Xóa mềm tài sản
+CREATE PROCEDURE DeleteAsset(
+    IN p_ID NVARCHAR(100)
+)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+    BEGIN
+        SELECT 1 AS RESULT;
+    END;
+    
+    UPDATE Asset 
+    SET IsDeleted = 1, updated_at = CURRENT_TIMESTAMP 
+    WHERE ID = p_ID;
+    
+    SELECT 0 AS RESULT;
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE GetAssetsByPageOrder(
+    IN p_PageIndex INT,
+    IN p_PageSize INT,
+    IN p_OrderType VARCHAR(4),
+    IN p_StatusAsset NVARCHAR(50),
+    IN p_DivisionId INT 
+)
+BEGIN
+    DECLARE v_Offset INT;
+    DECLARE v_StatusFilter VARCHAR(400);
+    DECLARE v_DivisionFilter VARCHAR(400);
+    SET v_Offset = (p_PageIndex - 1) * p_PageSize;
+
+    -- Kiểm tra nếu có giá trị lọc theo trạng thái tài sản
+    IF p_StatusAsset IS NOT NULL AND p_StatusAsset != '' THEN
+        SET v_StatusFilter = CONCAT(" AND A.StatusAsset LIKE '%", p_StatusAsset, "%' ");
+    ELSE
+        SET v_StatusFilter = "";
+    END IF;
+
+    -- Kiểm tra nếu có giá trị lọc theo đơn vị (DivisionId)
+    IF p_DivisionId IS NOT NULL AND p_DivisionId > 0 THEN
+        SET v_DivisionFilter = CONCAT(" AND A.DivisionId = ", p_DivisionId, " ");
+    ELSE
+        SET v_DivisionFilter = "";
+    END IF;
+
+    -- Ghép SQL động
+    SET @sql = CONCAT(
+        'SELECT A.*, P.PersonnelName, D.DivisionName, COUNT(*) OVER () AS TotalRecords 
+        FROM Asset A
+        LEFT JOIN Personnel P ON A.PersonnelId = P.Id
+        LEFT JOIN Division D ON A.DivisionId = D.Id
+        WHERE A.IsDeleted = 0',
+        v_StatusFilter,
+        v_DivisionFilter,  
+        ' ORDER BY A.AssetName ', p_OrderType,
+        ' LIMIT ', p_PageSize, ' OFFSET ', v_Offset
+    );
+
+    PREPARE stmt FROM @sql;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END$$
+
+DELIMITER ;

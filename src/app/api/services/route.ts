@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
 
   return db_Provider<any>(
     'CALL AddService(?,?,?)',
-    [body.ServiceName.trim(), Description, body.ServiceStatus],
+    [body.ServiceName.trim(), Description?.trim(), body.ServiceStatus],
     true,
   );
 }
@@ -42,7 +42,7 @@ export async function PATCH(request: NextRequest) {
   const Description = body.Description ? body.Description : null;
   return db_Provider<any>(
     'CALL UpdateService(?,?,?,?)',
-    [body.Id, body.ServiceName.trim(), Description, body.ServiceStatus],
+    [body.Id, body.ServiceName.trim(), Description?.trim(), body.ServiceStatus],
     true,
   );
 }

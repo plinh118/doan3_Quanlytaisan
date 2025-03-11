@@ -11,11 +11,11 @@ export async function GET(req: NextRequest) {
   const pageSize = Number(searchParams.get('pageSize')) || 10;
   const orderType = (searchParams.get('orderType') as 'ASC' | 'DESC') || 'ASC';
   const AssetName = searchParams.get('assetName') || undefined;
-
+  const DivisionId=searchParams.get('divisionId') || undefined;
   try {
     const result = await db_Provider<GetAsset_DTO[]>(
-      'CALL GetAssetsByPageOrder(?, ?, ?, ?)',
-      [pageIndex, pageSize, orderType, AssetName || null],
+      'CALL GetAssetsByPageOrder(?, ?, ?, ?,?)',
+      [pageIndex, pageSize, orderType, AssetName || null,DivisionId|| null],
     );
     return result;
   } catch (error) {
@@ -25,16 +25,16 @@ export async function GET(req: NextRequest) {
 
 export async function POST(request: NextRequest) {
   const body: AddAsset_DTO = await request.json();
-  const Price = body.Price ? body.Price : null;
+  const PersonnelId = body.PersonnelId ? body.PersonnelId : null;
+  const StatDate = body.StatDate ? body.StatDate : null;
+  const Description = body.Description ? body.Description : null;
+  const Quantity=body.Quantity?body.Quantity:null;
   return db_Provider<any>(
-    'CALL AddAsset(?,?,?,?,?,?)',
+    'CALL InsertAsset(?,?,?,?,?,?,?,?,?,?)',
     [
-      body.AssetName.trim(),
-      body.TypeAsset.trim(),
-      body.StatusAsset.trim(),
-      body.Quantity,
-      body.DivisionId,
-      Price,
+     body.Id,body.AssetName.trim(),
+     body.AssetType.trim(),body.DivisionId,Quantity,
+     PersonnelId,body.Price,StatDate,body.StatusAsset,Description?.trim()
     ],
     true,
   );
@@ -42,19 +42,18 @@ export async function POST(request: NextRequest) {
 
 export async function PATCH(request: NextRequest) {
   const body: UpAsset_DTO = await request.json();
-  const Price = body.Price ? body.Price : null;
+  const PersonnelId = body.PersonnelId ? body.PersonnelId : null;
+  const StatDate = body.StatDate ? body.StatDate : null;
+  const Description = body.Description ? body.Description : null;
+  const Quantity=body.Quantity?body.Quantity:null;
 
   return db_Provider<any>(
-    'CALL UpdateAsset(?,?,?,?,?,?,?)',
+    'CALL UpdateAsset(?,?,?,?,?,?,?,?,?,?)',
     [
-      body.Id,
-      body.AssetName.trim(),
-      body.TypeAsset.trim(),
-      body.StatusAsset.trim(),
-      body.Quantity,
-      body.DivisionId,
-      Price,
-    ],
+      body.Id,body.AssetName.trim(),
+      body.AssetType.trim(),body.DivisionId,
+      PersonnelId,Quantity,body.Price,StatDate,body.StatusAsset,Description?.trim()
+     ],
     true,
   );
 }

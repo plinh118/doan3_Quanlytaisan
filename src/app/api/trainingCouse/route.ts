@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
       [
         body.CourseName.trim(),
         body.ServiceStatus,
-        Description,
+        Description?.trim(),
         body.Duration,
         body.InstructorId,
       ],
@@ -66,7 +66,7 @@ export async function PATCH(request: NextRequest) {
         body.Id,
         body.CourseName.trim(),
         body.ServiceStatus,
-        Description,
+        Description?.trim(),
         body.Duration,
         body.InstructorId,
       ],

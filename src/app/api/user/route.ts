@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
   const hashedPassword = await bcrypt.hash(body.Password, 10);
   return db_Provider<any>(
     'CALL AddUser(?,?,?,?)',
-    [body.Email, hashedPassword, body.FullName, body.Role],
+    [body.Email.trim(), hashedPassword, body.FullName.trim(), body.Role],
     true,
   );
 }
@@ -56,7 +56,7 @@ export async function PATCH(request: NextRequest) {
   const hashedPassword = await bcrypt.hash(body.Password, 10);
   return db_Provider<any>(
     'CALL UpdateUser(?,?,?,?,?)',
-    [body.Id, body.Email, hashedPassword, body.FullName, body.Role],
+    [body.Id, body.Email.trim(), hashedPassword, body.FullName.trim(), body.Role],
     true,
   );
 }

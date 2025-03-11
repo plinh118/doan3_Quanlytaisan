@@ -1,28 +1,42 @@
 export interface UpAsset_DTO {
-  Id: number;
-  AssetName: string;
-  TypeAsset: string;
-  StatusAsset: string;
-  Quantity: number;
-  DivisionId: number;
-  Price: number | null;
+  Id:string;
+  AssetName:string;
+  AssetType:string;
+  DivisionId:number;
+  PersonnelId:number | null;
+  Quantity:number| null;
+  Price:number;
+  StatDate:string | null;
+  StatusAsset:string;
+  Description:string;
+  PersonnelName:string | null;
+  DivisionName:string | null;
+  TotalRecords: number;
 }
 export interface AddAsset_DTO {
-  AssetName: string;
-  TypeAsset: string;
-  StatusAsset: string;
-  Quantity: number;
-  DivisionId: number;
-  Price: number | null;
+  Id:string;
+  AssetName:string;
+  AssetType:string;
+  Quantity:number| null;
+  DivisionId:number;
+  PersonnelId:number | null;
+  Price:number;
+  StatDate:string | null;
+  StatusAsset:string;
+  Description:string;
 }
 export interface GetAsset_DTO {
-  Id: number;
-  AssetName: string;
-  TypeAsset: string;
-  StatusAsset: string;
-  Quantity: number;
-  DivisionId: number;
-  DivisionName: string;
-  Price: number | null;
+  Id:string;
+  AssetName:string;
+  AssetType:string;
+  DivisionId:number;
+  PersonnelId:number | null;
+  Quantity:number| null;
+  Price:number;
+  StatDate:string | null;
+  StatusAsset:string;
+  Description:string;
+  PersonnelName:string | null;
+  DivisionName:string | null;
   TotalRecords: number;
 }

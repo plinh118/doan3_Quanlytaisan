@@ -1,6 +1,7 @@
-import type { NextRequest } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 import { db_Provider } from '@/app/api/Api_Provider';
 import type { GetPosition, AddPosistion } from '@/models/position.model';
+import { executeQuery } from '@/libs/db';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -25,6 +26,14 @@ export async function GET(req: NextRequest) {
 
 export async function POST(request: NextRequest) {
   const body: AddPosistion = await request.json();
+   const users = await executeQuery<any[]>(
+      `SELECT * FROM Position WHERE PositionName = ? AND IsDeleted = 0`,
+      [body.PositionName.trim()]
+    );
+  
+    if (users.length > 0) {
+      return NextResponse.json({ result: -1 }, { status: 200 }); 
+    }
   return db_Provider<any>('CALL AddPosition(?)', [body.PositionName.trim()], true);
 }
 

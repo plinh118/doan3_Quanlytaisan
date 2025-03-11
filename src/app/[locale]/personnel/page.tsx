@@ -56,6 +56,7 @@ const PersonnelPage = () => {
     pageSize: number,
     orderType: 'ASC' | 'DESC',
     PersonnelName?: string,
+    divisionId?:number,
   ) => {
     try {
       setLoading(true);
@@ -64,6 +65,7 @@ const PersonnelPage = () => {
         pageSize,
         orderType,
         PersonnelName,
+        divisionId
       );
       if (data.length > 0) {
         setTotal(data[0].TotalRecords);

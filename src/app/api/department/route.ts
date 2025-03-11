@@ -1,11 +1,11 @@
-import type { NextRequest } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 import { db_Provider } from '@/app/api/Api_Provider';
 import type {
   GetDepartment,
   AddDepartment,
   Department_DTO,
 } from '@/models/department.model';
-
+import { executeQuery } from '@/libs/db';
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const pageIndex = Number(searchParams.get('pageIndex')) || 1;
@@ -14,6 +14,7 @@ export async function GET(req: NextRequest) {
   const departmentName = searchParams.get('departmentName') || undefined;
 
   try {
+
     const result = await db_Provider<Department_DTO[]>(
       'CALL GetDepartmentByPageOrder(?, ?, ?, ?)',
       [pageIndex, pageSize, orderType, departmentName || null],
@@ -27,6 +28,14 @@ export async function GET(req: NextRequest) {
 export async function POST(request: NextRequest) {
   const body: AddDepartment = await request.json();
   const Description = body.Description ? body.Description : null;
+  const users = await executeQuery<any[]>(
+    `SELECT * FROM Department WHERE DepartmentName = ? AND IsDeleted = 0`,
+    [body.DepartmentName.trim()]
+  );
+
+  if (users.length > 0) {
+    return NextResponse.json({ result: -1 }, { status: 200 }); 
+  }
   return db_Provider<any>(
     'CALL AddDepartment(?,?)',
     [body.DepartmentName.trim(), Description],
