@@ -66,7 +66,11 @@ const IntellectualPropertyPage = () => {
           orderType,
           IntellectualPropertyName,
         );
-      setTotal(data[0].TotalRecords);
+        if (data.length > 0) {
+          setTotal(data[0].TotalRecords);
+        } else {
+          setTotal(0);
+        }
       setIntellectualPropertys(data || []);
     } catch (error) {
       show({
