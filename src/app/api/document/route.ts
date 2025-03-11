@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
   const body: Add_Document_DTO = await request.json();
   return db_Provider<any>(
     'CALL AddDocument(?,?,?,?)',
-    [body.DocumentName, body.DocumentLink, body.RelatedId, body.RelatedType],
+    [body.DocumentName.trim(), body.DocumentLink.trim(), body.RelatedId, body.RelatedType],
     true,
   );
 }
@@ -32,8 +32,8 @@ export async function PATCH(request: NextRequest) {
     'CALL UpdateDocument(?,?,?,?,?)',
     [
       body.Id,
-      body.DocumentName,
-      body.DocumentLink,
+      body.DocumentName.trim(),
+      body.DocumentLink.trim(),
       body.RelatedId,
       body.RelatedType,
     ],

@@ -35,7 +35,7 @@ export const useNotification = () => {
         result != 6 &&
         result != 7 &&
         result != 8 &&
-        result != 3)
+        result != 3 && result != -1)
     ) {
       notification.success({
         ...notificationConfig,
@@ -65,14 +65,7 @@ export const useNotification = () => {
       });
     }
 
-    if (result === 6) {
-      notification.error({
-        ...notificationConfig,
-        description: 'Email không tồn tại',
-      });
-    }
-
-    if (result === 7) {
+    if (result === 7 || result === 6) {
       notification.error({
         ...notificationConfig,
         description: 'Tài khoản, mật khẩu không đúng',
@@ -83,6 +76,12 @@ export const useNotification = () => {
       notification.error({
         ...notificationConfig,
         description: 'Lỗi server, vui lòng thử lại sau',
+      });
+    }
+    if (result === -1) {
+      notification.error({
+        ...notificationConfig,
+        description: 'Tên đã tồn tại !',
       });
     }
   };

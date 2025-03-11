@@ -1,7 +1,17 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Table, Button, Modal, Form, Input, Space, Card, Divider } from 'antd';
+import {
+  Table,
+  Button,
+  Modal,
+  Form,
+  Input,
+  Space,
+  Card,
+  Divider,
+  Select,
+} from 'antd';
 import { SearchOutlined, ReloadOutlined } from '@ant-design/icons';
 import { GetAsset_DTO, AddAsset_DTO, UpAsset_DTO } from '@/models/asset.model';
 import { assetAPI } from '@/libs/api/asset.api';
@@ -12,6 +22,9 @@ import { useNotification } from '../../../components/UI_shared/Notification';
 import Header_Children from '@/components/UI_shared/Children_Head';
 import { GetDivision } from '@/models/division.model';
 import { divisionAPI } from '@/libs/api/division.api';
+import { personnelAPI } from '@/libs/api/personnel.api';
+import { GetPersonnel } from '@/models/persionnel.model';
+import { showDateFormat } from '@/utils/date';
 
 const AssetPage = () => {
   const [Assets, setAssets] = useState<GetAsset_DTO[]>([]);
@@ -19,7 +32,6 @@ const AssetPage = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [editingAsset, setEditingAsset] = useState<GetAsset_DTO | null>(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [searchText, setSearchText] = useState('');
   const [form] = Form.useForm();
   const { show } = useNotification();
   const [currentPage, setCurrentPage] = useState(1);
@@ -27,22 +39,35 @@ const AssetPage = () => {
   const [orderType, setOrderType] = useState<'ASC' | 'DESC'>('ASC');
   const [total, setTotal] = useState<number>(10);
   const [divisions, setdivisions] = useState<GetDivision[]>([]);
+  const [divisionFilter, setDivisionFilter] = useState<number | undefined>(
+    undefined,
+  );
+  const [statusFilter, setStatusFilter] = useState<string | undefined>(
+    undefined,
+  );
 
   useEffect(() => {
-    GetAssetsByPageOrder(currentPage, pageSize, orderType, searchText);
+    GetAssetsByPageOrder(
+      currentPage,
+      pageSize,
+      orderType,
+      statusFilter,
+      divisionFilter,
+    );
     getdivision();
-  }, [currentPage, pageSize, orderType]);
+  }, [currentPage, pageSize, orderType, divisionFilter, statusFilter]);
 
   const getdivision = async () => {
     const data = await divisionAPI.getDivisionByPageOrder(1, 100, 'ASC');
     setdivisions(data);
   };
+
   const GetAssetsByPageOrder = async (
     pageIndex: number,
     pageSize: number,
     orderType: 'ASC' | 'DESC',
-    AssetName?: string,
-    divisionName?: string,
+    assetName?: string,
+    divisionId?: number,
   ) => {
     try {
       setLoading(true);
@@ -50,7 +75,8 @@ const AssetPage = () => {
         pageIndex,
         pageSize,
         orderType,
-        AssetName,
+        assetName,
+        divisionId,
       );
       if (data.length > 0) {
         setTotal(data[0].TotalRecords);
@@ -69,7 +95,8 @@ const AssetPage = () => {
   };
 
   const handleRefresh = async () => {
-    setSearchText('');
+    setDivisionFilter(undefined);
+    setStatusFilter(undefined);
     await GetAssetsByPageOrder(currentPage, pageSize, orderType);
   };
 
@@ -79,7 +106,7 @@ const AssetPage = () => {
       pageSize,
       orderType,
       value,
-      searchText,
+      divisionFilter,
     );
   };
 
@@ -93,7 +120,11 @@ const AssetPage = () => {
   const openEditModal = (record: GetAsset_DTO) => {
     setEditingAsset(record);
     setIsEditing(true);
-    form.setFieldsValue(record);
+    const formattedValues = {
+      ...record,
+      StatDate: showDateFormat(record.StatDate),
+    };
+    form.setFieldsValue(formattedValues);
     setModalVisible(true);
   };
 
@@ -112,7 +143,7 @@ const AssetPage = () => {
         messageDone: 'Xóa tài sản thành công',
         messageError: 'Xóa tài sản thất bại',
       });
-      await GetAssetsByPageOrder(currentPage, pageSize, orderType, searchText);
+      await GetAssetsByPageOrder(currentPage, pageSize, orderType);
     } catch (error) {
       show({
         result: 1,
@@ -122,9 +153,6 @@ const AssetPage = () => {
   };
 
   const addAsset = async (value: AddAsset_DTO) => {
-    const price =
-      parseInt(form.getFieldValue('Price').replace(/,/g, ''), 10) || 0;
-
     const result: any = await assetAPI.createasset(value);
     show({
       result: result.result,
@@ -133,12 +161,8 @@ const AssetPage = () => {
     });
   };
 
-  const upAsset = async (Id: number, value: AddAsset_DTO) => {
-    const NewAsset: UpAsset_DTO = {
-      Id: Id,
-      ...value,
-    };
-    const result: any = await assetAPI.updateasset(NewAsset);
+  const upAsset = async (value: UpAsset_DTO) => {
+    const result: any = await assetAPI.updateasset(value);
     show({
       result: result.result,
       messageDone: 'Cập nhật tài sản thành công',
@@ -150,11 +174,9 @@ const AssetPage = () => {
       const values = await form.validateFields();
       setLoading(true);
 
-      editingAsset
-        ? await upAsset(editingAsset.Id, values)
-        : await addAsset(values);
+      editingAsset ? await upAsset(values) : await addAsset(values);
 
-      await GetAssetsByPageOrder(currentPage, pageSize, orderType, searchText);
+      await GetAssetsByPageOrder(currentPage, pageSize, orderType);
 
       closeModal();
     } catch (error) {
@@ -187,14 +209,34 @@ const AssetPage = () => {
       {/* Tier 2: Search and Refresh */}
       <div className="py-4">
         <Space size="middle">
-          <Input.Search
-            placeholder="Tên tài sản..."
+          {/* Bộ lọc đơn vị */}
+          <Select
+            placeholder="Chọn đơn vị"
             allowClear
-            enterButton={<SearchOutlined />}
             size="large"
-            onSearch={handleSearch}
-            style={{ width: 300 }}
+            style={{ width: 200 }}
+            options={divisions.map((division) => ({
+              label: division.DivisionName,
+              value: division.Id,
+            }))}
+            onChange={(value) => setDivisionFilter(value)}
           />
+
+          {/* Bộ lọc trạng thái */}
+          <Select
+            placeholder="Chọn trạng thái"
+            allowClear
+            size="large"
+            style={{ width: 200 }}
+            options={[
+              { label: 'Tốt', value: 'Tốt' },
+              { label: 'Chờ sửa chữa', value: 'Chờ sửa chữa' },
+              { label: 'Cần thay thế', value: 'Cần thay thế' },
+            ]}
+            onChange={(value) => setStatusFilter(value)}
+          />
+
+          {/* Nút làm mới */}
           <Button
             type="default"
             icon={<ReloadOutlined />}
@@ -247,7 +289,11 @@ const AssetPage = () => {
             okText="Lưu"
             cancelText="Hủy"
           >
-            <AssetForm formdata={form} divisions={divisions} />
+            <AssetForm
+              formdata={form}
+              divisions={divisions}
+              isEditing={isEditing}
+            />
           </Modal>
         </div>
       )}

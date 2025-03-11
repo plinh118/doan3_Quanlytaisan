@@ -187,6 +187,24 @@ CREATE TABLE Customer_Link(
 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+
+CREATE TABLE Asset(
+	Id NVARCHAR(100) primary KEY,
+    AssetName NVARCHAR(100) NOT NULL,
+    AssetType NVARCHAR(100) NOT NULL,
+    DivisionId INT,
+    PersonnelId INT NULL,
+     Quantity INT NULL,
+    Price float,
+    StatDate Date Null,
+    StatusAsset nvarchar(50),
+    Description TEXT NULL,
+     IsDeleted BOOLEAN DEFAULT 0,
+       FOREIGN KEY (DivisionId) REFERENCES Division(Id),
+        FOREIGN KEY (PersonnelId) REFERENCES Personnel(Id),
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
 -- ADD DATA
 INSERT INTO `Position` (PositionName, IsDeleted) VALUES
 ('Software Engineer', 0),

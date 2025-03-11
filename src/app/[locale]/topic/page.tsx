@@ -181,8 +181,7 @@ const TopicPage = () => {
       let newIDTopic, result: any;
 
       if (documents.length > 0) {
-        const uploadResult = await uploadFile(documents);
-        uploadedDocuments = uploadResult.documents || [];
+const uploadResult = await uploadFile(documents,show);        uploadedDocuments = uploadResult.documents || [];
       }
       debugger;
       if (editingTopic) {

@@ -15,7 +15,7 @@ export const Department_Colum: ColumnType[] = [
     title: 'Tên đơn vị',
     dataIndex: 'DepartmentName',
     key: 'DepartmentName',
-    width:'200px',
+    width:'500px',
     ellipsis: {
       showTitle: false, 
     },

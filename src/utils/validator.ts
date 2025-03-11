@@ -22,6 +22,11 @@ export const RULES_FORM: Record<keyof keyValidator, FormRule[]> = {
       required: true,
       message: 'Không được để trống',
     },
+    {
+      message: 'Không được bỏ trống',
+      pattern: /^(?!\s+$).*/gm
+    },
+   
   ],
   email: [
     {
@@ -29,13 +34,33 @@ export const RULES_FORM: Record<keyof keyValidator, FormRule[]> = {
       pattern: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g,
       message: 'Email không đúng định dạng',
     },
+    {
+      message: 'Không được bỏ trống',
+      pattern: /^(?!\s+$).*/gm
+    },
+    {
+      required: true,
+      message: 'Không được để trống',
+    },
+    {
+      max: 50,
+      message: 'Tối đa 50 ký tự',
+    },
   ],
   phone: [
     {
-      min: 10,
-      max: 10,
-      pattern: /^0\d{9}$/,
-      message: 'Số điện thoại phải đúng 10 chữ số và bắt đầu bằng 0',
+      min: 9,
+      max: 11,
+      pattern: /^0\d{8,10}$/,
+      message: 'Số điện thoại phải có từ 9 đến 11 chữ số và bắt đầu bằng 0',
+    },
+    {
+      message: 'Không được bỏ trống',
+      pattern: /^(?!\s+$).*/gm
+    },
+    {
+      required: true,
+      message: 'Không được để trống',
     },
   ],
   number: [
@@ -44,6 +69,10 @@ export const RULES_FORM: Record<keyof keyValidator, FormRule[]> = {
       pattern: /^[0-9]*$/gm,
       message: 'Chỉ được là số',
     },
+    {
+      message: 'Không được bỏ trống',
+      pattern: /^(?!\s+$).*/gm
+    }
   ],
   username: [
     {
@@ -52,6 +81,10 @@ export const RULES_FORM: Record<keyof keyValidator, FormRule[]> = {
       message:
         'Tài khoản có độ dài 6-10 chữ/số và không chứa khoảng cách và ký tự đặc biệt',
     },
+    {
+      message: 'Không được bỏ trống',
+      pattern: /^(?!\s+$).*/gm
+    }
   ],
   password: [
     {
@@ -61,6 +94,10 @@ export const RULES_FORM: Record<keyof keyValidator, FormRule[]> = {
       message:
         'Mật khẩu phải có ít nhất 8 kí tự bao gồm chữ hoa, chữ thường, và ít nhất một kí tự đặc biệt và số',
     },
+    {
+      message: 'Không được bỏ trống',
+      pattern: /^(?!\s+$).*/gm
+    }
   ],
   people_name: [
     {
@@ -68,11 +105,15 @@ export const RULES_FORM: Record<keyof keyValidator, FormRule[]> = {
       pattern:
         /^[A-ZÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ][a-zàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]*(?:[ ][A-ZÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ][a-zàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]*)*$/gm,
       message:
-        'Tên nguời dùng phải bắt đầu bằng chữ in hoa Không bắt đầu và kết thúc bằng dấu cách, không chứa sô và ký tự đặc biệt',
+        'Tên nguời dùng phải bắt đầu bằng chữ in hoa, Không bắt đầu và kết thúc bằng dấu cách, không chứa sô và ký tự đặc biệt',
     },
     {
-      min: 5,
-      message: 'Tên phải tối thiểu 5 ký tự',
+      message: 'Không được bỏ trống',
+      pattern: /^(?!\s+$).*/gm
+    },
+    {
+      max: 50,
+      message: 'Tối đa 50 ký tự',
     },
   ],
   full_name: [
@@ -84,6 +125,10 @@ export const RULES_FORM: Record<keyof keyValidator, FormRule[]> = {
       pattern: /^[a-zA-Z ]+$/gm,
       message: 'Tên nguời dùng không chứa ký tự số, không chứa ký tự đặc biệt',
     },
+    {
+      message: 'Không được bỏ trống',
+      pattern: /^(?!\s+$).*/gm
+    }
   ],
   department_name: [
     {
@@ -91,12 +136,16 @@ export const RULES_FORM: Record<keyof keyValidator, FormRule[]> = {
       pattern:
         /^[A-ZÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ][a-zàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]*(?:[ ][A-ZÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ][a-zàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]*)*$/gm,
       message:
-        'Tên phải bắt đầu bằng chữ in hoa Không bắt đầu và kết thúc bằng dấu cách, không chứa sô và ký tự đặc biệt',
+        'Tên phải bắt đầu bằng chữ in hoa, Không bắt đầu và kết thúc bằng dấu cách, không chứa sô và ký tự đặc biệt',
     },
     {
-      min: 5,
-      message: 'Tên phải tối thiểu 5 ký tự',
+      max: 50,
+      message: 'Tối đa 50 ký tự',
     },
+    {
+      message: 'Không được bỏ trống',
+      pattern: /^(?!\s+$).*/gm
+    }
   ],
   required_max50: [
     {
@@ -105,20 +154,20 @@ export const RULES_FORM: Record<keyof keyValidator, FormRule[]> = {
 
     },
     {
-      min: 5,
-      message: 'Tên phải tối thiểu 5 ký tự',
+      min: 1,
+      message: 'Tên phải tối thiểu 1 ký tự',
     },
     {
       max: 50,
       message: 'Tối đa 50 ký tự',
     },
     {
-      message: 'Không được chứa toàn khoảng khoảng trắng',
+      message: 'Không được bỏ trống',
       pattern: /^(?!\s+$).*/gm
     }
   ],
   no_space:[{
-    message: 'Không được chứa toàn khoảng tr khoảng trắng',
+    message: 'Không được bỏ trống',
     pattern: /^(?!\s+$).*/gm
   }]
 };

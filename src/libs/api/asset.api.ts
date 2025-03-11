@@ -12,12 +12,16 @@ export const assetAPI = {
     pageSize: number,
     orderType: 'ASC' | 'DESC',
     assetName?: string,
+    divisionId?:number,
   ) => {
     const queryParams = new URLSearchParams({
       pageIndex: pageIndex.toString(),
       pageSize: pageSize.toString(),
       orderType,
     });
+    if (divisionId) {
+      queryParams.append('divisionId', divisionId.toString());
+    }
 
     if (assetName) {
       queryParams.append('assetName', assetName);
@@ -40,8 +44,20 @@ export const assetAPI = {
     return data;
   },
 
-  deleteasset: async (Id: number): Promise<number> => {
-    const data = await CallApi.delete<number>('asset', Id);
-    return data;
+  deleteasset: async (Id: string): Promise<number> => {
+    const assetId = parseInt(Id, 10); // Chuyển đổi string thành number
+
+    if (isNaN(assetId)) {
+      console.warn('ID không hợp lệ:', Id);
+      return 0; // Hoặc có thể throw error tùy vào logic của bạn
+    }
+
+    try {
+      const data = await CallApi.delete<number>('asset', assetId);
+      return typeof data === 'number' ? data : 0; // Đảm bảo trả về số hợp lệ
+    } catch (error) {
+      console.error('Lỗi khi xóa tài sản:', error);
+      return 0; // Trả về giá trị mặc định khi API lỗi
+    }
   },
 };

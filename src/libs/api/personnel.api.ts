@@ -11,6 +11,7 @@ export const personnelAPI = {
     pageSize: number,
     orderType: 'ASC' | 'DESC',
     personnelName?: string,
+    divisionId?:number,
   ) => {
     const queryParams = new URLSearchParams({
       pageIndex: pageIndex.toString(),
@@ -20,6 +21,10 @@ export const personnelAPI = {
 
     if (personnelName) {
       queryParams.append('personnelName', personnelName);
+    }
+    
+    if (divisionId) {
+      queryParams.append('divisionId', divisionId.toString());
     }
 
     const data: GetPersonnel[] = await CallApi.getAll<GetPersonnel>(
