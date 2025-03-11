@@ -178,7 +178,8 @@ const ProjectPage = () => {
       let newIDProject, result: any;
 
       if (documents.length > 0) {
-const uploadResult = await uploadFile(documents,show);        uploadedDocuments = uploadResult.documents || [];
+        const uploadResult = await uploadFile(documents);
+        uploadedDocuments = uploadResult.documents || [];
       }
       debugger;
       if (editingProject) {
