@@ -11,7 +11,7 @@ export const ServicesForm: React.FC<ReusableFormProps> = ({ formdulieu }) => (
     <Form.Item
       name="ServiceName"
       label="Tên dịch vụ"
-      rules={RULES_FORM.Description_max50}
+      rules={RULES_FORM.required_max50}
      
     >
       <Input />

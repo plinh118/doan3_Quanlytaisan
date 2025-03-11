@@ -1,7 +1,7 @@
 import { message } from 'antd';
 
 interface Document {
-  Id?: number;
+  Id?: number; // Thêm Id để phân biệt tài liệu cũ
   DocumentName: string;
   DocumentFile?: File;
   DocumentLink?: string;
@@ -15,13 +15,10 @@ interface UploadResult {
   uploadedPaths?: string[];
   error?: string;
 }
-const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 export const uploadFile = async (
   documents: Document[],
-  show: (msg: any) => void 
 ): Promise<UploadResult> => {
   if (documents.length === 0) {
-    show({ result: 1, messageError: 'Không có tài liệu để tải lên' });
     return { success: false, documents: [], error: 'No documents to upload' };
   }
 
@@ -44,14 +41,10 @@ export const uploadFile = async (
     };
   }
 
-  // Append files to FormData with key 'file'
-  documents.forEach((doc) => {
+  // Append files to FormData
+  documents.forEach((doc, index) => {
     if (doc.DocumentFile instanceof File) {
-      if (doc.DocumentFile.size > MAX_FILE_SIZE) {
-        show({ result: 1, messageError: `Tệp ${doc.DocumentName} quá lớn (10MB)` });
-        return { success: false, documents, error: `Tệp ${doc.DocumentName} vượt quá 10MB` };
-      }
-      formData.append('file', doc.DocumentFile);
+      formData.append(`file_${index}`, doc.DocumentFile);
       hasFiles = true;
     }
   });
@@ -72,7 +65,7 @@ export const uploadFile = async (
 
     if (!response.ok) {
       const errorData = await response.json();
-      show({ result: 1, messageError: errorData });
+      throw new Error(errorData.error || `Server error: ${response.status}`);
     }
 
     const result = await response.json();
@@ -116,8 +109,8 @@ export const uploadFile = async (
 export async function uploadFilesImage(files: File[]): Promise<string[]> {
   const formData = new FormData();
 
-  files.forEach((file) => {
-    formData.append('file', file); // Dùng key 'file'
+  files.forEach((file, index) => {
+    formData.append(`file${index}`, file);
   });
 
   try {
@@ -138,6 +131,7 @@ export async function uploadFilesImage(files: File[]): Promise<string[]> {
     throw error;
   }
 }
+
 export async function getInforFile(filePath: string) {
   if (!filePath) {
     throw new Error('Thiếu đường dẫn file');
@@ -145,8 +139,10 @@ export async function getInforFile(filePath: string) {
 
   try {
     const response = await fetch(
-     ` /api/uploadfile?path=${encodeURIComponent(filePath)}`,
-      { method: 'GET' },
+      `/api/uploadfile?path=${encodeURIComponent(filePath)}`,
+      {
+        method: 'GET',
+      },
     );
 
     const data = await response.json();
@@ -157,7 +153,7 @@ export async function getInforFile(filePath: string) {
 
     return {
       success: true,
-      fileInfo: data,
+      fileInfo: data, // Thông tin file trả về
     };
   } catch (error) {
     console.error('Lỗi khi lấy thông tin file:', error);
