@@ -136,18 +136,18 @@ const PersonnelPage = () => {
                 throw new Error(fileInfo.error || 'Lỗi khi lấy thông tin file');
             }
         } catch (error) {
-            // Tạo thông tin file ảo nếu lỗi
+            
             formattedValues.Picture = [
                 {
                     uid: '-1',
                     name: 'no-image.png',
                     status: 'done',
-                    url: '/images/no-image.png', // Đường dẫn ảnh mặc định
+                    url: '/images/no-image.png', 
                 },
             ];
         }
     } else {
-        // Nếu Picture ban đầu không có gì thì cũng set file ảo luôn
+        
         formattedValues.Picture = [
             {
                 uid: '-1',

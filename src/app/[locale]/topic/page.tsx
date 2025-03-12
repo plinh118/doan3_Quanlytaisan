@@ -154,19 +154,15 @@ const TopicPage = () => {
   );
 
   const addTopic = useCallback(async (newTopic: AddTopic) => {
-    if (
-      !validateDates(newTopic.TopicStartDate, newTopic.TopicEndDate, show)
-    )
+    if (!validateDates(newTopic.TopicStartDate, newTopic.TopicEndDate, show))
       return null;
     const result: any = await topicAPI.createtopic(newTopic);
     return result.result;
   }, []);
 
   const updateTopic = useCallback(async (Id: number, Topic: AddTopic) => {
-     if (
-          !validateDates(Topic.TopicStartDate, Topic.TopicEndDate, show)
-        )
-          return null;
+    if (!validateDates(Topic.TopicStartDate, Topic.TopicEndDate, show))
+      return null;
     const newTopic = { Id, ...Topic };
     const result: any = await topicAPI.updatetopic(newTopic);
     return result.result;
@@ -181,7 +177,8 @@ const TopicPage = () => {
       let newIDTopic, result: any;
 
       if (documents.length > 0) {
-const uploadResult = await uploadFile(documents,show);        uploadedDocuments = uploadResult.documents || [];
+        const uploadResult = await uploadFile(documents, show);
+        uploadedDocuments = uploadResult.documents || [];
       }
       debugger;
       if (editingTopic) {
