@@ -12,6 +12,8 @@ export const personnelAPI = {
     orderType: 'ASC' | 'DESC',
     personnelName?: string,
     divisionId?:number,
+    positionId?:number,
+    workStatus?:string,
   ) => {
     const queryParams = new URLSearchParams({
       pageIndex: pageIndex.toString(),
@@ -22,7 +24,12 @@ export const personnelAPI = {
     if (personnelName) {
       queryParams.append('personnelName', personnelName);
     }
-    
+    if (positionId) {
+      queryParams.append('positionId', positionId.toString());
+    }
+    if (workStatus) {
+      queryParams.append('workStatus', workStatus);
+    }
     if (divisionId) {
       queryParams.append('divisionId', divisionId.toString());
     }

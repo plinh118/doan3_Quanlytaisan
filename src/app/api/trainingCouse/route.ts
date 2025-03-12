@@ -12,11 +12,13 @@ export async function GET(req: NextRequest) {
   const pageSize = Number(searchParams.get('pageSize')) || 10;
   const orderType = (searchParams.get('orderType') as 'ASC' | 'DESC') || 'ASC';
   const TrainingCouseName = searchParams.get('trainingCouseName') || undefined;
+  const InstructorId = searchParams.get('instructorId') || undefined;
+  const ServiceStatus = searchParams.get('serviceStatus') || undefined;
 
   try {
     return db_Provider<GetTrainingCourse[]>(
-      'CALL GetTrainingCoursesByPageOrder(?, ?, ?, ?)',
-      [pageIndex, pageSize, orderType, TrainingCouseName || null],
+      'CALL GetTrainingCoursesByPageOrder(?, ?, ?, ?,?,?)',
+      [pageIndex, pageSize, orderType, TrainingCouseName || null, InstructorId || null ,ServiceStatus || null],
     );
   } catch (error) {
     console.error('Lỗi khi lấy danh sách khóa học:', error);

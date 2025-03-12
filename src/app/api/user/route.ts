@@ -11,11 +11,12 @@ export async function GET(req: NextRequest) {
   const pageSize = Number(searchParams.get('pageSize')) || 10;
   const orderType = (searchParams.get('orderType') as 'ASC' | 'DESC') || 'ASC';
   const FullName = searchParams.get('fullName') || undefined;
+  const Role = searchParams.get('role') || undefined;
 
   try {
     const result = await db_Provider<GetUser[]>(
-      'CALL GetUsersByPageOrder(?, ?, ?, ?)',
-      [pageIndex, pageSize, orderType, FullName || null],
+      'CALL GetUsersByPageOrder(?, ?, ?, ?, ?)',
+      [pageIndex, pageSize, orderType, FullName || null, Role || null],
     );
     return result;
   } catch (error) {

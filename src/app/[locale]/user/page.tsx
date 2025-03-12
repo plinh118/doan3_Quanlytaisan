@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Table, Button, Modal, Form, Input, Space, Card, Divider } from 'antd';
+import { Table, Button, Modal, Form, Input, Space, Card, Divider, Select } from 'antd';
 import { SearchOutlined, ReloadOutlined } from '@ant-design/icons';
 import { GetUser, AddUser } from '@/models/user.model';
 import { userAPI } from '@/libs/api/user.api';
@@ -23,16 +23,17 @@ const UserPage = () => {
   const [form] = Form.useForm();
   const [total, setTotal] = useState<number>(10);
   const { show } = useNotification();
-
+  const [roleFilter,setRoleFilter]=useState('');
   useEffect(() => {
-    GetUsersByPageOrder(currentPage, pageSize, orderType, searchText);
-  }, [currentPage, pageSize, orderType, searchText]);
+    GetUsersByPageOrder(currentPage, pageSize, orderType, searchText,roleFilter);
+  }, [currentPage, pageSize, orderType, searchText,roleFilter]);
 
   const GetUsersByPageOrder = async (
     pageIndex: number,
     pageSize: number,
     orderType: 'ASC' | 'DESC',
     UserName?: string,
+    roleFilter?:string,
   ) => {
     try {
       setLoading(true);
@@ -41,6 +42,7 @@ const UserPage = () => {
         pageSize,
         orderType,
         UserName,
+        roleFilter
       );
       if (data.length > 0) {
         setTotal(data[0].TotalRecords);
@@ -174,6 +176,17 @@ const UserPage = () => {
             size="large"
             onSearch={handleSearch}
             style={{ width: 300 }}
+          />
+           <Select
+            placeholder="Chọn vai trò"
+            allowClear
+            size="large"
+            style={{ width: 200 }}
+            options={[
+              { label: 'Quản trị viên', value: 'admin' },
+              { label: 'Người dùng', value: 'user' },
+            ]}
+            onChange={(value) => setRoleFilter(value)}
           />
           <Button
             type="default"

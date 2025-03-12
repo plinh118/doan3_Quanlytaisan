@@ -11,6 +11,7 @@ import {
   Card,
   message,
   Divider,
+  Select,
 } from 'antd';
 import { SearchOutlined, ReloadOutlined } from '@ant-design/icons';
 import type { GetTopic, AddTopic } from '@/models/topic.model';
@@ -48,6 +49,9 @@ const TopicPage = () => {
   const [documentAfter, setDocumentAfter] = useState<any[]>([]);
   const { updateDocuments } = useUpdateDocuments();
   const { addDocuments } = useAddDocuments();
+  const [departmentFilter,setDepartmentFilter]=useState<number | undefined>(undefined);
+  const [topicStatus,setTopicStatus]=useState('');
+
   const fetchTopics = useCallback(async () => {
     try {
       setLoading(true);
@@ -56,6 +60,8 @@ const TopicPage = () => {
         pageSize,
         orderType,
         searchText,
+        departmentFilter,
+        topicStatus
       );
       if (data.length > 0) {
         setTotal(data[0].TotalRecords);
@@ -71,7 +77,7 @@ const TopicPage = () => {
     } finally {
       setLoading(false);
     }
-  }, [currentPage, pageSize, orderType, searchText]);
+  }, [currentPage, pageSize, orderType, searchText,departmentFilter,topicStatus]);
 
   const fetchDepartments = useCallback(async () => {
     const data = await DepartmentAPI.getDepartmentByPageOrder(1, 100, 'ASC');
@@ -85,6 +91,8 @@ const TopicPage = () => {
 
   const handleRefresh = useCallback(() => {
     setSearchText('');
+    setDepartmentFilter(undefined);
+    setTopicStatus('');
     setCurrentPage(1);
     fetchTopics();
   }, [fetchTopics]);
@@ -267,6 +275,31 @@ const TopicPage = () => {
             size="large"
             onSearch={handleSearch}
             style={{ width: 300 }}
+          />
+           <Select
+            placeholder="Chọn đơn vị"
+            allowClear
+            size="large"
+            style={{ width: 200 }}
+            options={departments.map((dp) => ({
+              label: dp.DepartmentName,
+              value: dp.DepartmentId,
+            }))}
+            onChange={(value) => setDepartmentFilter(value)}
+          />
+
+          {/* Bộ lọc trạng thái */}
+          <Select
+            placeholder="Chọn trạng thái"
+            allowClear
+            size="large"
+            style={{ width: 200 }}
+            options={[
+              { label: 'Đang thực hiện', value: 'Đang thực hiện' },
+              { label: 'Đã hoàn thành', value: 'Đã hoàn thành' },
+              { label: 'Hủy', value: 'Hủy' },
+            ]}
+            onChange={(value) => setTopicStatus(value)}
           />
           <Button
             type="default"

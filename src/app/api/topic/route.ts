@@ -13,13 +13,17 @@ export async function GET(req: NextRequest) {
   const pageSize = Number(searchParams.get('pageSize')) || 10;
   const orderType = (searchParams.get('orderType') as 'ASC' | 'DESC') || 'ASC';
   const TopicName = searchParams.get('topicName') || undefined;
+  const DepartmentId=searchParams.get('departmentId') || undefined;
+  const TopicStatus=searchParams.get('topicStatus') || undefined;
 
   try {
-    return db_Provider<Get_Product[]>('CALL GetTopicsByPageOrder(?, ?, ?, ?)', [
+    return db_Provider<Get_Product[]>('CALL GetTopicsByPageOrder(?, ?, ?, ?,?,?)', [
       pageIndex,
       pageSize,
       orderType,
       TopicName || null,
+      DepartmentId || null,
+      TopicStatus || null
     ]);
   } catch (error) {
     console.error('Lỗi khi lấy danh sách đề tài:', error);

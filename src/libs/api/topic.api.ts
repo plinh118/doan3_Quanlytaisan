@@ -7,6 +7,8 @@ export const topicAPI = {
     pageSize: number,
     orderType: 'ASC' | 'DESC',
     topicName?: string,
+    departmentId?:number,
+    topicStatus?:string,
   ) => {
     const queryParams = new URLSearchParams({
       pageIndex: pageIndex.toString(),
@@ -14,8 +16,14 @@ export const topicAPI = {
       orderType,
     });
 
+    if (departmentId) {
+      queryParams.append('departmentId', departmentId.toString());
+    }
     if (topicName) {
       queryParams.append('topicName', topicName);
+    }
+    if (topicStatus) {
+      queryParams.append('topicStatus', topicStatus);
     }
 
     const data: GetTopic[] = await CallApi.getAll<GetTopic>(

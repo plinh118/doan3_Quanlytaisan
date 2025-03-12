@@ -10,6 +10,7 @@ export const userAPI = {
     pageSize: number,
     orderType: 'ASC' | 'DESC',
     FullName?: string,
+    Role?:string,
   ) => {
     const queryParams = new URLSearchParams({
       pageIndex: pageIndex.toString(),
@@ -17,6 +18,10 @@ export const userAPI = {
       orderType,
     });
 
+
+    if (Role) {
+      queryParams.append('role', Role);
+    }
     if (FullName) {
       queryParams.append('fullName', FullName);
     }

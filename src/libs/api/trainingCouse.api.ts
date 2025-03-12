@@ -10,13 +10,20 @@ export const trainingCouseAPI = {
     pageSize: number,
     orderType: 'ASC' | 'DESC',
     trainingCouseName?: string,
+    instructorId?:number,
+    serviceStatus?:string
   ) => {
     const queryParams = new URLSearchParams({
       pageIndex: pageIndex.toString(),
       pageSize: pageSize.toString(),
       orderType,
     });
-
+    if (instructorId) {
+      queryParams.append('instructorId', instructorId.toString());
+    }
+    if (serviceStatus) {
+      queryParams.append('serviceStatus', serviceStatus);
+    }
     if (trainingCouseName) {
       queryParams.append('trainingCouseName', trainingCouseName);
     }
