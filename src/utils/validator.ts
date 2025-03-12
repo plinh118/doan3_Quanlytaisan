@@ -1,7 +1,7 @@
 import { useNotification } from '@/components/UI_shared/Notification';
 import { FormRule } from 'antd';
 
-// Validator
+
 interface keyValidator {
   required?: any;
   email?: any;
@@ -44,7 +44,7 @@ export const RULES_FORM: Record<keyof keyValidator, FormRule[]> = {
     },
     {
       max: 50,
-      message: 'Tối đa 50 ký tự',
+      message: 'Không nhập quá 50 ký tự',
     },
   ],
   phone: [
@@ -102,6 +102,10 @@ export const RULES_FORM: Record<keyof keyValidator, FormRule[]> = {
   people_name: [
     {
       required: true,
+      message: 'Không được để trống',
+
+    },
+    {
       pattern:
         /^[A-ZÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ][a-zàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]*(?:[ ][A-ZÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ][a-zàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]*)*$/gm,
       message:
@@ -113,7 +117,7 @@ export const RULES_FORM: Record<keyof keyValidator, FormRule[]> = {
     },
     {
       max: 50,
-      message: 'Tối đa 50 ký tự',
+      message: 'Không nhập quá 50 ký tự',
     },
   ],
   full_name: [
@@ -140,7 +144,7 @@ export const RULES_FORM: Record<keyof keyValidator, FormRule[]> = {
     },
     {
       max: 50,
-      message: 'Tối đa 50 ký tự',
+      message: 'Không nhập quá 50 ký tự',
     },
     {
       message: 'Không được bỏ trống',
@@ -159,7 +163,7 @@ export const RULES_FORM: Record<keyof keyValidator, FormRule[]> = {
     },
     {
       max: 50,
-      message: 'Tối đa 50 ký tự',
+      message: 'Không nhập quá 50 ký tự',
     },
     {
       message: 'Không được bỏ trống',
@@ -172,8 +176,8 @@ export const RULES_FORM: Record<keyof keyValidator, FormRule[]> = {
       message: 'Tên phải tối thiểu 1 ký tự',
     },
     {
-      max: 50,
-      message: 'Tối đa 50 ký tự',
+      max: 500,
+      message: 'Không nhập quá 500 ký tự',
     },
     {
       message: 'Không được bỏ trống',
@@ -193,6 +197,48 @@ export const validateDates = (
       messageError: 'Ngày kết thúc phải lớn hơn ngày bắt đầu',
     });
     return false;
+  }
+  return true;
+};
+
+export const checkDateOfBirth = (
+  DateOfBirth: string | null,
+  show?: (msg: any) => void,
+) => {
+  if(DateOfBirth)
+  {
+    const regex = /^(\d{4})-(\d{2})-(\d{2})$|^(\d{2})\/(\d{2})\/(\d{4})$/;
+    if ( !regex.test(DateOfBirth)) {
+      show?.({
+        result: 1,
+        messageError: 'Định dạng ngày sinh không hợp lệ (yyyy-mm-dd hoặc dd/mm/yyyy)',
+      });
+      return false;
+    }
+  
+    
+    const parsedDate = DateOfBirth.includes('-')
+      ? new Date(DateOfBirth) 
+      : new Date(DateOfBirth.split('/').reverse().join('-')); 
+  
+    if (isNaN(parsedDate.getTime())) {
+      show?.({
+        result: 1,
+        messageError: 'Ngày sinh không hợp lệ',
+      });
+      return false;
+    }
+  
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); 
+  
+    if (parsedDate >= today) {
+      show?.({
+        result: 1,
+        messageError: 'Ngày sinh phải nhỏ hơn ngày hiện tại',
+      });
+      return false;
+    }
   }
   return true;
 };

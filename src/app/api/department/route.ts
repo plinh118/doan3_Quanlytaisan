@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(request: NextRequest) {
   const body: AddDepartment = await request.json();
-  const Description = body.Description ? body.Description : null;
+  const Description = body.Description ? body.Description.trim() : null;
   const users = await executeQuery<any[]>(
     `SELECT * FROM Department WHERE DepartmentName = ? AND IsDeleted = 0`,
     [body.DepartmentName.trim()]
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
 
 export async function PATCH(request: NextRequest) {
   const body: GetDepartment = await request.json();
-  const Description = body.Description ? body.Description : null;
+  const Description = body.Description ? body.Description.trim() : null;
 
   return db_Provider<any>(
     'CALL UpdateDepartment(?,?,?)',

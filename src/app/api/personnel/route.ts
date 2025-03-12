@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
     const formattedEndDate = body.EndDate ? body.EndDate : null;
     const formattedDateOfBirth = body.DateOfBirth ? body.DateOfBirth : null;
     const formattedJoinDate = body.JoinDate ? body.JoinDate : null;
-    const Description = body.Description ? body.Description : null;
+    const Description = body.Description ? body.Description.trim() : null;
     const image = body.Picture ? body.Picture : null;
     const gender = body.Gender ? body.Gender : null;
 
@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
         gender?.trim(),
         image,
         body.Email.trim(),
-        Description?.trim(),
+        Description,
         body.PhoneNumber,
         formattedJoinDate,
         formattedEndDate,
@@ -78,9 +78,9 @@ export async function PATCH(request: NextRequest) {
     const formattedEndDate = body.EndDate ? body.EndDate : null;
     const formattedDateOfBirth = body.DateOfBirth ? body.DateOfBirth : null;
     const formattedJoinDate = body.JoinDate ? body.JoinDate : null;
-    const Description = body.Description ? body.Description : null;
+    const Description = body.Description ? body.Description.trim() : null;
     const image = body.Picture ? body.Picture : null;
-    const gender = body.Gender ? body.Gender : null;
+    const gender = body.Gender ? body.Gender.trim() : null;
     const value=db_Provider<any>(
       'CALL UpdatePersonnel(?,?,?,?,?,?,?,?,?,?,?,?,?)',
       [
@@ -89,10 +89,10 @@ export async function PATCH(request: NextRequest) {
         body.PersonnelName.trim(),
         body.PositionId,
         formattedDateOfBirth,
-        gender?.trim(),
+        gender,
         image,
         body.Email.trim(),
-        Description?.trim(),
+        Description,
         body.PhoneNumber,
         formattedJoinDate,
         formattedEndDate,

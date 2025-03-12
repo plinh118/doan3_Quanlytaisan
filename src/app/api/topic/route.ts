@@ -33,7 +33,7 @@ export async function GET(req: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body: AddTopic = await request.json();
-    const Description = body.Description ? body.Description : null;
+    const Description = body.Description ? body.Description.trim() : null;
 
     const formattedEndDate = body.TopicEndDate ? body.TopicEndDate : null;
 
@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
         body.DepartmentId,
         body.TopicStartDate,
         formattedEndDate,
-        Description?.trim(),
+        Description,
         body.TopicStatus,
       ],
       true,
@@ -65,7 +65,7 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ error: 'Thiếu ID đề tài' }, { status: 400 });
     }
     const formattedEndDate = body.TopicEndDate ? body.TopicEndDate : null;
-    const Description = body.Description ? body.Description : null;
+    const Description = body.Description ? body.Description.trim() : null;
 
     return db_Provider<any>(
       'CALL UpdateTopic(?,?,?,?,?,?,?)',
@@ -75,7 +75,7 @@ export async function PATCH(request: NextRequest) {
         body.DepartmentId,
         body.TopicStartDate,
         formattedEndDate,
-        Description?.trim(),
+        Description,
         body.TopicStatus,
       ],
       true,

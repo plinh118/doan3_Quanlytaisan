@@ -30,14 +30,14 @@ export async function GET(req: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body: AddTrainingCourse = await request.json();
-    const Description = body.Description ? body.Description : null;
+    const Description = body.Description ? body.Description.trim() : null;
 
     return db_Provider<any>(
       'CALL AddTrainingCourse(?,?,?,?,?)',
       [
         body.CourseName.trim(),
         body.ServiceStatus,
-        Description?.trim(),
+        Description,
         body.Duration,
         body.InstructorId,
       ],
@@ -58,7 +58,7 @@ export async function PATCH(request: NextRequest) {
     if (!body.Id) {
       return NextResponse.json({ error: 'Thiếu ID khóa học' }, { status: 400 });
     }
-    const Description = body.Description ? body.Description : null;
+    const Description = body.Description ? body.Description.trim() : null;
 
     return db_Provider<any>(
       'CALL UpdateTrainingCourse(?,?,?,?,?,?)',
@@ -66,7 +66,7 @@ export async function PATCH(request: NextRequest) {
         body.Id,
         body.CourseName.trim(),
         body.ServiceStatus,
-        Description?.trim(),
+        Description,
         body.Duration,
         body.InstructorId,
       ],

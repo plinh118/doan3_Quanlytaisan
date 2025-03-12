@@ -13,7 +13,6 @@ import { trainingCouse_Colum } from '@/components/trainingCouse/trainingCouse_Ta
 import { TrainingCouseForm } from '@/components/trainingCouse/trainingCouse_Form';
 import { useNotification } from '../../../components/UI_shared/Notification';
 import Header_Children from '@/components/UI_shared/Children_Head';
-import { GetPersonnel_DTO } from '@/models/personnel.model';
 import { personnelAPI } from '@/libs/api/personnel.api';
 import { GetPersonnel } from '@/models/persionnel.model';
 

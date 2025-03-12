@@ -27,14 +27,14 @@ export async function POST(request: NextRequest) {
   const body: AddAsset_DTO = await request.json();
   const PersonnelId = body.PersonnelId ? body.PersonnelId : null;
   const StatDate = body.StatDate ? body.StatDate : null;
-  const Description = body.Description ? body.Description : null;
+  const Description = body.Description ? body.Description.trim() : null;
   const Quantity=body.Quantity?body.Quantity:null;
   return db_Provider<any>(
     'CALL InsertAsset(?,?,?,?,?,?,?,?,?,?)',
     [
      body.Id,body.AssetName.trim(),
      body.AssetType.trim(),body.DivisionId,Quantity,
-     PersonnelId,body.Price,StatDate,body.StatusAsset,Description?.trim()
+     PersonnelId,body.Price,StatDate,body.StatusAsset,Description
     ],
     true,
   );
@@ -44,7 +44,7 @@ export async function PATCH(request: NextRequest) {
   const body: UpAsset_DTO = await request.json();
   const PersonnelId = body.PersonnelId ? body.PersonnelId : null;
   const StatDate = body.StatDate ? body.StatDate : null;
-  const Description = body.Description ? body.Description : null;
+  const Description = body.Description ? body.Description.trim() : null;
   const Quantity=body.Quantity?body.Quantity:null;
 
   return db_Provider<any>(
@@ -52,7 +52,7 @@ export async function PATCH(request: NextRequest) {
     [
       body.Id,body.AssetName.trim(),
       body.AssetType.trim(),body.DivisionId,
-      PersonnelId,Quantity,body.Price,StatDate,body.StatusAsset,Description?.trim()
+      PersonnelId,Quantity,body.Price,StatDate,body.StatusAsset,Description
      ],
     true,
   );

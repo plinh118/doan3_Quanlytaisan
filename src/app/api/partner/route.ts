@@ -66,11 +66,7 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ error: 'Thiếu ID đối tác' }, { status: 400 });
     }
 
-    const formattedStartDate = formatDate(
-      body.StartDate,
-      'YYYY/MM/DD',
-      'YYYY-MM-DD',
-    );
+   
     const formattedEndDate = body.EndDate ? body.EndDate : null;
 
     return db_Provider<any>(
