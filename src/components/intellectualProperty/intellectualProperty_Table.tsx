@@ -53,20 +53,6 @@ export const IntellectualProperty_Colum: ColumnType[] = [
     ),
   },
   {
-    title: 'Mô tả',
-    dataIndex: 'Description',
-    key: 'Description',
-    width:'200px',
-    ellipsis: {
-      showTitle: false, 
-    },
-    render: (text) => (
-      <Tooltip placement="topLeft" title={text}>
-        {text}
-      </Tooltip>
-    ),
-  },
-  {
     title: 'Trạng thái',
     dataIndex: 'IntellectualPropertyStatus',
     key: 'IntellectualPropertyStatus',

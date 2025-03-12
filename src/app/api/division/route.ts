@@ -29,22 +29,22 @@ export async function GET(req: NextRequest) {
 
 export async function POST(request: NextRequest) {
   const body: Division_DTO = await request.json();
-  const Description = body.Description ? body.Description : null;
+  const Description = body.Description ? body.Description.trim() : null;
 
   return db_Provider<any>(
     'CALL AddDivision(?,?,?)',
-    [body.DivisionName.trim(), body.DepartmentId, Description?.trim()],
+    [body.DivisionName.trim(), body.DepartmentId, Description],
     true,
   );
 }
 
 export async function PATCH(request: NextRequest) {
   const body: Division_DTO = await request.json();
-  const Description = body.Description ? body.Description : null;
+  const Description = body.Description ? body.Description.trim() : null;
 
   return db_Provider<any>(
     'CALL UpdateDivision(?,?,?,?)',
-    [body.Id, body.DivisionName.trim(), body.DepartmentId, Description?.trim()],
+    [body.Id, body.DivisionName.trim(), body.DepartmentId, Description],
     true,
   );
 }

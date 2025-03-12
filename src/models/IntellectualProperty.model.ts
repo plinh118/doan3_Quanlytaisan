@@ -13,7 +13,7 @@ export interface GetIntellectualProperty {
 export interface AddIntellectualProperty {
   DepartmentId: number;
   IntellectualPropertyName: string;
-  IntellectualPropertyImage: string;
+  IntellectualPropertyImage: string |null;
   Description: string | null;
   IntellectualPropertyStatus: string;
 }

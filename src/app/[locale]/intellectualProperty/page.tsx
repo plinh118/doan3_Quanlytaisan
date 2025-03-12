@@ -110,30 +110,44 @@ const IntellectualPropertyPage = () => {
     const formattedValues = {
       ...record,
     };
+if (formattedValues.IntellectualPropertyImage && typeof formattedValues.IntellectualPropertyImage === 'string') {
+        try {
+            const fileInfo = await getInforFile(formattedValues.IntellectualPropertyImage);
 
-    if (
-      formattedValues.IntellectualPropertyImage &&
-      typeof formattedValues.IntellectualPropertyImage === 'string'
-    ) {
-      try {
-        const fileInfo = await getInforFile(
-          formattedValues.IntellectualPropertyImage,
-        );
-
-        if (!fileInfo.success)
-          throw new Error(fileInfo.error || 'Lỗi khi lấy thông tin file');
-
+            if (fileInfo.success) {
+                formattedValues.IntellectualPropertyImage = [
+                    {
+                        uid: fileInfo.fileInfo.uid,
+                        name: fileInfo.fileInfo.name,
+                        status: 'done',
+                        url: fileInfo.fileInfo.url,
+                    },
+                ];
+            } else {
+                throw new Error(fileInfo.error || 'Lỗi khi lấy thông tin file');
+            }
+        } catch (error) {
+            
+            formattedValues.IntellectualPropertyImage = [
+                {
+                    uid: '-1',
+                    name: 'no-image.png',
+                    status: 'done',
+                    url: '/images/no-image.png', 
+                },
+            ];
+        }
+    } else {
+        
         formattedValues.IntellectualPropertyImage = [
-          {
-            uid: fileInfo.fileInfo.uid,
-            name: fileInfo.fileInfo.name,
-            status: 'done',
-            url: fileInfo.fileInfo.url,
-          },
+            {
+                uid: '-1',
+                name: 'no-image.png',
+                status: 'done',
+                url: '/images/no-image.png',
+            },
         ];
-      } catch (error) {}
     }
-
     form.setFieldsValue(formattedValues);
     setModalVisible(true);
   };
@@ -192,8 +206,11 @@ const IntellectualPropertyPage = () => {
       const values: any = await form.validateFields();
       setLoading(true);
       debugger;
-      let imageUrl = '';
-      if (values.IntellectualPropertyImage[0].url) {
+      let imageUrl;
+      if (values.IntellectualPropertyImage === undefined) {
+        imageUrl = null;
+      }
+      else if (values.IntellectualPropertyImage[0].url) {
         imageUrl = values.IntellectualPropertyImage[0].url;
       } else if (
         values.IntellectualPropertyImage &&

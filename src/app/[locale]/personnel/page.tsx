@@ -26,7 +26,7 @@ import { GetPosition } from '@/models/position.model';
 import { PositionAPI } from '@/libs/api/position.api';
 import { divisionAPI } from '@/libs/api/division.api';
 import { getInforFile, uploadFilesImage } from '@/libs/api/upload.api';
-import { validateDates } from '@/utils/validator';
+import { checkDateOfBirth, validateDates } from '@/utils/validator';
 const PersonnelPage = () => {
   const [Personnels, setPersonnels] = useState<GetPersonnel[]>([]);
   const [loading, setLoading] = useState(false);
@@ -187,7 +187,8 @@ const PersonnelPage = () => {
     }
   };
   const AddPersonnel = async (value: any) => {
-    if (!validateDates(value.StartDate, value.EndDate, show))
+    debugger;
+    if (!validateDates(value.JoinDate, value.EndDate, show))
       return null;
 
       const result: any = await personnelAPI.createpersonnel(value);
@@ -204,7 +205,10 @@ const PersonnelPage = () => {
       Id: Id,
       ...value,
     };
-    if (!validateDates(newPersonnel.StartDate, newPersonnel.EndDate, show))
+    debugger;
+    if (!validateDates(newPersonnel.JoinDate, newPersonnel.EndDate, show))
+      return null;
+    if(!checkDateOfBirth(newPersonnel.DateOfBirth,show))
       return null;
 
     const result: any = await personnelAPI.updatepersonnel(newPersonnel);
