@@ -987,44 +987,73 @@ CREATE PROCEDURE GetPersonnelByPageOrder(
     IN p_PageSize INT,
     IN p_OrderType VARCHAR(4),
     IN p_PersonnelName VARCHAR(255),
-    IN p_DivisionId INT  -- Thêm tham số lọc theo đơn vị
+    IN p_DivisionId INT,
+    IN p_PositionId INT,  -- Tìm theo Chức vụ
+    IN p_WorkStatus NVARCHAR(50)  -- Tìm theo Trạng thái công việc
 )
 BEGIN
     DECLARE v_Offset INT;
+    DECLARE v_NameFilter VARCHAR(400);
+    DECLARE v_DivisionFilter VARCHAR(400);
+    DECLARE v_PositionFilter VARCHAR(400);
+    DECLARE v_StatusFilter VARCHAR(400);
+
     SET v_Offset = (p_PageIndex - 1) * p_PageSize;
 
+    -- Lọc theo tên nhân sự
+    IF p_PersonnelName IS NOT NULL AND p_PersonnelName != '' THEN
+        SET v_NameFilter = CONCAT(" AND p.PersonnelName LIKE '%", p_PersonnelName, "%' ");
+    ELSE
+        SET v_NameFilter = "";
+    END IF;
+
+    -- Lọc theo DivisionId
+    IF p_DivisionId IS NOT NULL AND p_DivisionId > 0 THEN
+        SET v_DivisionFilter = CONCAT(" AND p.DivisionId = ", p_DivisionId);
+    ELSE
+        SET v_DivisionFilter = "";
+    END IF;
+
+    -- Lọc theo PositionId
+    IF p_PositionId IS NOT NULL AND p_PositionId > 0 THEN
+        SET v_PositionFilter = CONCAT(" AND p.PositionId = ", p_PositionId);
+    ELSE
+        SET v_PositionFilter = "";
+    END IF;
+
+    -- Lọc theo WorkStatus
+    IF p_WorkStatus IS NOT NULL AND p_WorkStatus != '' THEN
+        SET v_StatusFilter = CONCAT(" AND p.WorkStatus = '", p_WorkStatus, "' ");
+    ELSE
+        SET v_StatusFilter = "";
+    END IF;
+
+    -- Xây dựng SQL lấy danh sách nhân sự + tổng số bản ghi không bị ảnh hưởng bởi bộ lọc
     SET @sql = CONCAT(
         'SELECT p.Id, p.PersonnelName, p.DivisionId, p.PositionId, p.Picture, p.Description, ',
-        'p.Gender, ',  
-        'd.DivisionName, pos.PositionName, p.DateOfBirth, p.Email, p.PhoneNumber, ',
-        'p.JoinDate, p.EndDate, p.WorkStatus, COUNT(*) OVER () AS TotalRecords ',
+        'p.Gender, d.DivisionName, pos.PositionName, p.DateOfBirth, p.Email, p.PhoneNumber, ',
+        'p.JoinDate, p.EndDate, p.WorkStatus, ',
+        'COUNT(*) OVER () AS TotalRecords ',
         'FROM Personnel p ',
         'LEFT JOIN Division d ON p.DivisionId = d.Id ',
         'LEFT JOIN `Position` pos ON p.PositionId = pos.Id ',
-        'WHERE p.IsDeleted = 0 '
+        'WHERE p.IsDeleted = 0 ',
+        v_NameFilter,
+        v_DivisionFilter,
+        v_PositionFilter,
+        v_StatusFilter,
+        ' ORDER BY p.PersonnelName ', p_OrderType, 
+        ' LIMIT ', p_PageSize, ' OFFSET ', v_Offset
     );
 
-    -- Lọc theo tên nhân sự (nếu có)
-    IF p_PersonnelName IS NOT NULL AND p_PersonnelName != '' THEN
-        SET @sql = CONCAT(@sql, ' AND p.PersonnelName LIKE ''%', p_PersonnelName, '%'' ');
-    END IF;
-
-    -- Lọc theo DivisionId (nếu có)
-    IF p_DivisionId IS NOT NULL AND p_DivisionId > 0 THEN
-        SET @sql = CONCAT(@sql, ' AND p.DivisionId = ', p_DivisionId);
-    END IF;
-
-    -- Thêm sắp xếp và phân trang
-    SET @sql = CONCAT(@sql, ' ORDER BY p.PersonnelName ', p_OrderType, 
-                      ' LIMIT ', p_PageSize, ' OFFSET ', v_Offset);
-
-    -- Thực thi câu lệnh SQL động
+    -- Thực thi SQL động
     PREPARE stmt FROM @sql;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 END$$
 
 DELIMITER ;
+
 
 
 DELIMITER $$
@@ -1292,43 +1321,69 @@ BEGIN
     SELECT 0 AS RESULT;
 END$$
 
--- Lấy danh sách khóa đào tạo theo phân trang và sắp xếp
+DELIMITER ;
+DELIMITER $$
+
 CREATE PROCEDURE GetTrainingCoursesByPageOrder(
     IN p_PageIndex INT,         -- Trang hiện tại
     IN p_PageSize INT,          -- Số dòng trên mỗi trang
     IN p_OrderType VARCHAR(4),  -- 'ASC' hoặc 'DESC'
-    IN p_CourseName VARCHAR(255)  -- Tên khóa đào tạo cần tìm (có thể NULL)
+    IN p_CourseName VARCHAR(255),  -- Tên khóa đào tạo cần tìm (có thể NULL)
+    IN p_InstructorId INT,      -- ID giảng viên (có thể NULL)
+    IN p_ServiceStatus NVARCHAR(50) -- Trạng thái khóa học (có thể NULL)
 )
 BEGIN
     DECLARE v_Offset INT;
     DECLARE v_CourseFilter VARCHAR(400);
+    DECLARE v_InstructorFilter VARCHAR(400);
+    DECLARE v_StatusFilter VARCHAR(400);
+
     SET v_Offset = (p_PageIndex - 1) * p_PageSize;
 
-    -- Xử lý điều kiện tìm kiếm
+    -- Xử lý điều kiện tìm kiếm theo CourseName
     IF p_CourseName IS NOT NULL AND p_CourseName != '' THEN
         SET v_CourseFilter = CONCAT(" AND tc.CourseName LIKE '%", p_CourseName, "%' ");
     ELSE
         SET v_CourseFilter = "";
     END IF;
 
-    -- Xây dựng SQL lấy danh sách khóa đào tạo kèm tổng số bản ghi
+    -- Xử lý điều kiện tìm kiếm theo InstructorId
+    IF p_InstructorId IS NOT NULL THEN
+        SET v_InstructorFilter = CONCAT(" AND tc.InstructorId = ", p_InstructorId, " ");
+    ELSE
+        SET v_InstructorFilter = "";
+    END IF;
+
+    -- Xử lý điều kiện tìm kiếm theo ServiceStatus
+    IF p_ServiceStatus IS NOT NULL AND p_ServiceStatus != '' THEN
+        SET v_StatusFilter = CONCAT(" AND tc.ServiceStatus = '", p_ServiceStatus, "' ");
+    ELSE
+        SET v_StatusFilter = "";
+    END IF;
+
+    -- Xây dựng SQL lấy danh sách khóa đào tạo kèm tổng số bản ghi của cả bảng (IsDeleted = 0)
     SET @sql = CONCAT(
-        'SELECT tc.*, p.PersonnelName AS InstructorName, COUNT(*) OVER () AS TotalRecords 
-        FROM TrainingCourse tc 
-        LEFT JOIN Personnel p ON tc.InstructorId = p.Id 
-        WHERE tc.IsDeleted = 0',
-        v_CourseFilter,
-        ' ORDER BY tc.CourseName ', p_OrderType,
-        ' LIMIT ', p_PageSize, ' OFFSET ', v_Offset
+        'SELECT tc.*, p.PersonnelName AS InstructorName, 
+               COUNT(*) OVER () AS TotalRecords 
+         FROM TrainingCourse tc 
+         LEFT JOIN Personnel p ON tc.InstructorId = p.Id 
+         WHERE tc.IsDeleted = 0',
+         v_CourseFilter,
+         v_InstructorFilter,
+         v_StatusFilter,
+         ' ORDER BY tc.CourseName ', p_OrderType,
+         ' LIMIT ', p_PageSize, ' OFFSET ', v_Offset
     );
 
-    -- Thực thi SQL động
     PREPARE stmt FROM @sql;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 END$$
 
 DELIMITER ;
+
+
+
 -- topic
 
 DELIMITER $$
@@ -1404,40 +1459,69 @@ BEGIN
     SELECT 0 AS RESULT;
 END$$
 
--- Lấy danh sách Topic có phân trang và sắp xếp
+
+DELIMITER ;
+
+DELIMITER $$
+
 CREATE PROCEDURE GetTopicsByPageOrder(
     IN p_PageIndex INT,
     IN p_PageSize INT,
-    IN p_OrderType VARCHAR(4),
-    IN p_TopicName VARCHAR(255)
+    IN p_OrderType VARCHAR(4),   -- 'ASC' hoặc 'DESC'
+    IN p_TopicName VARCHAR(255), -- Tên chủ đề cần tìm (có thể NULL)
+    IN p_DepartmentId INT,       -- Mã đơn vị cần tìm (có thể NULL)
+    IN p_StatusName VARCHAR(255) -- Tên trạng thái cần tìm (có thể NULL)
 )
 BEGIN
     DECLARE v_Offset INT;
     DECLARE v_TopicFilter VARCHAR(400);
+    DECLARE v_DepartmentFilter VARCHAR(400);
+    DECLARE v_StatusFilter VARCHAR(400);
+    
     SET v_Offset = (p_PageIndex - 1) * p_PageSize;
 
+    -- Xử lý điều kiện tìm kiếm theo TopicName
     IF p_TopicName IS NOT NULL AND p_TopicName != '' THEN
         SET v_TopicFilter = CONCAT(" AND t.TopicName LIKE '%", p_TopicName, "%' ");
     ELSE
         SET v_TopicFilter = "";
     END IF;
 
+    -- Xử lý điều kiện tìm kiếm theo DepartmentId
+    IF p_DepartmentId IS NOT NULL THEN
+        SET v_DepartmentFilter = CONCAT(" AND t.DepartmentId = ", p_DepartmentId, " ");
+    ELSE
+        SET v_DepartmentFilter = "";
+    END IF;
+
+    -- Xử lý điều kiện tìm kiếm theo StatusName
+    IF p_StatusName IS NOT NULL AND p_StatusName != '' THEN
+        SET v_StatusFilter = CONCAT(" AND t.TopicStatus = '", p_StatusName, "' ");
+    ELSE
+        SET v_StatusFilter = "";
+    END IF;
+
+    -- Xây dựng SQL lấy danh sách topic kèm tổng số bản ghi
     SET @sql = CONCAT(
         'SELECT t.*, d.DepartmentName, COUNT(*) OVER () AS TotalRecords 
          FROM Topic t 
          JOIN Department d ON t.DepartmentId = d.Id 
-         WHERE t.IsDeleted=0',
+         WHERE t.IsDeleted = 0',
         v_TopicFilter,
+        v_DepartmentFilter,
+        v_StatusFilter,
         ' ORDER BY t.TopicName ', p_OrderType,
         ' LIMIT ', p_PageSize, ' OFFSET ', v_Offset
     );
 
+    -- Thực thi SQL động
     PREPARE stmt FROM @sql;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 END$$
 
 DELIMITER ;
+
 
 -- user
 
@@ -1498,30 +1582,42 @@ BEGIN
     SELECT 0 AS RESULT;
 END$$
 
--- Lấy danh sách User
+DELIMITER $$
+
 CREATE PROCEDURE GetUsersByPageOrder(
     IN p_PageIndex INT,
     IN p_PageSize INT,
     IN p_OrderType VARCHAR(4),  -- 'ASC' hoặc 'DESC'
-    IN p_FullName VARCHAR(255)  -- Tên người dùng cần tìm (có thể NULL)
+    IN p_FullName VARCHAR(255),  -- Tên người dùng cần tìm (có thể NULL)
+    IN p_Role ENUM('admin', 'user')  -- Vai trò cần tìm (có thể NULL)
 )
 BEGIN
     DECLARE v_Offset INT;
     DECLARE v_FullNameFilter VARCHAR(400);
+    DECLARE v_RoleFilter VARCHAR(400);
+    
     SET v_Offset = (p_PageIndex - 1) * p_PageSize;
 
-    -- Xử lý điều kiện tìm kiếm
+    -- Xử lý điều kiện tìm kiếm theo FullName
     IF p_FullName IS NOT NULL AND p_FullName != '' THEN
-        SET v_FullNameFilter = CONCAT(" AND fullName LIKE '%", p_FullName, "%' ");
+        SET v_FullNameFilter = CONCAT(" AND FullName LIKE '%", p_FullName, "%' ");
     ELSE
         SET v_FullNameFilter = "";
+    END IF;
+
+    -- Xử lý điều kiện tìm kiếm theo Role
+    IF p_Role IS NOT NULL AND p_Role != '' THEN
+        SET v_RoleFilter = CONCAT(" AND Role = '", p_Role, "' ");
+    ELSE
+        SET v_RoleFilter = "";
     END IF;
 
     -- Xây dựng SQL lấy danh sách user kèm tổng số bản ghi
     SET @sql = CONCAT(
         'SELECT *, COUNT(*) OVER () AS TotalRecords FROM users WHERE 1=1',
         v_FullNameFilter,
-        ' ORDER BY fullName ', p_OrderType,
+        v_RoleFilter,
+        ' ORDER BY FullName ', p_OrderType,
         ' LIMIT ', p_PageSize, ' OFFSET ', v_Offset
     );
 

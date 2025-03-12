@@ -13,10 +13,13 @@ export async function GET(req: NextRequest) {
   const orderType = (searchParams.get('orderType') as 'ASC' | 'DESC') || 'ASC';
   const PersonnelName = searchParams.get('personnelName') || undefined;
   const DivisionId=searchParams.get('divisionId') || undefined;
+  const PositionId=searchParams.get('positionId') || undefined;
+  const WorkStatus=searchParams.get('workStatus') || undefined;
+
   try {
     return db_Provider<GetPersonnel[]>(
-      'CALL GetPersonnelByPageOrder(?, ?, ?, ?,?)',
-      [pageIndex, pageSize, orderType, PersonnelName || null,DivisionId|| null],
+      'CALL GetPersonnelByPageOrder(?, ?, ?, ?,? ,?,?)',
+      [pageIndex, pageSize, orderType, PersonnelName || null,DivisionId|| null ,PositionId || null,WorkStatus || null ],
     );
   } catch (error) {
     console.error('Lỗi khi lấy danh sách nhân viên:', error);

@@ -11,6 +11,7 @@ import {
   Card,
   UploadFile,
   Divider,
+  Select,
 } from 'antd';
 import { SearchOutlined, ReloadOutlined } from '@ant-design/icons';
 import type { GetPersonnel } from '@/models/persionnel.model';
@@ -27,6 +28,8 @@ import { PositionAPI } from '@/libs/api/position.api';
 import { divisionAPI } from '@/libs/api/division.api';
 import { getInforFile, uploadFilesImage } from '@/libs/api/upload.api';
 import { checkDateOfBirth, validateDates } from '@/utils/validator';
+
+
 const PersonnelPage = () => {
   const [Personnels, setPersonnels] = useState<GetPersonnel[]>([]);
   const [loading, setLoading] = useState(false);
@@ -44,19 +47,25 @@ const PersonnelPage = () => {
   const { show } = useNotification();
   const [divisions, setDivisions] = useState<GetDivision[]>([]);
   const [positions, setpositions] = useState<GetPosition[]>([]);
+  const [divisionFilter,setDivisionFilter]=useState<number | undefined>(undefined)
+  const [positionFilter,setPositionFilter]=useState<number | undefined>(undefined)
+  const [WorkStatus,setWorkStatust]=useState('')
+
 
   useEffect(() => {
-    GetPersonnelsByPageOrder(currentPage, pageSize, orderType, searchText);
+    GetPersonnelsByPageOrder(currentPage, pageSize, orderType, searchText,divisionFilter,positionFilter,WorkStatus);
     getDivision();
     getPosition();
-  }, [currentPage, pageSize, orderType, searchText]);
+  }, [currentPage, pageSize, orderType, searchText,divisionFilter,positionFilter,WorkStatus]);
 
   const GetPersonnelsByPageOrder = async (
     pageIndex: number,
     pageSize: number,
     orderType: 'ASC' | 'DESC',
     PersonnelName?: string,
-    divisionId?:number,
+    divisionId?: number,
+    positionFilter?:number,
+    WorkStatus?:string,
   ) => {
     try {
       setLoading(true);
@@ -65,7 +74,9 @@ const PersonnelPage = () => {
         pageSize,
         orderType,
         PersonnelName,
-        divisionId
+        divisionId,
+        positionFilter,
+        WorkStatus
       );
       if (data.length > 0) {
         setTotal(data[0].TotalRecords);
@@ -94,11 +105,14 @@ const PersonnelPage = () => {
   };
   const handleRefresh = () => {
     setSearchText('');
-    GetPersonnelsByPageOrder(1, pageSize, orderType);
+    setDivisionFilter(undefined);
+    setPositionFilter(undefined);
+    setWorkStatust('');
+    GetPersonnelsByPageOrder(currentPage, pageSize, orderType);
   };
 
   const handleSearch = (value: string) => {
-    GetPersonnelsByPageOrder(1, pageSize, orderType, value);
+    GetPersonnelsByPageOrder(currentPage, pageSize, orderType, value);
   };
 
   const openCreateModal = () => {
@@ -119,49 +133,49 @@ const PersonnelPage = () => {
       DateOfBirth: showDateFormat(record.DateOfBirth),
     };
 
-    if (formattedValues.Picture && typeof formattedValues.Picture === 'string') {
-        try {
-            const fileInfo = await getInforFile(formattedValues.Picture);
+    if (
+      formattedValues.Picture &&
+      typeof formattedValues.Picture === 'string'
+    ) {
+      try {
+        const fileInfo = await getInforFile(formattedValues.Picture);
 
-            if (fileInfo.success) {
-                formattedValues.Picture = [
-                    {
-                        uid: fileInfo.fileInfo.uid,
-                        name: fileInfo.fileInfo.name,
-                        status: 'done',
-                        url: fileInfo.fileInfo.url,
-                    },
-                ];
-            } else {
-                throw new Error(fileInfo.error || 'Lỗi khi lấy thông tin file');
-            }
-        } catch (error) {
-            
-            formattedValues.Picture = [
-                {
-                    uid: '-1',
-                    name: 'no-image.png',
-                    status: 'done',
-                    url: '/images/no-image.png', 
-                },
-            ];
-        }
-    } else {
-        
-        formattedValues.Picture = [
+        if (fileInfo.success) {
+          formattedValues.Picture = [
             {
-                uid: '-1',
-                name: 'no-image.png',
-                status: 'done',
-                url: '/images/no-image.png',
+              uid: fileInfo.fileInfo.uid,
+              name: fileInfo.fileInfo.name,
+              status: 'done',
+              url: fileInfo.fileInfo.url,
             },
+          ];
+        } else {
+          throw new Error(fileInfo.error || 'Lỗi khi lấy thông tin file');
+        }
+      } catch (error) {
+        formattedValues.Picture = [
+          {
+            uid: '-1',
+            name: 'no-image.png',
+            status: 'done',
+            url: '/images/no-image.png',
+          },
         ];
+      }
+    } else {
+      formattedValues.Picture = [
+        {
+          uid: '-1',
+          name: 'no-image.png',
+          status: 'done',
+          url: '/images/no-image.png',
+        },
+      ];
     }
 
     form.setFieldsValue(formattedValues);
     setModalVisible(true);
-};
-
+  };
 
   const closeModal = () => {
     setModalVisible(false);
@@ -188,16 +202,15 @@ const PersonnelPage = () => {
   };
   const AddPersonnel = async (value: any) => {
     debugger;
-    if (!validateDates(value.JoinDate, value.EndDate, show))
-      return null;
+    if (!validateDates(value.JoinDate, value.EndDate, show)) return null;
 
-      const result: any = await personnelAPI.createpersonnel(value);
-      show({
-        result: result.result,
-        messageDone: 'Thêm nhân viên thành công',
-        messageError: 'Thêm nhân viên thất bại',
-      });
-      return;
+    const result: any = await personnelAPI.createpersonnel(value);
+    show({
+      result: result.result,
+      messageDone: 'Thêm nhân viên thành công',
+      messageError: 'Thêm nhân viên thất bại',
+    });
+    return;
   };
 
   const UpdatePersonnel = async (Id: number, value: any) => {
@@ -208,8 +221,7 @@ const PersonnelPage = () => {
     debugger;
     if (!validateDates(newPersonnel.JoinDate, newPersonnel.EndDate, show))
       return null;
-    if(!checkDateOfBirth(newPersonnel.DateOfBirth,show))
-      return null;
+    if (!checkDateOfBirth(newPersonnel.DateOfBirth, show)) return null;
 
     const result: any = await personnelAPI.updatepersonnel(newPersonnel);
     show({
@@ -284,6 +296,41 @@ const PersonnelPage = () => {
             size="large"
             onSearch={handleSearch}
             style={{ width: 300 }}
+          />
+          <Select
+            placeholder="Chọn đơn vị"
+            allowClear
+            size="large"
+            style={{ width: 200 }}
+            options={divisions.map((division) => ({
+              label: division.DivisionName,
+              value: division.Id,
+            }))}
+            onChange={(value) => setDivisionFilter(value)}
+          />
+          <Select
+            placeholder="Chọn chức vụ"
+            allowClear
+            size="large"
+            style={{ width: 200 }}
+            options={positions.map((position) => ({
+              label: position.PositionName,
+              value: position.Id,
+            }))}
+            onChange={(value) => setPositionFilter(value)}
+          />
+
+          {/* Bộ lọc trạng thái */}
+          <Select
+            placeholder="Chọn trạng thái"
+            allowClear
+            size="large"
+            style={{ width: 200 }}
+            options={[
+              { label: 'Đang làm việc', value: 'Đang làm việc' },
+              { label: 'Đã nghỉ việc', value: 'Đã nghỉ việc' },
+            ]}
+            onChange={(value) => setWorkStatust(value)}
           />
           <Button
             type="default"

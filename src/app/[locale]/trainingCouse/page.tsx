@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Table, Button, Modal, Form, Input, Space, Card, Divider } from 'antd';
+import { Table, Button, Modal, Form, Input, Space, Card, Divider, Select } from 'antd';
 import { SearchOutlined, ReloadOutlined } from '@ant-design/icons';
 import {
   AddTrainingCourse,
@@ -31,16 +31,30 @@ const TrainingCousePage = () => {
   const [pageSize, setPageSize] = useState(10);
   const [orderType, setOrderType] = useState<'ASC' | 'DESC'>('ASC');
   const [persionnels, setPersionnels] = useState<GetPersonnel[]>([]);
+  const [instructorId, setinstructorId] = useState<number | undefined>(
+    undefined,
+  );
+  const [serviceStatus, setserviceStatus] = useState('');
+
   useEffect(() => {
-    GetTrainingCousesByPageOrder(currentPage, pageSize, orderType, searchText);
+    GetTrainingCousesByPageOrder(
+      currentPage,
+      pageSize,
+      orderType,
+      searchText,
+      instructorId,
+      serviceStatus,
+    );
     getPersonnel();
-  }, [currentPage, pageSize, orderType]);
+  }, [currentPage, pageSize, orderType, instructorId, serviceStatus]);
 
   const GetTrainingCousesByPageOrder = async (
     pageIndex: number,
     pageSize: number,
     orderType: 'ASC' | 'DESC',
     TrainingCouseName?: string,
+    instructorId?: number | undefined,
+    serviceStatus?: string,
   ) => {
     try {
       setLoading(true);
@@ -49,6 +63,8 @@ const TrainingCousePage = () => {
         pageSize,
         orderType,
         TrainingCouseName,
+        instructorId,
+        serviceStatus,
       );
       if (data.length > 0) {
         setTotal(data[0].TotalRecords);
@@ -71,6 +87,7 @@ const TrainingCousePage = () => {
     setPersionnels(data);
   };
   const handleRefresh = () => {
+    setinstructorId(undefined), setserviceStatus('');
     setSearchText('');
     GetTrainingCousesByPageOrder(1, pageSize, orderType);
   };
@@ -189,6 +206,31 @@ const TrainingCousePage = () => {
             size="large"
             onSearch={handleSearch}
             style={{ width: 300 }}
+          />
+          <Select
+            placeholder="Chọn giảng viên"
+            allowClear
+            size="large"
+            style={{ width: 200 }}
+            options={persionnels.map((pr) => ({
+              label: pr.PersonnelName,
+              value: pr.Id,
+            }))}
+            onChange={(value) => setinstructorId(value)}
+          />
+
+          {/* Bộ lọc trạng thái */}
+          <Select
+            placeholder="Chọn trạng thái"
+            allowClear
+            size="large"
+            style={{ width: 200 }}
+            options={[
+              { label: 'Đang diễn ra', value: 'Đang diễn ra' },
+              { label: 'Đã hoàn thành', value: 'Đã hoàn thành' },
+              { label: 'Hủy', value: 'Hủy' },
+            ]}
+            onChange={(value) => setserviceStatus(value)}
           />
           <Button
             type="default"

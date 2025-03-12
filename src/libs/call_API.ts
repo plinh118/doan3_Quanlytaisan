@@ -49,7 +49,7 @@ export const CallApi = {
     }
   },
 
-  delete: async <T>(nameApi: string, id: number): Promise<T> => {
+  delete: async <T>(nameApi: string, id: number | string): Promise<T> => {
     try {
       const response = await apiClient.delete<T>(`${API_URL}/${nameApi}`, {
         params: { id },
