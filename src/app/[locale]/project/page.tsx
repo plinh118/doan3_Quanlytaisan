@@ -151,9 +151,7 @@ const ProjectPage = () => {
   };
 
   const updateProject = async (Id: number, project: Add_project) => {
-    if (
-      !validateDates(project.ProjectStartDate, project.ProjectEndDate, show)
-    )
+    if (!validateDates(project.ProjectStartDate, project.ProjectEndDate, show))
       return null;
     const newProject = { Id, ...project };
     const result: any = await projectAPI.updateproject(newProject);
@@ -161,10 +159,14 @@ const ProjectPage = () => {
   };
 
   const addProject = useCallback(async (newProject: any) => {
-       if (
-            !validateDates(newProject.ProjectStartDate, newProject.ProjectEndDate, show)
-          )
-            return null;
+    if (
+      !validateDates(
+        newProject.ProjectStartDate,
+        newProject.ProjectEndDate,
+        show,
+      )
+    )
+      return null;
     const result: any = await projectAPI.createproject(newProject);
     return result.result;
   }, []);
@@ -178,7 +180,8 @@ const ProjectPage = () => {
       let newIDProject, result: any;
 
       if (documents.length > 0) {
-const uploadResult = await uploadFile(documents,show);        uploadedDocuments = uploadResult.documents || [];
+        const uploadResult = await uploadFile(documents, show);
+        uploadedDocuments = uploadResult.documents || [];
       }
       debugger;
       if (editingProject) {
