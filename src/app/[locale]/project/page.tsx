@@ -180,7 +180,7 @@ const ProjectPage = () => {
       let newIDProject, result: any;
 
       if (documents.length > 0) {
-        const uploadResult = await uploadFile(documents, show);
+        const uploadResult = await uploadFile(documents);
         uploadedDocuments = uploadResult.documents || [];
       }
       debugger;

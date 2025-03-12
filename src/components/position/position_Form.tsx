@@ -17,7 +17,7 @@ export const PositionForm: React.FC<ReusableFormProps> = ({
     <Form.Item
       name="PositionName"
       label="Tên chức vụ"
-      rules={RULES_FORM.required_max50}
+      rules={RULES_FORM.Description_max50}
      
     >
       <Input />

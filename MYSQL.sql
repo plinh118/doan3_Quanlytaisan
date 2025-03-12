@@ -67,7 +67,7 @@ CREATE TABLE Partner(
     Email NVARCHAR(50),
     Address NVARCHAR(100),
     StartDate DATE,
-    EndDate DATE,
+    EndDate DATE null,
     PartnershipStatus NVARCHAR(50),
     IsDeleted BOOLEAN DEFAULT 0,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
