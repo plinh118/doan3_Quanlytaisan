@@ -242,3 +242,15 @@ export const checkDateOfBirth = (
   }
   return true;
 };
+
+export const checkNumber=(value:number | null,  show?: (msg: any) => void,)=>{
+  if( value && value < 0)
+  {
+    show?.({
+      result: 1,
+      messageError: 'Số phải lớn hơn hoặc bằng 0',
+    });
+    return false;
+  }
+  return true;
+}

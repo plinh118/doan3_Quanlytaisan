@@ -25,6 +25,7 @@ import { divisionAPI } from '@/libs/api/division.api';
 import { personnelAPI } from '@/libs/api/personnel.api';
 import { GetPersonnel } from '@/models/persionnel.model';
 import { showDateFormat } from '@/utils/date';
+import { checkNumber } from '@/utils/validator';
 
 const AssetPage = () => {
   const [Assets, setAssets] = useState<GetAsset_DTO[]>([]);
@@ -153,6 +154,9 @@ const AssetPage = () => {
   };
 
   const addAsset = async (value: AddAsset_DTO) => {
+    debugger;
+    if(!checkNumber(value.Price,show)) return null;
+    if(!checkNumber(value.Quantity,show)) return null; 
     const result: any = await assetAPI.createasset(value);
     show({
       result: result.result,
@@ -162,6 +166,9 @@ const AssetPage = () => {
   };
 
   const upAsset = async (value: UpAsset_DTO) => {
+    if(!checkNumber(value.Price,show)) return null;
+    if(!checkNumber(value.Quantity,show)) return null; 
+    
     const result: any = await assetAPI.updateasset(value);
     show({
       result: result.result,

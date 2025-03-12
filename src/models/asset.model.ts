@@ -5,7 +5,7 @@ export interface UpAsset_DTO {
   DivisionId:number;
   PersonnelId:number | null;
   Quantity:number| null;
-  Price:number;
+  Price:number | null;
   StatDate:string | null;
   StatusAsset:string;
   Description:string;
@@ -20,7 +20,7 @@ export interface AddAsset_DTO {
   Quantity:number| null;
   DivisionId:number;
   PersonnelId:number | null;
-  Price:number;
+  Price:number | null;
   StatDate:string | null;
   StatusAsset:string;
   Description:string;
@@ -32,7 +32,7 @@ export interface GetAsset_DTO {
   DivisionId:number;
   PersonnelId:number | null;
   Quantity:number| null;
-  Price:number;
+  Price:number | null;
   StatDate:string | null;
   StatusAsset:string;
   Description:string;

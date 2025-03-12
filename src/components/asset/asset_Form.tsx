@@ -92,7 +92,7 @@ export const AssetForm: React.FC<ReusableFormProps> = ({
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item name="Price" label="Giá tiền">
+          <Form.Item name="Price" label="Giá tiền" >
             <Input type="number" />
           </Form.Item>
         </Col>
@@ -104,7 +104,7 @@ export const AssetForm: React.FC<ReusableFormProps> = ({
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item name="Quantity" label="Số lượng">
+          <Form.Item name="Quantity" label="Số lượng"  >
             <Input type="number" />
           </Form.Item>
         </Col>
