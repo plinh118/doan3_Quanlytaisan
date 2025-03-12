@@ -29,12 +29,14 @@ export async function POST(request: NextRequest) {
   const StatDate = body.StatDate ? body.StatDate : null;
   const Description = body.Description ? body.Description.trim() : null;
   const Quantity=body.Quantity?body.Quantity:null;
+  const Price=body.Price?body.Price:null;
+ 
   return db_Provider<any>(
     'CALL InsertAsset(?,?,?,?,?,?,?,?,?,?)',
     [
      body.Id,body.AssetName.trim(),
      body.AssetType.trim(),body.DivisionId,Quantity,
-     PersonnelId,body.Price,StatDate,body.StatusAsset,Description
+     PersonnelId,Price,StatDate,body.StatusAsset,Description
     ],
     true,
   );
@@ -46,13 +48,14 @@ export async function PATCH(request: NextRequest) {
   const StatDate = body.StatDate ? body.StatDate : null;
   const Description = body.Description ? body.Description.trim() : null;
   const Quantity=body.Quantity?body.Quantity:null;
+  const Price=body.Price?body.Price:null;
 
   return db_Provider<any>(
     'CALL UpdateAsset(?,?,?,?,?,?,?,?,?,?)',
     [
       body.Id,body.AssetName.trim(),
       body.AssetType.trim(),body.DivisionId,
-      PersonnelId,Quantity,body.Price,StatDate,body.StatusAsset,Description
+      PersonnelId,Quantity,Price,StatDate,body.StatusAsset,Description
      ],
     true,
   );

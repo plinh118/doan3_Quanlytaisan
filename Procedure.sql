@@ -1322,6 +1322,7 @@ BEGIN
 END$$
 
 DELIMITER ;
+
 DELIMITER $$
 
 CREATE PROCEDURE GetTrainingCoursesByPageOrder(
