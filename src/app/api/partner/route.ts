@@ -34,12 +34,7 @@ export async function GET(req: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body: AddPartner_DTO = await request.json();
-    if (!body.PartnerName || !body.PhoneNumber || !body.Email) {
-      return NextResponse.json(
-        { error: 'Thiếu thông tin bắt buộc' },
-        { status: 400 },
-      );
-    }
+
     const formattedEndDate = body.EndDate ? body.EndDate : null;
 
     return db_Provider<any>(

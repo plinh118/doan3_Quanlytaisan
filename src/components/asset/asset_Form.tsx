@@ -129,7 +129,7 @@ export const AssetForm: React.FC<ReusableFormProps> = ({
       <Form.Item
         name="Description"
         label="Mô tả"
-        rules={RULES_FORM.required_max50}
+        rules={RULES_FORM.Description_max50}
       >
         <TextArea />
       </Form.Item>

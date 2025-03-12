@@ -75,7 +75,7 @@ const ProjectForm: React.FC<ReusableFormProps> = ({
             <Form.Item
               name="ProjectName"
               label="Tên dự án"
-              rules={RULES_FORM.required_max50}
+              rules={RULES_FORM.Description_max50}
              
             >
               <Input />
@@ -141,7 +141,7 @@ const ProjectForm: React.FC<ReusableFormProps> = ({
             </Form.Item>
           </Col>
         </Row>
-        <Form.Item name="Description" label="Mô tả" rules={RULES_FORM.required_max50}>
+        <Form.Item name="Description" label="Mô tả" rules={RULES_FORM.Description_max50}>
           <TextArea />
         </Form.Item>
       </Card>
