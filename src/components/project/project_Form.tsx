@@ -75,7 +75,7 @@ const ProjectForm: React.FC<ReusableFormProps> = ({
             <Form.Item
               name="ProjectName"
               label="Tên dự án"
-              rules={RULES_FORM.Description_max50}
+              rules={RULES_FORM.required_max50}
              
             >
               <Input />

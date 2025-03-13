@@ -26,6 +26,7 @@ import {
   useUpdateDocuments,
 } from '../../../modules/shared/document/add_documentHooks';
 import { validateDates } from '@/utils/validator';
+import { UpLoadDocument } from '@/libs/api/newupload';
 
 const ProjectPage = () => {
   const [projects, setProjects] = useState<Get_project[]>([]);
@@ -180,7 +181,9 @@ const ProjectPage = () => {
       let newIDProject, result: any;
 
       if (documents.length > 0) {
-        const uploadResult = await uploadFile(documents);
+        // const uploadResult = await uploadFile(documents);
+        const uploadResult = await UpLoadDocument(documents,show);
+
         uploadedDocuments = uploadResult.documents || [];
       }
       debugger;

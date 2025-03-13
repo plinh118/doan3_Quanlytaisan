@@ -39,6 +39,15 @@ export async function POST(request: NextRequest) {
 
 export async function PATCH(request: NextRequest) {
   const body: GetPosition = await request.json();
+
+  const existingPosition = await executeQuery<any[]>(
+      `SELECT * FROM Position WHERE PositionName = ? AND Id <> ? AND IsDeleted = 0`,
+      [body.PositionName.trim(), body.Id]
+    );
+  
+    if (existingPosition.length > 0) {
+      return NextResponse.json({ result: -1 }, { status: 200 }); 
+    }
   return db_Provider<any>(
     'CALL UpdatePosition(?,?)',
     [body.Id, body.PositionName.trim()],

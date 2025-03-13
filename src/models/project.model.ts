@@ -1,7 +1,7 @@
 export interface Add_project {
   ProjectName: string;
   DepartmentId: number;
-  PartnerId: number;
+  PartnerId: number | null;
   Description: string | null;
   ProjectStartDate: string;
   ProjectEndDate: string | null;
@@ -12,7 +12,7 @@ export interface Up_project {
   Id: number;
   ProjectName: string;
   DepartmentId: number;
-  PartnerId: number;
+  PartnerId: number | null;
   Description: string | null;
   ProjectStartDate: string;
   ProjectEndDate: string | null;
@@ -24,7 +24,7 @@ export interface Get_project {
   ProjectName: string;
   DepartmentId: number;
   DepartmentName: string;
-  PartnerId: number;
+  PartnerId: number | null;
   PartnerName: string;
   Description: string | null;
   ProjectStartDate: string;

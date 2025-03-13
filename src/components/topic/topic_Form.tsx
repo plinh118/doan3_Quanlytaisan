@@ -67,7 +67,7 @@ export const TopicForm: React.FC<ReusableFormProps> = ({
           <Form.Item
             name="TopicName"
             label="Tên đề tài"
-            rules={RULES_FORM.Description_max50}
+            rules={RULES_FORM.required_max50}
            
           >
             <Input />

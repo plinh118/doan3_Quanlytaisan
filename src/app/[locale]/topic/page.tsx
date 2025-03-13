@@ -31,6 +31,7 @@ import {
   useUpdateDocuments,
 } from '../../../modules/shared/document/add_documentHooks';
 import { validateDates } from '@/utils/validator';
+import { UpLoadDocument } from '@/libs/api/newupload';
 
 const TopicPage = () => {
   const [Topics, setTopics] = useState<GetTopic[]>([]);
@@ -185,7 +186,8 @@ const TopicPage = () => {
       let newIDTopic, result: any;
 
       if (documents.length > 0) {
-        const uploadResult = await uploadFile(documents);
+        // const uploadResult = await uploadFile(documents);
+        const uploadResult = await UpLoadDocument(documents,show);
         uploadedDocuments = uploadResult.documents || [];
       }
       debugger;

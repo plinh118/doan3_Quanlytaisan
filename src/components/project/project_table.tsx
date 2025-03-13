@@ -49,8 +49,8 @@ export const Project_Colum: ColumnType[] = [
       showTitle: false, 
     },
     render: (text) => (
-      <Tooltip placement="topLeft" title={text}>
-        {text}
+      <Tooltip placement="topLeft" title={text? text :"Không có"}>
+        {text? text :"Không có"}
       </Tooltip>
     ),
   },

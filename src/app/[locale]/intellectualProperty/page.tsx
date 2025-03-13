@@ -19,10 +19,11 @@ import { IntellectualPropertyForm } from '@/components/intellectualProperty/inte
 import { IntellectualProperty_Colum } from '@/components/intellectualProperty/intellectualProperty_Table';
 import { useNotification } from '../../../components/UI_shared/Notification';
 import Header_Children from '@/components/UI_shared/Children_Head';
-import { getInforFile, uploadFilesImage } from '@/libs/api/upload.api';
+// import { getInforFile, uploadFilesImage } from '@/libs/api/upload.api';
 import { GetIntellectualProperty } from '@/models/IntellectualProperty.model';
 import { DepartmentAPI } from '@/libs/api/department.api';
 import { Department_DTO } from '@/models/department.model';
+import { fetchFile, NewuploadFiles } from '@/libs/api/newupload';
 const IntellectualPropertyPage = () => {
   const [IntellectualPropertys, setIntellectualPropertys] = useState<
     GetIntellectualProperty[]
@@ -107,38 +108,36 @@ const IntellectualPropertyPage = () => {
     setEditingIntellectualProperty(record);
     setIsEditing(true);
 
-    const formattedValues = {
-      ...record,
-    };
-if (formattedValues.IntellectualPropertyImage && typeof formattedValues.IntellectualPropertyImage === 'string') {
+    const formattedValues = { ...record };
+
+    if (formattedValues.IntellectualPropertyImage && typeof formattedValues.IntellectualPropertyImage === 'string') {
         try {
-            const fileInfo = await getInforFile(formattedValues.IntellectualPropertyImage);
+            const fileInfo = await fetchFile(formattedValues.IntellectualPropertyImage);
 
             if (fileInfo.success) {
                 formattedValues.IntellectualPropertyImage = [
                     {
-                        uid: fileInfo.fileInfo.uid,
-                        name: fileInfo.fileInfo.name,
+                        uid: Date.now().toString(),
+                        name: formattedValues.IntellectualPropertyImage.replace(/^\/?uploads\//, ''),
                         status: 'done',
-                        url: fileInfo.fileInfo.url,
+                        url: fileInfo.url,
                     },
                 ];
             } else {
-                throw new Error(fileInfo.error || 'Lỗi khi lấy thông tin file');
+                throw new Error(fileInfo.error);
             }
         } catch (error) {
-            
+            console.error('❌ Lỗi khi xử lý ảnh:', error);
             formattedValues.IntellectualPropertyImage = [
                 {
                     uid: '-1',
                     name: 'no-image.png',
                     status: 'done',
-                    url: '/images/no-image.png', 
+                    url: '/images/no-image.png',
                 },
             ];
         }
     } else {
-        
         formattedValues.IntellectualPropertyImage = [
             {
                 uid: '-1',
@@ -148,9 +147,11 @@ if (formattedValues.IntellectualPropertyImage && typeof formattedValues.Intellec
             },
         ];
     }
+
     form.setFieldsValue(formattedValues);
     setModalVisible(true);
-  };
+};
+
 
   const closeModal = () => {
     setModalVisible(false);
@@ -217,7 +218,9 @@ if (formattedValues.IntellectualPropertyImage && typeof formattedValues.Intellec
         values.IntellectualPropertyImage.length > 0
       ) {
         const fileObj = values.IntellectualPropertyImage[0].originFileObj;
-        const uploadedPaths = await uploadFilesImage([fileObj]);
+        // const uploadedPaths = await uploadFilesImage([fileObj]);
+        debugger;
+        const uploadedPaths = await NewuploadFiles([fileObj],show);
         imageUrl = uploadedPaths[0];
       }
 

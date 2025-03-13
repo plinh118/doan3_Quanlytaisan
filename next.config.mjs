@@ -9,7 +9,8 @@ const nextConfig = {
     rewrites: () => [
         {
           source: '/uploads/:path*',
-          destination: '/api/files/upload/:path*',
+          destination: '/api/uploads/:path*', // dùng để lấy file
+
         },
       ],
     webpack(config) {
