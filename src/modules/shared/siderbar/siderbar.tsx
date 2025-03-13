@@ -65,7 +65,7 @@ const SiderBar: React.FC<SiderBarProps> = ({ collapsed }) => {
 
   const sidebarItems = useMemo<MenuItem[]>(
     () => [
-      { key: 'sub5', label: 'DashBoard', icon: <ProjectOutlined /> },
+      { key: 'sub5', label: 'Dashboard', icon: <ProjectOutlined /> },
       {
         key: 'sub1',
         label: 'Quản lý đối tượng',

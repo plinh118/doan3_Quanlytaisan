@@ -208,7 +208,7 @@ const IntellectualPropertyPage = () => {
       setLoading(true);
       debugger;
       let imageUrl;
-      if (values.IntellectualPropertyImage === undefined) {
+      if (values.IntellectualPropertyImage === undefined || values.IntellectualPropertyImage.length==0) {
         imageUrl = null;
       }
       else if (values.IntellectualPropertyImage[0].url) {

@@ -240,7 +240,7 @@ const PersonnelPage = () => {
       setLoading(true);
       debugger;
       let imageUrl;
-      if (values.Picture === undefined) {
+      if (values.Picture === undefined || values.Picture.length==0) {
         imageUrl = null;
       } else if (values.Picture[0].url) {
         imageUrl = values.Picture[0].url;
