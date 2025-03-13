@@ -33,14 +33,17 @@ export const Asset_Colum: ColumnType[] = [
     title: 'Tên người dùng',
     dataIndex: 'PersonnelName',
     key: 'PersonnelName',
-    width:'250px'
+    width:'250px',
+    render: (PersonnelName: string) => <span>{PersonnelName?PersonnelName:"Không có"} </span>,
+
   },
   {
     title: 'Số lượng',
     dataIndex: 'Quantity',
     key: 'Id',
     align:'center',
-    width:'100px'
+    width:'100px',
+    render: (Quantity: number) => <span>{Quantity?Quantity:"Không có"} </span>,
   },
   {
     title: 'Giá',
@@ -48,7 +51,7 @@ export const Asset_Colum: ColumnType[] = [
     key: 'Price',
     width:'200px',
     align:'center',
-    render: (price: number) => <span>{price.toLocaleString()} ₫</span>,
+    render: (price: number) => <span>{price?price.toLocaleString():"Không có"} ₫</span>,
   },
   {
     title: 'Tình trạng',
