@@ -4,7 +4,7 @@ export interface GetIntellectualProperty {
   Id: number;
   DepartmentId: number;
   IntellectualPropertyName: string;
-  IntellectualPropertyImage: string | UploadFile[];
+  IntellectualPropertyImage?: string | UploadFile[];
   Description: string | null;
   IntellectualPropertyStatus: string;
   DepartmentName: string;

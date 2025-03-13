@@ -46,6 +46,14 @@ export async function POST(request: NextRequest) {
 export async function PATCH(request: NextRequest) {
   const body: GetDepartment = await request.json();
   const Description = body.Description ? body.Description.trim() : null;
+  const existingDepartment = await executeQuery<any[]>(
+    `SELECT * FROM Department WHERE DepartmentName = ? AND Id <> ? AND IsDeleted = 0`,
+    [body.DepartmentName.trim(), body.Id]
+  );
+
+  if (existingDepartment.length > 0) {
+    return NextResponse.json({ result: -1 }, { status: 200 }); 
+  }
 
   return db_Provider<any>(
     'CALL UpdateDepartment(?,?,?)',

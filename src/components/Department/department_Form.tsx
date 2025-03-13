@@ -12,7 +12,7 @@ export const DepartmentForm: React.FC<ReusableFormProps> = ({ formdulieu }) => (
     <Form.Item
       name="DepartmentName"
       label="Tên đơn vị"
-      rules={RULES_FORM.Description_max50}
+      rules={RULES_FORM.required_max50}
      
     >
       <Input />

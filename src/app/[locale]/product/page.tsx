@@ -20,6 +20,7 @@ import {
   useAddDocuments,
   useUpdateDocuments,
 } from '../../../modules/shared/document/add_documentHooks';
+import { NewuploadFiles, UpLoadDocument } from '@/libs/api/newupload';
 
 const ProductPage = () => {
   const [products, setProducts] = useState<Get_Product[]>([]);
@@ -177,7 +178,9 @@ const ProductPage = () => {
       debugger;
 
       if (documents.length > 0) {
-        const uploadResult = await uploadFile(documents);
+        // const uploadResult = await uploadFile(documents);
+        const uploadResult = await UpLoadDocument(documents,show);
+
         uploadedDocuments = uploadResult.documents || [];
       }
       if (editingProduct) {

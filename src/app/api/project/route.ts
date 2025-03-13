@@ -33,12 +33,13 @@ export async function POST(request: NextRequest) {
 
     const formattedEndDate = body.ProjectEndDate ? body.ProjectEndDate : null;
     const Description = body.Description ? body.Description.trim() : null;
+    const Partner=body.PartnerId? body.PartnerId:null;
     return db_Provider<any>(
       'CALL AddProject(?,?,?,?,?,?,?)',
       [
         body.ProjectName.trim(),
         body.DepartmentId,
-        body.PartnerId,
+        Partner,
         Description,
         body.ProjectStartDate,
         formattedEndDate,
@@ -64,6 +65,7 @@ export async function PATCH(request: NextRequest) {
 
     const formattedEndDate = body.ProjectEndDate ? body.ProjectEndDate : null;
     const Description = body.Description ? body.Description.trim() : null;
+    const Partner=body.PartnerId? body.PartnerId:null;
 
     return db_Provider<any>(
       'CALL UpdateProject(?,?,?,?,?,?,?,?)',
@@ -71,7 +73,7 @@ export async function PATCH(request: NextRequest) {
         body.Id,
         body.ProjectName.trim(),
         body.DepartmentId,
-        body.PartnerId,
+        Partner,
         Description,
         body.ProjectStartDate,
         formattedEndDate,

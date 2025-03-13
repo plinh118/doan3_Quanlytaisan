@@ -40,7 +40,7 @@ export const PersonnelForm: React.FC<ReusableFormProps> = ({
           <Form.Item
             name="PersonnelName"
             label="Tên nhân sự"
-            rules={RULES_FORM.department_name}
+            rules={RULES_FORM.people_name}
            
           >
             <Input />

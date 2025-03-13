@@ -28,6 +28,7 @@ import { PositionAPI } from '@/libs/api/position.api';
 import { divisionAPI } from '@/libs/api/division.api';
 import { getInforFile, uploadFilesImage } from '@/libs/api/upload.api';
 import { checkDateOfBirth, validateDates } from '@/utils/validator';
+import { fetchFile, NewuploadFiles } from '@/libs/api/newupload';
 
 
 const PersonnelPage = () => {
@@ -138,15 +139,16 @@ const PersonnelPage = () => {
       typeof formattedValues.Picture === 'string'
     ) {
       try {
-        const fileInfo = await getInforFile(formattedValues.Picture);
+        // const fileInfo = await getInforFile(formattedValues.Picture);
+        const fileInfo = await fetchFile(formattedValues.Picture);
 
         if (fileInfo.success) {
           formattedValues.Picture = [
             {
-              uid: fileInfo.fileInfo.uid,
-              name: fileInfo.fileInfo.name,
+              uid: Date.now().toString(),
+              name: formattedValues.Picture.replace(/^\/?uploads\//, ''),
               status: 'done',
-              url: fileInfo.fileInfo.url,
+              url: fileInfo.url,
             },
           ];
         } else {
@@ -244,7 +246,9 @@ const PersonnelPage = () => {
         imageUrl = values.Picture[0].url;
       } else if (values.Picture && values.Picture.length > 0) {
         const fileObj = values.Picture[0].originFileObj;
-        const uploadedPaths = await uploadFilesImage([fileObj]);
+        // const uploadedPaths = await uploadFilesImage([fileObj]);
+        const uploadedPaths = await NewuploadFiles([fileObj],show);
+        
         imageUrl = uploadedPaths[0];
       }
 

@@ -86,11 +86,12 @@ CREATE TABLE Customer(
 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+
 CREATE TABLE Project(
     Id INT AUTO_INCREMENT PRIMARY KEY,
     ProjectName NVARCHAR(50),
     DepartmentId INT,
-    PartnerId INT,
+    PartnerId INT null,
     Description TEXT NULL,
     ProjectStartDate DATE,
     ProjectEndDate DATE NULL,
