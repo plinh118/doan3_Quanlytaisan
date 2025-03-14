@@ -105,7 +105,7 @@ const SiderBar: React.FC<SiderBarProps> = ({ collapsed }) => {
         icon: <SettingOutlined />,
         children: [
           { key: '11', label: 'Đơn vị/ công ty con', icon: <TeamOutlined /> },
-          { key: '10', label: 'Quản bộ phận', icon: <FolderOutlined /> },
+          { key: '10', label: 'Quản lý bộ phận', icon: <FolderOutlined /> },
           { key: '12', label: 'Quản lý chức vụ', icon: <BankOutlined /> },
         ],
       },

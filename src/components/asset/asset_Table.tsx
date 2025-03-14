@@ -12,6 +12,12 @@ export const Asset_Colum: ColumnType[] = [
     ),
   },
   {
+    title: 'Mã tài sản',
+    dataIndex: 'Id',
+    key: 'Id',
+    width:'200px'
+  },
+  {
     title: 'Tên tài sản',
     dataIndex: 'AssetName',
     key: 'AssetName',
@@ -40,7 +46,7 @@ export const Asset_Colum: ColumnType[] = [
   {
     title: 'Số lượng',
     dataIndex: 'Quantity',
-    key: 'Id',
+    key: 'Quantity',
     align:'center',
     width:'100px',
     render: (Quantity: number) => <span>{Quantity?Quantity:"Không có"} </span>,

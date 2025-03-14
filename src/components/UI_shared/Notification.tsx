@@ -35,7 +35,7 @@ export const useNotification = () => {
         result != 6 &&
         result != 7 &&
         result != 8 &&
-        result != 3 && result != -1)
+        result != 3 && result != -1 && result != -2)
     ) {
       notification.success({
         ...notificationConfig,
@@ -82,6 +82,12 @@ export const useNotification = () => {
       notification.error({
         ...notificationConfig,
         description: 'Tên đã tồn tại !',
+      });
+    }
+    if (result === -2) {
+      notification.error({
+        ...notificationConfig,
+        description: 'Mã tài sản đã tồn tại !',
       });
     }
   };
