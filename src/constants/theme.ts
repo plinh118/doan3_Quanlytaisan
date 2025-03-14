@@ -125,7 +125,6 @@ export const themeBrownConfig: ThemeConfig = {
     },
   },
 };
-
 // const handleCheckTheme = () => {
 //     const key = "color"
 //     const themeColor = storage.getStorage(`V-OSINT3_${key}`);

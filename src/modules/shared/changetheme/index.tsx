@@ -5,7 +5,7 @@ import {
   themeLightConfig,
   themeBlueConfig,
   themeDarkConfig,
-  themeBrownConfig,
+  themeBrownConfig
 } from '@/constants/theme';
 
 import {
@@ -78,6 +78,7 @@ const ThemeChanger = () => {
         onClick={() => setThemeColor(themeBrownConfig)}
         style={buttonStyle('#48433d')}
       />
+      
       <h1>/</h1>
       <Dropdown
         menu={{ items: menuItems, onClick: handleMenuClick }}

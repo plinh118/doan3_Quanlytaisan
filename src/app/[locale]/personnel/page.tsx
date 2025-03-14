@@ -238,7 +238,6 @@ const PersonnelPage = () => {
     try {
       const values: any = await form.validateFields();
       setLoading(true);
-      debugger;
       let imageUrl;
       if (values.Picture === undefined || values.Picture.length==0) {
         imageUrl = null;
@@ -246,9 +245,7 @@ const PersonnelPage = () => {
         imageUrl = values.Picture[0].url;
       } else if (values.Picture && values.Picture.length > 0) {
         const fileObj = values.Picture[0].originFileObj;
-        // const uploadedPaths = await uploadFilesImage([fileObj]);
         const uploadedPaths = await NewuploadFiles([fileObj],show);
-        
         imageUrl = uploadedPaths[0];
       }
 

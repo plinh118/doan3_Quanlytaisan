@@ -136,6 +136,7 @@ export const PersonnelForm: React.FC<ReusableFormProps> = ({
         <Form.Item
         name="Gender"
         label="Giới tính "
+        required
       >
         <Select>
           <Select.Option key="1" value="Nam">

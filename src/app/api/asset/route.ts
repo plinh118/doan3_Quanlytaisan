@@ -1,10 +1,11 @@
-import type { NextRequest } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 import { db_Provider } from '@/app/api/Api_Provider';
 import type {
   GetAsset_DTO,
   AddAsset_DTO,
   UpAsset_DTO,
 } from '@/models/asset.model';
+import { executeQuery } from '@/libs/db';
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const pageIndex = Number(searchParams.get('pageIndex')) || 1;
@@ -30,7 +31,14 @@ export async function POST(request: NextRequest) {
   const Description = body.Description ? body.Description.trim() : null;
   const Quantity=body.Quantity?body.Quantity:null;
   const Price=body.Price?body.Price:null;
+  const existingDepartment = await executeQuery<any[]>(
+     `SELECT * FROM Asset WHERE Id = ? AND IsDeleted = 0`,
+     [body.Id.trim()]
+   );
  
+   if (existingDepartment.length > 0) {
+     return NextResponse.json({ result: -2 }, { status: 200 }); 
+   }
   return db_Provider<any>(
     'CALL InsertAsset(?,?,?,?,?,?,?,?,?,?)',
     [
@@ -49,7 +57,14 @@ export async function PATCH(request: NextRequest) {
   const Description = body.Description ? body.Description.trim() : null;
   const Quantity=body.Quantity?body.Quantity:null;
   const Price=body.Price?body.Price:null;
+  const existingDepartment = await executeQuery<any[]>(
+    `SELECT * FROM Asset WHERE Id = ? AND IsDeleted = 0`,
+    [body.Id.trim()]
+  );
 
+  if (existingDepartment.length > 0) {
+    return NextResponse.json({ result: -2 }, { status: 200 }); 
+  }
   return db_Provider<any>(
     'CALL UpdateAsset(?,?,?,?,?,?,?,?,?,?)',
     [

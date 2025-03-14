@@ -35,7 +35,7 @@ export const CustomerForm: React.FC<ReusableFormProps> = ({ formdulieu }) => {
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item name="Address" label="Địa chỉ" rules={RULES_FORM.required}>
+          <Form.Item name="Address" label="Địa chỉ" rules={RULES_FORM.required_max50}>
             <Input />
           </Form.Item>
         </Col>

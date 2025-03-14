@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
         body.PersonnelName.trim(),
         body.PositionId,
         formattedDateOfBirth,
-        gender?.trim(),
+        gender,
         image,
         body.Email.trim(),
         Description,
@@ -83,7 +83,7 @@ export async function PATCH(request: NextRequest) {
     const formattedJoinDate = body.JoinDate ? body.JoinDate : null;
     const Description = body.Description ? body.Description.trim() : null;
     const image = body.Picture ? body.Picture : null;
-    const gender = body.Gender ? body.Gender.trim() : null;
+    const gender = body.Gender ? body.Gender: null;
     const value=db_Provider<any>(
       'CALL UpdatePersonnel(?,?,?,?,?,?,?,?,?,?,?,?,?)',
       [
