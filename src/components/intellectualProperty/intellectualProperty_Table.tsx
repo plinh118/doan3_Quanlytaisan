@@ -1,5 +1,6 @@
 import { ColumnType } from '../UI_shared/ColumType';
-import moment from 'moment';
+import avatar from "@/assets/images/avatars/default.png";
+import Image from "next/image";
 import { Tag, Tooltip } from 'antd';
 export const IntellectualProperty_Colum: ColumnType[] = [
   {
@@ -19,9 +20,9 @@ export const IntellectualProperty_Colum: ColumnType[] = [
     align: 'center',
     render: (text) =>
       text ? (
-        <img src={text} alt="Hình ảnh" width={50} height={50} />
+        <Image src={text} alt="Hình ảnh" width={50} height={50} />
       ) : (
-        <span>Không có</span>
+        <Image src={avatar} alt="Hình ảnh" width={50} height={50} />
       ),
   },
   {

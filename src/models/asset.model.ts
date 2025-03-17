@@ -8,7 +8,7 @@ export interface UpAsset_DTO {
   Price:number | null;
   StatDate:string | null;
   StatusAsset:string;
-  Description:string;
+  Description:string | null;
   PersonnelName:string | null;
   DivisionName:string | null;
   TotalRecords: number;
@@ -23,7 +23,7 @@ export interface AddAsset_DTO {
   Price:number | null;
   StatDate:string | null;
   StatusAsset:string;
-  Description:string;
+  Description:string | null;
 }
 export interface GetAsset_DTO {
   Id:string;
@@ -35,7 +35,7 @@ export interface GetAsset_DTO {
   Price:number | null;
   StatDate:string | null;
   StatusAsset:string;
-  Description:string;
+  Description:string | null;
   PersonnelName:string | null;
   DivisionName:string | null;
   TotalRecords: number;

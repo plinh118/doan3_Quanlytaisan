@@ -1,9 +1,9 @@
 export interface GetCustomer {
   Id: number;
   CustomerName: string;
-  PhoneNumber: string;
-  Email: string;
-  Address: string;
+  PhoneNumber: string | null;
+  Email: string | null;
+  Address: string | null;
   CustomerStatut:string;
   TotalRecords: number;
 }
@@ -11,8 +11,8 @@ export interface GetCustomer {
 export interface AddCustomer {
   Id: number;
   CustomerName: string;
-  PhoneNumber: string;
+  PhoneNumber: string | null;
   CustomerStatut:string;
-  Email: string;
-  Address: string;
+  Email: string | null;
+  Address: string | null;
 }

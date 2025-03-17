@@ -8,16 +8,19 @@ export async function GET(req: NextRequest) {
   const orderType = (searchParams.get('orderType') as 'ASC' | 'DESC') || 'ASC';
   const customerName = searchParams.get('customerName') || undefined;
   const phoneNumber = searchParams.get('phoneNumber') || undefined;
+  const CustomerStatut = searchParams.get('customerStatut') || undefined;
+
 
   try {
     const customers = await db_Provider<GetCustomer[]>(
-      'CALL GetCustomerByPageOrder(?, ?, ?, ?, ?)',
+      'CALL GetCustomerByPageOrder(?, ?, ?, ?, ?,?)',
       [
         pageIndex,
         pageSize,
         orderType,
         customerName || null,
         phoneNumber || null,
+        CustomerStatut || null
       ],
     );
     return customers;
@@ -32,16 +35,12 @@ export async function GET(req: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body: AddCustomer = await request.json();
-    if (!body.CustomerName || !body.PhoneNumber || !body.Address) {
-      return NextResponse.json(
-        { error: 'Thiếu thông tin bắt buộc' },
-        { status: 400 },
-      );
-    }
-
+    const Phone=body.PhoneNumber?body.PhoneNumber.trim(): null;
+    const Email=body.Email?body.Email.trim(): null;
+    const address=body.Address?body.Address.trim():null;
     return db_Provider<any>(
       'CALL AddCustomer(?,?,?,?,?)',
-      [body.CustomerName.trim(), body.PhoneNumber.trim(), body.Email.trim(), body.Address.trim(),body.CustomerStatut],
+      [body.CustomerName.trim(), Phone, Email, address,body.CustomerStatut],
       true,
     );
   } catch (error) {
@@ -55,16 +54,12 @@ export async function POST(request: NextRequest) {
 export async function PATCH(request: NextRequest) {
   try {
     const body: GetCustomer = await request.json();
-    if (!body.Id) {
-      return NextResponse.json(
-        { error: 'Thiếu ID khách hàng' },
-        { status: 400 },
-      );
-    }
-
+    const Phone=body.PhoneNumber?body.PhoneNumber.trim(): null;
+    const Email=body.Email?body.Email.trim(): null;
+    const address=body.Address?body.Address.trim():null;
     return db_Provider<any>(
       'CALL UpdateCustomer(?,?,?,?,?,?)',
-      [body.Id, body.CustomerName.trim(), body.PhoneNumber.trim(), body.Email.trim(), body.Address.trim(),body.CustomerStatut],
+      [body.CustomerName.trim(), Phone, Email, address,body.CustomerStatut],
       true,
     );
   } catch (error) {

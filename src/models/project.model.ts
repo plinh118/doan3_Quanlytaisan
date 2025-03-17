@@ -5,6 +5,7 @@ export interface Add_project {
   Description: string | null;
   ProjectStartDate: string;
   ProjectEndDate: string | null;
+  CustomerId:number | null;
   ProjectStatus: string;
 }
 
@@ -16,6 +17,7 @@ export interface Up_project {
   Description: string | null;
   ProjectStartDate: string;
   ProjectEndDate: string | null;
+  CustomerId:number | null;
   ProjectStatus: string;
 }
 
@@ -30,5 +32,6 @@ export interface Get_project {
   ProjectStartDate: string;
   ProjectEndDate: string | null;
   ProjectStatus: string;
+  CustomerId:number | null;
   TotalRecords: number;
 }

@@ -1,7 +1,17 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Table, Button, Modal, Form, Input, Space, Card, Divider, Select } from 'antd';
+import {
+  Table,
+  Button,
+  Modal,
+  Form,
+  Input,
+  Space,
+  Card,
+  Divider,
+  Select,
+} from 'antd';
 import { SearchOutlined, ReloadOutlined } from '@ant-design/icons';
 import {
   AddTrainingCourse,
@@ -15,7 +25,15 @@ import { useNotification } from '../../../components/UI_shared/Notification';
 import Header_Children from '@/components/UI_shared/Children_Head';
 import { personnelAPI } from '@/libs/api/personnel.api';
 import { GetPersonnel } from '@/models/persionnel.model';
-
+import Product_Customer from '@/components/UI_shared/Product_Customer_Modal';
+import { GetCustomer } from '@/models/customer.model';
+import { CustomerAPI } from '@/libs/api/customer.api';
+import { UndoIcon } from 'lucide-react';
+import { customer_LinkAPI } from '@/libs/api/customer_link.api';
+import {
+  AddCustomer_Link,
+  GetCustomer_Link,
+} from '@/models/customer_Linh.model';
 const TrainingCousePage = () => {
   const [TrainingCouses, setTrainingCouses] = useState<GetTrainingCourse[]>([]);
   const [loading, setLoading] = useState(false);
@@ -35,7 +53,9 @@ const TrainingCousePage = () => {
     undefined,
   );
   const [serviceStatus, setserviceStatus] = useState('');
-
+  const [OpenModalCustomer, setOpenModalCustomer] = useState(false);
+  const [Customers, setCustomers] = useState<GetCustomer[]>([]);
+  const [selectedCustomer, setSelectedCustomer] = useState<any[]>([]);
   useEffect(() => {
     GetTrainingCousesByPageOrder(
       currentPage,
@@ -75,7 +95,7 @@ const TrainingCousePage = () => {
     } catch (error) {
       show({
         result: 1,
-        messageError: 'Lỗi tải danh sách phòng ban',
+        messageError: 'Lỗi tải danh sách khóa học',
       });
     } finally {
       setLoading(false);
@@ -172,17 +192,67 @@ const TrainingCousePage = () => {
     } catch (error) {
       show({
         result: 1,
-        messageError: 'Lỗi lưu phòng ban',
+        messageError: 'Lỗi lưu khóa học',
       });
     } finally {
       setLoading(false);
     }
   };
 
+  const addCustomer = async (value: any) => {
+    const data = await CustomerAPI.getCustomersByPageOrder(1,10,'ASC',undefined,undefined,'Đang hợp tác');
+    const dataTraining = await customer_LinkAPI.getcustomer_LinkByPageOrder(1,10,'ASC',undefined,value.Id,'TrainingCourse',);
+    setSelectedCustomer(dataTraining);
+    setCustomers(data);
+    setOpenModalCustomer(true);
+    setEditingTrainingCouse(value);
+  };
+
+  const handleAddCustomer = async (user: any) => {
+    setSelectedCustomer((prev) => [...prev, user]);
+    const newCustomer: AddCustomer_Link = {
+      CustomerId: user.Id,
+      RelatedId: editingTrainingCouse?.Id,
+      RelatedType: 'TrainingCourse',
+    };
+    const result:any = await customer_LinkAPI.createcustomer_Link(newCustomer);
+    show({
+      result: result.result,
+      messageDone: 'Thêm khách hàng thành công! ',
+      messageError:'Thêm khách hàng thất bại!'
+    });
+  };
+
+  const handleRemoveCustomer = async (Id: number) => {
+    try {
+      setSelectedCustomer((prev) =>
+        prev.filter((customer) => customer.Id !== Id),
+      );
+      const deleteCustomer: AddCustomer_Link = {
+        CustomerId: Id,
+        RelatedId: editingTrainingCouse?.Id,
+        RelatedType: 'TrainingCourse',
+      };
+      await customer_LinkAPI.deletecustomer_Link(deleteCustomer);
+      show({
+        result: 0,
+        messageDone: 'Xóa khách hàng thành công',
+      });
+    } catch {
+      show({
+        result: 1,
+        messageError: 'Lỗii xóa khách hàng',
+      });
+    }
+  };
+  const AddCustomer = async () => {
+    console.log('Thêm đây này');
+  };
   const columns = COLUMNS({
     columnType: trainingCouse_Colum,
     openModal: openEditModal,
     handleDelete: handleDelete,
+    addCustomer: addCustomer,
   });
 
   return (
@@ -262,6 +332,16 @@ const TrainingCousePage = () => {
           }}
         />
       </div>
+
+      <Product_Customer
+        OpenModal={OpenModalCustomer}
+        SetOpenModal={setOpenModalCustomer}
+        Customers={Customers}
+        selectedCustomer={selectedCustomer}
+        handleAddCustomer={handleAddCustomer}
+        handleRemoveCustomer={handleRemoveCustomer}
+        AddCustomer={AddCustomer}
+      />
 
       {/* Modal Form */}
 

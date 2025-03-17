@@ -11,8 +11,9 @@ export const assetAPI = {
     pageIndex: number,
     pageSize: number,
     orderType: 'ASC' | 'DESC',
-    assetName?: string,
+    AssetStatust?: string,
     divisionId?:number,
+    assetName?:string,
   ) => {
     const queryParams = new URLSearchParams({
       pageIndex: pageIndex.toString(),
@@ -21,6 +22,10 @@ export const assetAPI = {
     });
     if (divisionId) {
       queryParams.append('divisionId', divisionId.toString());
+    }
+
+    if (AssetStatust) {
+      queryParams.append('AssetStatust', AssetStatust);
     }
 
     if (assetName) {

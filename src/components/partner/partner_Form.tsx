@@ -38,7 +38,7 @@ export const PartnerForm: React.FC<ReusableFormProps> = ({ formdulieu }) => {
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item name="Address" label="Địa chỉ" rules={RULES_FORM.required}  >
+          <Form.Item name="Address" label="Địa chỉ" rules={RULES_FORM.Description_max50}  >
             <Input />
           </Form.Item>
         </Col>
@@ -48,7 +48,6 @@ export const PartnerForm: React.FC<ReusableFormProps> = ({ formdulieu }) => {
           <Form.Item
             name="StartDate"
             label="Ngày hợp tác"
-            rules={RULES_FORM.required}
           >
             <Input type="Date" />
           </Form.Item>

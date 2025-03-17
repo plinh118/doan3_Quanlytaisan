@@ -8,6 +8,7 @@ export const CustomerAPI = {
     orderType: 'ASC' | 'DESC',
     CustomerName?: string,
     PhoneNumber?: string,
+    customerStatut?:string,
   ) => {
     const queryParams = new URLSearchParams({
       pageIndex: pageIndex.toString(),
@@ -15,6 +16,9 @@ export const CustomerAPI = {
       orderType,
     });
 
+    if (customerStatut) {
+      queryParams.append('customerStatut', customerStatut);
+    }
     if (CustomerName) {
       queryParams.append('customerName', CustomerName);
     }

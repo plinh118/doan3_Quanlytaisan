@@ -424,8 +424,6 @@ BEGIN
 END$$
 
 DELIMITER ;
-
--- customer
 DELIMITER $$
 
 CREATE PROCEDURE GetCustomerByPageOrder(
@@ -433,7 +431,8 @@ CREATE PROCEDURE GetCustomerByPageOrder(
     IN p_PageSize INT,          -- Số dòng trên mỗi trang
     IN p_OrderType VARCHAR(4),  -- 'ASC' hoặc 'DESC'
     IN p_CustomerName VARCHAR(255),
-    IN p_PhoneNumber VARCHAR(10)
+    IN p_PhoneNumber VARCHAR(10),
+    IN p_CustomerStatut NVARCHAR(20)  -- Thêm tham số tìm theo trạng thái khách hàng
 )
 BEGIN
     DECLARE v_Offset INT;
@@ -449,6 +448,10 @@ BEGIN
     
     IF p_PhoneNumber IS NOT NULL AND p_PhoneNumber <> '' THEN
         SET v_FilterCondition = CONCAT(v_FilterCondition, " AND PhoneNumber LIKE '%", p_PhoneNumber, "%' ");
+    END IF;
+    
+    IF p_CustomerStatut IS NOT NULL AND p_CustomerStatut <> '' THEN
+        SET v_FilterCondition = CONCAT(v_FilterCondition, " AND CustomerStatut LIKE '%", p_CustomerStatut, "%' ");
     END IF;
 
     -- Lấy tổng số bản ghi phù hợp với điều kiện
@@ -558,7 +561,8 @@ CREATE PROCEDURE AddProject(
     IN p_Description TEXT,
     IN p_ProjectStartDate DATE,
     IN p_ProjectEndDate DATE,
-    IN p_ProjectStatus NVARCHAR(50)
+    IN p_ProjectStatus NVARCHAR(50),
+    IN p_CustomerId INT
 )
 BEGIN
     DECLARE v_NewProjectId INT;
@@ -568,8 +572,8 @@ BEGIN
         SELECT -1 AS NewProjectId; -- Nếu lỗi, trả về -1
     END;
 
-    INSERT INTO Project (ProjectName, DepartmentId, PartnerId, Description, ProjectStartDate, ProjectEndDate, ProjectStatus)
-    VALUES (p_ProjectName, p_DepartmentId, p_PartnerId, p_Description, p_ProjectStartDate, p_ProjectEndDate, p_ProjectStatus);
+    INSERT INTO Project (ProjectName, DepartmentId, PartnerId, Description, ProjectStartDate, ProjectEndDate, ProjectStatus,CustomerId)
+    VALUES (p_ProjectName, p_DepartmentId, p_PartnerId, p_Description, p_ProjectStartDate, p_ProjectEndDate, p_ProjectStatus,p_CustomerId);
     
     SET v_NewProjectId = LAST_INSERT_ID(); -- Lấy ID vừa thêm
 
@@ -589,7 +593,8 @@ CREATE PROCEDURE UpdateProject(
     IN p_Description TEXT,
     IN p_ProjectStartDate DATE,
     IN p_ProjectEndDate DATE,
-    IN p_ProjectStatus NVARCHAR(50)
+    IN p_ProjectStatus NVARCHAR(50),
+    IN p_CustomerId INT
 )
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION 
@@ -604,7 +609,8 @@ BEGIN
         Description = p_Description,
         ProjectStartDate = p_ProjectStartDate,
         ProjectEndDate = p_ProjectEndDate,
-        ProjectStatus = p_ProjectStatus
+        ProjectStatus = p_ProjectStatus,
+        CustomerId=p_CustomerId
     WHERE Id = p_Id AND IsDeleted = 0;
 
     SELECT 0 AS RESULT;
@@ -643,6 +649,7 @@ BEGIN
         p.ProjectName,
         p.DepartmentId,
         d.DepartmentName,
+        cs.CustomerName,
         p.PartnerId,
         pr.PartnerName,
         p.Description,
@@ -653,6 +660,7 @@ BEGIN
     FROM Project p
     LEFT JOIN Department d ON p.DepartmentId = d.Id
     LEFT JOIN Partner pr ON p.PartnerId = pr.Id
+    LEFT JOIN Customer cs ON p.CustomerId=cs.Id
     WHERE p.IsDeleted = 0
         AND (p_ProjectName IS NULL OR p_ProjectName = '' OR p.ProjectName LIKE CONCAT('%', p_ProjectName, '%'))
     ORDER BY 
@@ -1631,7 +1639,6 @@ END$$
 DELIMITER ;
 
 DELIMITER $$
-
 -- Thêm tài sản
 CREATE PROCEDURE InsertAsset(
     IN p_ID NVARCHAR(100),
@@ -1711,7 +1718,7 @@ BEGIN
 END$$
 
 DELIMITER ;
-
+ 
 DELIMITER $$
 
 CREATE PROCEDURE GetAssetsByPageOrder(
@@ -1719,26 +1726,36 @@ CREATE PROCEDURE GetAssetsByPageOrder(
     IN p_PageSize INT,
     IN p_OrderType VARCHAR(4),
     IN p_StatusAsset NVARCHAR(50),
-    IN p_DivisionId INT 
+    IN p_DivisionId INT,
+    IN p_AssetName NVARCHAR(255)  -- Thêm tham số tìm theo tên tài sản
 )
 BEGIN
     DECLARE v_Offset INT;
     DECLARE v_StatusFilter VARCHAR(400);
     DECLARE v_DivisionFilter VARCHAR(400);
+    DECLARE v_AssetNameFilter VARCHAR(400);
+
     SET v_Offset = (p_PageIndex - 1) * p_PageSize;
 
-    -- Kiểm tra nếu có giá trị lọc theo trạng thái tài sản
+    -- Lọc theo trạng thái tài sản
     IF p_StatusAsset IS NOT NULL AND p_StatusAsset != '' THEN
         SET v_StatusFilter = CONCAT(" AND A.StatusAsset LIKE '%", p_StatusAsset, "%' ");
     ELSE
         SET v_StatusFilter = "";
     END IF;
 
-    -- Kiểm tra nếu có giá trị lọc theo đơn vị (DivisionId)
+    -- Lọc theo đơn vị (DivisionId)
     IF p_DivisionId IS NOT NULL AND p_DivisionId > 0 THEN
         SET v_DivisionFilter = CONCAT(" AND A.DivisionId = ", p_DivisionId, " ");
     ELSE
         SET v_DivisionFilter = "";
+    END IF;
+
+    -- Lọc theo tên tài sản
+    IF p_AssetName IS NOT NULL AND p_AssetName != '' THEN
+        SET v_AssetNameFilter = CONCAT(" AND A.AssetName LIKE '%", p_AssetName, "%' ");
+    ELSE
+        SET v_AssetNameFilter = "";
     END IF;
 
     -- Ghép SQL động
@@ -1750,6 +1767,7 @@ BEGIN
         WHERE A.IsDeleted = 0',
         v_StatusFilter,
         v_DivisionFilter,  
+        v_AssetNameFilter,  -- Thêm điều kiện lọc theo tên
         ' ORDER BY A.AssetName ', p_OrderType,
         ' LIMIT ', p_PageSize, ' OFFSET ', v_Offset
     );
@@ -1760,3 +1778,92 @@ BEGIN
 END$$
 
 DELIMITER ;
+
+DELIMITER $$
+
+-- Thêm Customer_Link
+CREATE PROCEDURE AddCustomerLink(
+    IN p_CustomerId INT,
+    IN p_RelatedId INT,
+    IN p_RelatedType NVARCHAR(50)
+)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+    BEGIN
+        SELECT 1 AS RESULT;
+    END;
+
+    INSERT INTO Customer_Link (CustomerId, RelatedId, RelatedType) 
+    VALUES (p_CustomerId, p_RelatedId, p_RelatedType);
+    
+    SELECT 0 AS RESULT;
+END$$
+
+-- Xóa Customer_Link (xóa cứng, không có cột IsDeleted)
+CREATE PROCEDURE DeleteCustomerLink(
+    IN p_CustomerId INT,
+    IN p_RelatedId INT,
+    IN p_RelatedType NVARCHAR(50)
+)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+    BEGIN
+        SELECT 1 AS RESULT;
+    END;
+
+    DELETE FROM Customer_Link
+    WHERE CustomerId = p_CustomerId AND RelatedId = p_RelatedId AND RelatedType = p_RelatedType;
+    
+    SELECT 0 AS RESULT;
+END$$
+DELIMITER ;
+DELIMITER $$
+
+CREATE PROCEDURE GetCustomerLinksByPageOrder(
+    IN p_PageIndex INT,         -- Trang hiện tại
+    IN p_PageSize INT,          -- Số dòng trên mỗi trang
+    IN p_OrderType VARCHAR(4),  -- 'ASC' hoặc 'DESC'
+    IN p_CustomerName NVARCHAR(255),  -- Tìm theo tên khách hàng (có thể NULL)
+    IN p_RelatedId INT,         -- Mã đối tượng liên quan (có thể NULL)
+    IN p_RelatedType NVARCHAR(50)  -- Kiểu quan hệ (có thể NULL)
+)
+BEGIN
+    DECLARE v_Offset INT;
+    DECLARE v_FilterCondition VARCHAR(500) DEFAULT ' WHERE 1=1 '; -- WHERE mặc định để tránh lỗi SQL
+
+    SET v_Offset = (p_PageIndex - 1) * p_PageSize;
+
+    -- Lọc theo CustomerName nếu có
+    IF p_CustomerName IS NOT NULL AND p_CustomerName != '' THEN
+        SET v_FilterCondition = CONCAT(v_FilterCondition, " AND C.CustomerName LIKE '%", p_CustomerName, "%' ");
+    END IF;
+
+    -- Lọc theo RelatedId nếu có
+    IF p_RelatedId IS NOT NULL AND p_RelatedId > 0 THEN
+        SET v_FilterCondition = CONCAT(v_FilterCondition, " AND CL.RelatedId = ", p_RelatedId);
+    END IF;
+
+    -- Lọc theo RelatedType nếu có
+    IF p_RelatedType IS NOT NULL AND p_RelatedType != '' THEN
+        SET v_FilterCondition = CONCAT(v_FilterCondition, " AND CL.RelatedType LIKE '%", p_RelatedType, "%' ");
+    END IF;
+
+    -- Xây dựng SQL động để lấy dữ liệu
+    SET @sql = CONCAT(
+        'SELECT CL.*, CL.CustomerId as Id, C.CustomerName, COUNT(*) OVER () AS TotalRecords
+         FROM Customer_Link CL
+         LEFT JOIN Customer C ON CL.CustomerId = C.Id',
+        v_FilterCondition,
+        ' ORDER BY CL.RelatedType ', p_OrderType,
+        ' LIMIT ', p_PageSize, ' OFFSET ', v_Offset
+    );
+
+    -- Thực thi SQL động
+    PREPARE stmt FROM @sql;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END$$
+
+DELIMITER ;
+
+

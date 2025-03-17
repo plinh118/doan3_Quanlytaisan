@@ -1,7 +1,7 @@
-import moment from 'moment';
+import Image from "next/image";
 import { ColumnType } from '../UI_shared/ColumType';
 import { Tag, Tooltip } from 'antd';
-
+import avatar from "@/assets/images/avatars/default.png";
 export const Personnel_Colum: ColumnType[] = [
   {
     title: 'STT',
@@ -21,9 +21,9 @@ export const Personnel_Colum: ColumnType[] = [
     align:'center',
     render: (text) =>
       text ? (
-        <img src={text} alt="Hình ảnh" width={50} height={50} />
+        <Image src={text} alt="Hình ảnh" width={50} height={50} />
       ) : (
-        <span>Không có</span>
+        <Image src={avatar} alt="Hình ảnh" width={50} height={50} />
       ),
   },
   {
@@ -82,7 +82,13 @@ export const Personnel_Colum: ColumnType[] = [
     title: 'Số điện thoại',
     dataIndex: 'PhoneNumber',
     key: 'PhoneNumber',
-    width:'150px'
+    width:'150px',
+    render: (text) =>
+      text ? (
+        <span>{text}</span>
+      ) : (
+        <span>Không có</span>
+      ),
   },
   {
     title: 'Trạng thái công việc',
