@@ -32,6 +32,12 @@ export const Partner_Colum: ColumnType[] = [
     key: 'PhoneNumber',
     align: 'center',
     width: '150px',
+    render: (text) =>
+      text ? (
+       <span>{text}</span>
+      ) : (
+        <span>Không có</span>
+      ),
   },
   {
     title: 'Email',
@@ -41,11 +47,13 @@ export const Partner_Colum: ColumnType[] = [
     ellipsis: {
       showTitle: false, 
     },
-    render: (text) => (
+    render: (text) => 
+    text?  
+    (
       <Tooltip placement="topLeft" title={text}>
         {text}
       </Tooltip>
-    ),
+    ):(<span>Không có</span>),
   },
   {
     title: 'Địa chỉ',
@@ -55,11 +63,13 @@ export const Partner_Colum: ColumnType[] = [
     ellipsis: {
       showTitle: false, 
     },
-    render: (text) => (
+    render: (text) => 
+    text?  
+    (
       <Tooltip placement="topLeft" title={text}>
         {text}
       </Tooltip>
-    ),
+    ):(<span>Không có</span>),
   },
   {
     title: 'Ngày bắt đầu',
@@ -67,9 +77,9 @@ export const Partner_Colum: ColumnType[] = [
     key: 'StartDate',
     align: 'center',
     width: '150px',
-    render: (text) => (
+    render: (text) =>text? (
       <span>{text ? moment(text).format('DD/MM/YYYY') : ''}</span>
-    ),
+    ):(<span>Không có</span>),
   },
   {
     title: 'Trạng thái',

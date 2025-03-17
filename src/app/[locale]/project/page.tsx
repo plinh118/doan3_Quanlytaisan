@@ -27,6 +27,8 @@ import {
 } from '../../../modules/shared/document/add_documentHooks';
 import { validateDates } from '@/utils/validator';
 import { UpLoadDocument } from '@/libs/api/newupload';
+import { CustomerAPI } from '@/libs/api/customer.api';
+import { GetCustomer } from '@/models/customer.model';
 
 const ProjectPage = () => {
   const [projects, setProjects] = useState<Get_project[]>([]);
@@ -46,7 +48,7 @@ const ProjectPage = () => {
   const [departments, setDepartments] = useState<Department_DTO[]>([]);
   const { updateDocuments } = useUpdateDocuments();
   const { addDocuments } = useAddDocuments();
-
+  const [customers,setCustomers]=useState<GetCustomer[]>([]);
   const refreshProjects = useCallback(() => {
     const fetchProjects = async () => {
       try {
@@ -76,13 +78,17 @@ const ProjectPage = () => {
     refreshProjects();
     getDepartment();
     getPartner();
+    getCustomer();
   }, [refreshProjects]);
 
   const getDepartment = async () => {
     const data = await DepartmentAPI.getDepartmentByPageOrder(1, 100, 'ASC');
     setDepartments(data);
   };
-
+  const getCustomer=async()=>{
+    const data= await CustomerAPI.getCustomersByPageOrder(1,100,"ASC");
+    setCustomers(data);
+  }
   const getPartner = async () => {
     const data = await PartnerAPI.getPartnersByPageOrder(1, 100, 'ASC');
     setPartners(data);
@@ -181,7 +187,6 @@ const ProjectPage = () => {
       let newIDProject, result: any;
 
       if (documents.length > 0) {
-        // const uploadResult = await uploadFile(documents);
         const uploadResult = await UpLoadDocument(documents,show);
 
         uploadedDocuments = uploadResult.documents || [];
@@ -333,6 +338,7 @@ const ProjectPage = () => {
               setDocuments={setDocuments}
               partners={partners}
               departments={departments}
+              customers={customers}
             />
           </Modal>
         </div>

@@ -20,11 +20,13 @@ import { Popconfirm, Tooltip } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import { documentAPI } from '@/libs/api/document.api';
 import { useNotification } from '../UI_shared/Notification';
+import { GetCustomer } from '@/models/customer.model';
 
 const { Text } = Typography;
 
 interface ReusableFormProps {
   partners: Partner_DTO[];
+  customers: GetCustomer[];
   departments: Department_DTO[];
   formdata: FormInstance<any>;
   documents: any[];
@@ -33,6 +35,7 @@ interface ReusableFormProps {
 
 const ProjectForm: React.FC<ReusableFormProps> = ({
   formdata,
+  customers,
   documents,
   setDocuments,
   departments,
@@ -97,7 +100,7 @@ const ProjectForm: React.FC<ReusableFormProps> = ({
           </Col>
         </Row>
         <Row gutter={16}>
-          <Col span={12}>
+          <Col span={8}>
             <Form.Item name="PartnerId" label="Tên đối tác">
               <Select
                 options={partners.map((partner: any) => ({
@@ -107,7 +110,17 @@ const ProjectForm: React.FC<ReusableFormProps> = ({
               />
             </Form.Item>
           </Col>
-          <Col span={12}>
+          <Col span={8}>
+            <Form.Item name="CustomerId" label="Tên khách hàng">
+              <Select
+                options={customers.map((cs: GetCustomer) => ({
+                  label: cs.CustomerName,
+                  value: cs.Id,
+                }))}
+              />
+            </Form.Item>
+          </Col>
+          <Col span={8}>
             <Form.Item
               name="ProjectStatus"
               label="Trạng thái dự án"

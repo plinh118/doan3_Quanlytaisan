@@ -1,6 +1,6 @@
 import moment from 'moment';
 import { ColumnType } from '../UI_shared/ColumType';
-import { Tag, Tooltip } from 'antd';
+import { Button, Tag, Tooltip } from 'antd';
 
 export const trainingCouse_Colum: ColumnType[] = [
   {

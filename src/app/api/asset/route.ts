@@ -11,12 +11,14 @@ export async function GET(req: NextRequest) {
   const pageIndex = Number(searchParams.get('pageIndex')) || 1;
   const pageSize = Number(searchParams.get('pageSize')) || 10;
   const orderType = (searchParams.get('orderType') as 'ASC' | 'DESC') || 'ASC';
-  const AssetName = searchParams.get('assetName') || undefined;
+  const AssetStatust = searchParams.get('AssetStatust') || undefined;
   const DivisionId=searchParams.get('divisionId') || undefined;
+  const AssetName=searchParams.get('assetName') || undefined;
+
   try {
     const result = await db_Provider<GetAsset_DTO[]>(
-      'CALL GetAssetsByPageOrder(?, ?, ?, ?,?)',
-      [pageIndex, pageSize, orderType, AssetName || null,DivisionId|| null],
+      'CALL GetAssetsByPageOrder(?, ?, ?, ?,?,?)',
+      [pageIndex, pageSize, orderType, AssetStatust || null,DivisionId|| null, AssetName|| null],
     );
     return result;
   } catch (error) {
@@ -32,10 +34,8 @@ export async function POST(request: NextRequest) {
   const Quantity=body.Quantity?body.Quantity:null;
   const Price=body.Price?body.Price:null;
   const existingDepartment = await executeQuery<any[]>(
-     `SELECT * FROM Asset WHERE Id = ? AND IsDeleted = 0`,
-     [body.Id.trim()]
+    `SELECT * FROM Asset WHERE Id = "${body.Id.trim()}" AND IsDeleted = 0`,
    );
- 
    if (existingDepartment.length > 0) {
      return NextResponse.json({ result: -2 }, { status: 200 }); 
    }
@@ -57,14 +57,6 @@ export async function PATCH(request: NextRequest) {
   const Description = body.Description ? body.Description.trim() : null;
   const Quantity=body.Quantity?body.Quantity:null;
   const Price=body.Price?body.Price:null;
-  const existingDepartment = await executeQuery<any[]>(
-    `SELECT * FROM Asset WHERE Id = ? AND IsDeleted = 0`,
-    [body.Id.trim()]
-  );
-
-  if (existingDepartment.length > 0) {
-    return NextResponse.json({ result: -2 }, { status: 200 }); 
-  }
   return db_Provider<any>(
     'CALL UpdateAsset(?,?,?,?,?,?,?,?,?,?)',
     [

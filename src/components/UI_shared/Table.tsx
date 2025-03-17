@@ -1,5 +1,5 @@
 import { Button, Space, Popconfirm, Tooltip } from 'antd';
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { EditOutlined, DeleteOutlined, UserAddOutlined } from '@ant-design/icons';
 import type { ColumnType } from 'antd/es/table';
 
 // Define the interface for props
@@ -7,12 +7,13 @@ interface ColumnProps<T> {
   columnType: ColumnType<T>[];
   openModal: (record: T) => void;
   handleDelete: (record: T) => void;
+  addCustomer?:(record: T) => void;
 }
 
 const createColumns = <T,>({
   columnType,
   openModal,
-  handleDelete,
+  handleDelete,addCustomer
 }: ColumnProps<T>): ColumnType<T>[] => {
   return [
     ...columnType,
@@ -23,6 +24,18 @@ const createColumns = <T,>({
       fixed: 'right',
       render: (_: any, record: T) => (
         <Space size="middle">
+          {addCustomer &&(
+            <Tooltip title="Thông tin khách hàng">
+            <Button
+              type="primary"
+              shape="circle"
+              icon={<UserAddOutlined />}
+              className="bg-purple-600"
+              onClick={() => addCustomer(record)}
+            />
+          </Tooltip>
+          )}
+          
           <Tooltip title="Chỉnh sửa">
             <Button
               type="primary"

@@ -38,6 +38,7 @@ CREATE TABLE Division(
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
+
 CREATE TABLE Personnel (
     Id INT AUTO_INCREMENT PRIMARY KEY,
     DivisionId INT,
@@ -48,7 +49,7 @@ CREATE TABLE Personnel (
     Picture NVARCHAR(255) NULL,
     Email NVARCHAR(50),
     Description TEXT NULL,
-    PhoneNumber VARCHAR(10),
+    PhoneNumber VARCHAR(10) null,
     JoinDate DATE NULL,
     EndDate DATE NULL,
     WorkStatus NVARCHAR(50),
@@ -59,14 +60,13 @@ CREATE TABLE Personnel (
     FOREIGN KEY (PositionId) REFERENCES `Position`(Id) ON UPDATE CASCADE
 );
 
-
 CREATE TABLE Partner(
     Id INT AUTO_INCREMENT PRIMARY KEY,
     PartnerName NVARCHAR(50) NOT NULL,
-    PhoneNumber VARCHAR(10),
-    Email NVARCHAR(50),
-    Address NVARCHAR(100),
-    StartDate DATE,
+    PhoneNumber VARCHAR(10) NULL,
+    Email NVARCHAR(50) NULL,
+    Address NVARCHAR(100) NULL,
+    StartDate DATE NULL,
     EndDate DATE null,
     PartnershipStatus NVARCHAR(50),
     IsDeleted BOOLEAN DEFAULT 0,
@@ -77,15 +77,14 @@ updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 CREATE TABLE Customer(
     Id INT AUTO_INCREMENT PRIMARY KEY,
     CustomerName NVARCHAR(50) NOT NULL,
-    PhoneNumber VARCHAR(10),
+    PhoneNumber VARCHAR(10) null,
     CustomerStatut NVARCHAR(20) NULL,
-    Email NVARCHAR(50),
-    Address NVARCHAR(50),
+    Email NVARCHAR(50) null,
+    Address NVARCHAR(50) null,
     IsDeleted BOOLEAN DEFAULT 0,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
-
 
 CREATE TABLE Project(
     Id INT AUTO_INCREMENT PRIMARY KEY,
@@ -96,9 +95,11 @@ CREATE TABLE Project(
     ProjectStartDate DATE,
     ProjectEndDate DATE NULL,
     ProjectStatus NVARCHAR(50),
+    CustomerId INT NULL, 
     IsDeleted BOOLEAN DEFAULT 0,
     FOREIGN KEY (DepartmentId) REFERENCES Department(Id) ON UPDATE CASCADE,
     FOREIGN KEY (PartnerId) REFERENCES Partner(Id) ON UPDATE CASCADE,
+    FOREIGN KEY (CustomerId) REFERENCES Customer(Id) ON UPDATE CASCADE,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );

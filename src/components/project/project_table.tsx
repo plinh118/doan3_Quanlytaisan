@@ -55,6 +55,20 @@ export const Project_Colum: ColumnType[] = [
     ),
   },
   {
+    title: 'Tên khách hàng',
+    dataIndex: 'CustomerName',
+    key: 'CustomerName',
+    width:'200px',
+    ellipsis: {
+      showTitle: false, 
+    },
+    render: (text) => (
+      <Tooltip placement="topLeft" title={text? text :"Không có"}>
+        {text? text :"Không có"}
+      </Tooltip>
+    ),
+  },
+  {
     title: 'Ngày bắt đầu',
     dataIndex: 'ProjectStartDate',
     key: 'ProjectStartDate',

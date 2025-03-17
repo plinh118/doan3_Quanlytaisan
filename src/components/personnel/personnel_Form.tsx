@@ -87,7 +87,6 @@ export const PersonnelForm: React.FC<ReusableFormProps> = ({
           <Form.Item
             name="JoinDate"
             label="Ngày tham gia"
-            rules={RULES_FORM.required}
           >
             <Input type="Date" />
           </Form.Item>
@@ -136,7 +135,6 @@ export const PersonnelForm: React.FC<ReusableFormProps> = ({
         <Form.Item
         name="Gender"
         label="Giới tính "
-        required
       >
         <Select>
           <Select.Option key="1" value="Nam">

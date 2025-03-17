@@ -36,15 +36,18 @@ export async function POST(request: NextRequest) {
     const body: AddPartner_DTO = await request.json();
 
     const formattedEndDate = body.EndDate ? body.EndDate : null;
-
+    const phone = body.PhoneNumber?body.PhoneNumber: null;
+    const address = body.Address?body.Address.trim(): null;
+    const Email = body.Email?body.Email.trim(): null;
+    const startDate = body.StartDate ? body.StartDate :null;
     return db_Provider<any>(
       'CALL AddPartner(?,?,?,?,?,?,?)',
       [
         body.PartnerName.trim(),
-        body.PhoneNumber.trim(),
-        body.Email.trim(),
-        body.Address.trim(),
-        body.StartDate,
+        phone,
+        Email,
+        address,
+        startDate,
         formattedEndDate,
         body.PartnershipStatus,
       ],
@@ -68,16 +71,19 @@ export async function PATCH(request: NextRequest) {
 
    
     const formattedEndDate = body.EndDate ? body.EndDate : null;
-
+    const phone = body.PhoneNumber?body.PhoneNumber: null;
+    const address = body.Address?body.Address.trim(): null;
+    const Email = body.Email?body.Email.trim(): null;
+    const startDate = body.StartDate ? body.StartDate :null;
     return db_Provider<any>(
       'CALL UpdatePartner(?,?,?,?,?,?,?,?)',
       [
         body.Id,
         body.PartnerName.trim(),
-        body.PhoneNumber.trim(),
-        body.Email.trim(),
-        body.Address.trim(),
-        body.StartDate,
+        phone,
+        Email,
+        address,
+        startDate,
         formattedEndDate,
         body.PartnershipStatus,
       ],

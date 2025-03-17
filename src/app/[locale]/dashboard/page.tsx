@@ -77,11 +77,11 @@ const Dashboard = () => {
     { name: "Đã Hủy", value: Number(statistics.cancel_trainingCouse) },
   ]
 
-  // Vibrant color palette for charts
+  
   const pieColors = [
-    "#00C49F", // Vibrant teal for "Đang thực hiện"
-    "#0088FE", // Bright blue for "Đã Hoàn thành"
-    "#FF5252", // Vibrant red for "Đã Hủy"
+    "#00C49F", 
+    "#0088FE", 
+    "#FF5252", 
   ]
 
   return (
@@ -268,8 +268,8 @@ const DashboardCard: React.FC<DashboardCardProps> = ({ title, data, total, color
     <Link href={link} className="dashboard-card-link">
       <div className="dashboard-card">
         <div className="card-header">
-          <h2 className="card-title">{title}</h2>
           <div className="card-icon">{icon}</div>
+          <h2 className="card-title">{title}</h2>
         </div>
         <div className="card-content">
           <div className="pie-chart-container">

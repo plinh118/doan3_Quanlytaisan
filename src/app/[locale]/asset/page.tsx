@@ -12,7 +12,7 @@ import {
   Divider,
   Select,
 } from 'antd';
-import { SearchOutlined, ReloadOutlined } from '@ant-design/icons';
+import { SearchOutlined, ReloadOutlined, UploadOutlined } from '@ant-design/icons';
 import { GetAsset_DTO, AddAsset_DTO, UpAsset_DTO } from '@/models/asset.model';
 import { assetAPI } from '@/libs/api/asset.api';
 import { COLUMNS } from '../../../components/UI_shared/Table';
@@ -22,10 +22,9 @@ import { useNotification } from '../../../components/UI_shared/Notification';
 import Header_Children from '@/components/UI_shared/Children_Head';
 import { GetDivision } from '@/models/division.model';
 import { divisionAPI } from '@/libs/api/division.api';
-import { personnelAPI } from '@/libs/api/personnel.api';
-import { GetPersonnel } from '@/models/persionnel.model';
 import { showDateFormat } from '@/utils/date';
 import { checkNumber } from '@/utils/validator';
+import * as XLSX from 'xlsx'
 
 const AssetPage = () => {
   const [Assets, setAssets] = useState<GetAsset_DTO[]>([]);
@@ -46,6 +45,9 @@ const AssetPage = () => {
   const [statusFilter, setStatusFilter] = useState<string | undefined>(
     undefined,
   );
+  const [assetNameFilter, setassetNameFilter] = useState<string | undefined>(
+    undefined,
+  );
 
   useEffect(() => {
     GetAssetsByPageOrder(
@@ -53,10 +55,10 @@ const AssetPage = () => {
       pageSize,
       orderType,
       statusFilter,
-      divisionFilter,
+      divisionFilter,assetNameFilter
     );
     getdivision();
-  }, [currentPage, pageSize, orderType, divisionFilter, statusFilter]);
+  }, [currentPage, pageSize, orderType, divisionFilter, statusFilter,assetNameFilter]);
 
   const getdivision = async () => {
     const data = await divisionAPI.getDivisionByPageOrder(1, 100, 'ASC');
@@ -67,8 +69,9 @@ const AssetPage = () => {
     pageIndex: number,
     pageSize: number,
     orderType: 'ASC' | 'DESC',
-    assetName?: string,
+    assetStatus?: string,
     divisionId?: number,
+    assetName?:string,
   ) => {
     try {
       setLoading(true);
@@ -76,8 +79,8 @@ const AssetPage = () => {
         pageIndex,
         pageSize,
         orderType,
-        assetName,
-        divisionId,
+        assetStatus,
+        divisionId,assetName
       );
       if (data.length > 0) {
         setTotal(data[0].TotalRecords);
@@ -106,9 +109,12 @@ const AssetPage = () => {
       currentPage,
       pageSize,
       orderType,
-      value,
+      statusFilter,
       divisionFilter,
+      value,
     );
+    setassetNameFilter(value);
+
   };
 
   const openCreateModal = () => {
@@ -155,8 +161,8 @@ const AssetPage = () => {
 
   const addAsset = async (value: AddAsset_DTO) => {
     debugger;
-    if(!checkNumber(value.Price,show)) return null;
-    if(!checkNumber(value.Quantity,show)) return null; 
+    if (!checkNumber(value.Price, show)) return null;
+    if (!checkNumber(value.Quantity, show)) return null;
     const result: any = await assetAPI.createasset(value);
     show({
       result: result.result,
@@ -166,9 +172,9 @@ const AssetPage = () => {
   };
 
   const upAsset = async (value: UpAsset_DTO) => {
-    if(!checkNumber(value.Price,show)) return null;
-    if(!checkNumber(value.Quantity,show)) return null; 
-    
+    if (!checkNumber(value.Price, show)) return null;
+    if (!checkNumber(value.Quantity, show)) return null;
+
     const result: any = await assetAPI.updateasset(value);
     show({
       result: result.result,
@@ -201,6 +207,13 @@ const AssetPage = () => {
     openModal: openEditModal,
     handleDelete: handleDelete,
   });
+  const ExportExcel = () => {
+    const worksheet = XLSX.utils.json_to_sheet(Assets);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Danh sách lớp');
+    XLSX.writeFile(workbook, 'danh_sach_lop.xlsx');
+  
+  };
 
   return (
     <>
@@ -216,6 +229,14 @@ const AssetPage = () => {
       {/* Tier 2: Search and Refresh */}
       <div className="py-4">
         <Space size="middle">
+          <Input.Search
+                      placeholder="Tên tài sản..."
+                      allowClear
+                      enterButton={<SearchOutlined />}
+                      size="large"
+                      onSearch={handleSearch}
+                      style={{ width: 300 }}
+                    />
           {/* Bộ lọc đơn vị */}
           <Select
             placeholder="Chọn đơn vị"
@@ -250,6 +271,9 @@ const AssetPage = () => {
             size="large"
             onClick={handleRefresh}
           />
+          <Button icon={<UploadOutlined />} onClick={ExportExcel}>
+            Xuất Excel
+          </Button>
         </Space>
       </div>
 

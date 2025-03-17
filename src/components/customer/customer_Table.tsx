@@ -20,11 +20,11 @@ export const Customer_Colum: ColumnType[] = [
     ellipsis: {
       showTitle: false, 
     },
-    render: (text) => (
+    render: (text) =>text? (
       <Tooltip placement="topLeft" title={text}>
         {text}
       </Tooltip>
-    ),
+    ): (<span>Không có</span>),
   },
   {
     title: 'Số điện thoại',
@@ -32,6 +32,7 @@ export const Customer_Colum: ColumnType[] = [
     key: 'PhoneNumber',
     align: 'center',
     width: '150px',
+    render: (PhoneNumber: string) => <span>{PhoneNumber?PhoneNumber:"Không có"} </span>,
   },
   {
     title: 'Email',
@@ -41,11 +42,11 @@ export const Customer_Colum: ColumnType[] = [
     ellipsis: {
       showTitle: false, 
     },
-    render: (text) => (
+    render: (text) =>text? (
       <Tooltip placement="topLeft" title={text}>
         {text}
       </Tooltip>
-    ),
+    ):(<span>Không có</span>),
   },
   {
     title: 'Địa chỉ',
@@ -55,11 +56,11 @@ export const Customer_Colum: ColumnType[] = [
     ellipsis: {
       showTitle: false, 
     },
-    render: (text) => (
+    render: (text) =>text? (
       <Tooltip placement="topLeft" title={text}>
         {text}
       </Tooltip>
-    ),
+    ) : (<span>Không có</span>),
   },
   {
     title: 'Trạng thái',

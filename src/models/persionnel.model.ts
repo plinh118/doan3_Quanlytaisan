@@ -27,7 +27,7 @@ export interface AddPersonnel {
   Email: string;
   Description: string | null;
   Gender:string|null;
-  PhoneNumber: string;
+  PhoneNumber: string |null;
   JoinDate: string | null;
   EndDate: string | null;
   WorkStatus: string;
@@ -43,7 +43,7 @@ export interface UpPersonnel {
   Email: string;
   Gender:string|null;
   Description: string;
-  PhoneNumber: string;
+  PhoneNumber: string| null;
   JoinDate: string | null;
   EndDate: string | null;
   WorkStatus: string;

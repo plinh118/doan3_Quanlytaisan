@@ -12,10 +12,10 @@ export interface Partner_DTO {
 
 export interface AddPartner_DTO {
   PartnerName: string;
-  PhoneNumber: string;
-  Email: string;
-  Address: string;
-  StartDate: string;
-  EndDate: string;
+  PhoneNumber: string | null;
+  Email: string | null;
+  Address: string | null;
+  StartDate: string | null;
+  EndDate: string | null;
   PartnershipStatus: string;
 }
