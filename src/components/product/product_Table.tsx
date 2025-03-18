@@ -53,7 +53,7 @@ export const Product_Colum: ColumnType[] = [
     title: 'Trạng thái',
     dataIndex: 'ProductStatus',
     key: 'ProductStatus',
-    width: '200px',
+    width: '150px',
     render: (status) => {
       let color = 'default';
       if (status === 'Đã hoàn thành') color = 'green';

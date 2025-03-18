@@ -15,7 +15,7 @@ export const Services_Colum: ColumnType[] = [
     title: 'Tên dịch vụ',
     dataIndex: 'ServiceName',
     key: 'ServiceName',
-    width:'200px',
+    width:'400px',
     ellipsis: {
       showTitle: false, 
     },

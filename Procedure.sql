@@ -1404,7 +1404,8 @@ CREATE PROCEDURE AddTopic(
     IN p_TopicStartDate DATE,
     IN p_TopicEndDate DATE,
     IN p_Description TEXT,
-    IN p_TopicStatus NVARCHAR(50)
+    IN p_TopicStatus NVARCHAR(50),
+    IN p_CustomerId INT
 )
 BEGIN
     DECLARE v_NewTopicId INT;
@@ -1414,8 +1415,8 @@ BEGIN
         SELECT -1 AS NewTopicId;
     END;
 
-    INSERT INTO Topic (TopicName, DepartmentId, TopicStartDate, TopicEndDate, Description, TopicStatus)
-    VALUES (p_TopicName, p_DepartmentId, p_TopicStartDate, p_TopicEndDate, p_Description, p_TopicStatus);
+    INSERT INTO Topic (TopicName, DepartmentId, TopicStartDate, TopicEndDate, Description, TopicStatus,CustomerId)
+    VALUES (p_TopicName, p_DepartmentId, p_TopicStartDate, p_TopicEndDate, p_Description, p_TopicStatus,p_CustomerId);
 
     SET v_NewTopicId = LAST_INSERT_ID();
 
@@ -1430,7 +1431,8 @@ CREATE PROCEDURE UpdateTopic(
     IN p_TopicStartDate DATE,
     IN p_TopicEndDate DATE,
     IN p_Description TEXT,
-    IN p_TopicStatus NVARCHAR(50)
+    IN p_TopicStatus NVARCHAR(50),
+    IN p_CustomerId INT
 )
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION 
@@ -1445,6 +1447,7 @@ BEGIN
         TopicEndDate = p_TopicEndDate,
         Description = p_Description,
         TopicStatus = p_TopicStatus,
+        CustomerId=p_CustomerId,
         updated_at = CURRENT_TIMESTAMP
     WHERE Id = p_Id AND IsDeleted = 0;
     
@@ -1470,7 +1473,6 @@ END$$
 
 
 DELIMITER ;
-
 DELIMITER $$
 
 CREATE PROCEDURE GetTopicsByPageOrder(
@@ -1512,9 +1514,10 @@ BEGIN
 
     -- Xây dựng SQL lấy danh sách topic kèm tổng số bản ghi
     SET @sql = CONCAT(
-        'SELECT t.*, d.DepartmentName, COUNT(*) OVER () AS TotalRecords 
+        'SELECT t.*, d.DepartmentName, c.CustomerName, COUNT(*) OVER () AS TotalRecords 
          FROM Topic t 
          JOIN Department d ON t.DepartmentId = d.Id 
+         LEFT JOIN Customer c ON t.CustomerId = c.Id 
          WHERE t.IsDeleted = 0',
         v_TopicFilter,
         v_DepartmentFilter,
@@ -1530,7 +1533,6 @@ BEGIN
 END$$
 
 DELIMITER ;
-
 
 -- user
 

@@ -19,12 +19,14 @@ import { useNotification } from '../UI_shared/Notification';
 import { Popconfirm, Tooltip } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import TextArea from 'antd/es/input/TextArea';
+import { GetCustomer } from '@/models/customer.model';
 
 const { Text } = Typography;
 interface ReusableFormProps {
   departments: any[];
   formdata: any;
   documents: any[];
+  customers:any[];
   setDocuments: React.Dispatch<React.SetStateAction<any[]>>;
 }
 
@@ -32,7 +34,7 @@ export const TopicForm: React.FC<ReusableFormProps> = ({
   formdata,
   documents,
   setDocuments,
-  departments,
+  departments,customers
 }) => {
   const { show } = useNotification();
   const updateDocument = (index: number, field: string, value: any) => {
@@ -105,8 +107,23 @@ export const TopicForm: React.FC<ReusableFormProps> = ({
           </Form.Item>
         </Col>
       </Row>
-
-      <Form.Item
+      <Row gutter={16}>
+      <Col span={12}>
+          <Form.Item
+            name="CustomerId"
+            label="Tên khách hàng"
+            rules={RULES_FORM.required}
+          >
+            <Select
+              options={customers.map((cus: GetCustomer) => ({
+                label: cus.CustomerName,
+                value: cus.Id,
+              }))}
+            />
+          </Form.Item>
+        </Col>
+        <Col span={12}>
+        <Form.Item
         name="TopicStatus"
         label="Trạng thái "
         rules={RULES_FORM.required}
@@ -117,6 +134,9 @@ export const TopicForm: React.FC<ReusableFormProps> = ({
           <Select.Option value="Hủy">Hủy</Select.Option>
         </Select>
       </Form.Item>
+        </Col>
+      </Row>
+      
 
       <Form.Item name="Description" label="Mô tả ">
         <TextArea />

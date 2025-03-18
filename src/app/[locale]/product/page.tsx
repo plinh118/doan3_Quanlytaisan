@@ -21,6 +21,11 @@ import {
   useUpdateDocuments,
 } from '../../../modules/shared/document/add_documentHooks';
 import { NewuploadFiles, UpLoadDocument } from '@/libs/api/newupload';
+import { CustomerAPI } from '@/libs/api/customer.api';
+import { customer_LinkAPI } from '@/libs/api/customer_link.api';
+import { GetCustomer } from '@/models/customer.model';
+import { handleAddCustomerhook, handleRemoveCustomerhook } from '@/modules/shared/customerLink/customerLinkHooks';
+import Product_Customer from '@/components/UI_shared/Product_Customer_Modal';
 
 const ProductPage = () => {
   const [products, setProducts] = useState<Get_Product[]>([]);
@@ -40,6 +45,12 @@ const ProductPage = () => {
   const [departments, setDepartments] = useState<Department_DTO[]>([]);
   const { updateDocuments } = useUpdateDocuments();
   const { addDocuments } = useAddDocuments();
+
+  const [OpenModalCustomer, setOpenModalCustomer] = useState(false);
+    const [Customers, setCustomers] = useState<GetCustomer[]>([]);
+    const [selectedCustomer, setSelectedCustomer] = useState<any[]>([]);
+   
+
   const fetchProducts = useCallback(async () => {
     try {
       setLoading(true);
@@ -71,6 +82,7 @@ const ProductPage = () => {
   }, []);
 
   useEffect(() => {
+    document.title="Quản lý sản phẩm"
     fetchProducts();
     fetchDepartments();
   }, [fetchProducts, fetchDepartments]);
@@ -243,13 +255,44 @@ const ProductPage = () => {
       setLoading(false);
     }
   };
+  const addCustomer = async (value: any) => {
+    const data = await CustomerAPI.getCustomersByPageOrder(1,10,'ASC',undefined,undefined,'Đang hợp tác');
+    const dataTraining = await customer_LinkAPI.getcustomer_LinkByPageOrder(1,10,'ASC',undefined,value.Id,'Product',);
+    setSelectedCustomer(dataTraining);
+    setCustomers(data);
+    setOpenModalCustomer(true);
+    setEditingProduct(value);
+  };
 
   const columns = COLUMNS({
     columnType: Product_Colum,
     openModal: openEditModal,
     handleDelete: handleDelete,
+    addCustomer: addCustomer,
   });
 
+  //  CUSTOMER
+ 
+    const handleAddCustomer = async (user: any) => {
+      const result= await handleAddCustomerhook(user,editingProduct?.Id,'Product',show);
+      if(result===0){
+        setSelectedCustomer((prev) => [...prev, user]);
+      }
+      else{
+        show({ result: 1, messageError: 'Thêm khách hàng thất bại!' });
+      }
+    };
+  
+    const handleRemoveCustomer = async (Id: number) => {
+        setSelectedCustomer((prev) =>
+          prev.filter((customer) => customer.Id !== Id),
+        );
+        handleRemoveCustomerhook(Id,editingProduct?.Id,'Product',show);
+    };
+    const AddCustomer = async () => {
+      setOpenModalCustomer(false);
+    };
+  
   return (
     <>
       <Header_Children
@@ -297,6 +340,18 @@ const ProductPage = () => {
           }}
         />
       </div>
+
+      <Product_Customer
+        RelatedId={editingProduct?.Id}
+        RelatedType='Product'
+        OpenModal={OpenModalCustomer}
+        SetOpenModal={setOpenModalCustomer}
+        Customers={Customers}
+        selectedCustomer={selectedCustomer}
+        handleAddCustomer={handleAddCustomer}
+        handleRemoveCustomer={handleRemoveCustomer}
+        AddCustomer={AddCustomer}
+      />
 
       {modalVisible && (
         <div

@@ -1,11 +1,15 @@
-import React, { useState } from 'react';
-import { Modal, Card, Table, Button, Input, Typography, Space } from 'antd';
-import {
-  DeleteOutlined,
-  UserAddOutlined,
-  SearchOutlined,
-} from '@ant-design/icons';
+import React, { useEffect, useState } from 'react';
+import { Modal, Card, Select, Button, Typography, Space, Input, Table } from 'antd';
+import { DeleteOutlined, SearchOutlined, UserAddOutlined } from '@ant-design/icons';
 import { GetCustomer } from '@/models/customer.model';
+import { CustomerAPI } from '@/libs/api/customer.api';
+import { customer_LinkAPI } from '@/libs/api/customer_link.api';
+import { debounce, forEach } from 'lodash';
+import { GetCustomer_Link } from '@/models/customer_Linh.model';
+import { useNotification } from './Notification';
+import { Divider } from 'antd/lib';
+const { Option } = Select;
+const { Title } = Typography;
 
 interface Product_CustomerProps {
   OpenModal: boolean;
@@ -15,11 +19,12 @@ interface Product_CustomerProps {
   handleAddCustomer: (user: GetCustomer) => void;
   handleRemoveCustomer: (Id: number) => void;
   AddCustomer: () => void;
+  RelatedType: string;
+  RelatedId: number | undefined;
 }
 
-const { Title } = Typography;
-
 const Product_Customer: React.FC<Product_CustomerProps> = ({
+  RelatedType,
   OpenModal,
   SetOpenModal,
   Customers,
@@ -27,80 +32,74 @@ const Product_Customer: React.FC<Product_CustomerProps> = ({
   handleAddCustomer,
   handleRemoveCustomer,
   AddCustomer,
+  RelatedId,
 }) => {
+  const [filteredCustomers, setFilteredCustomers] = useState<GetCustomer[]>([]);
+  const [filteredSelectedCustomers, setFilteredSelectedCustomers] = useState<any[]>([]);
   const [searchText, setSearchText] = useState('');
-  const [searchCustomerIn,setsearchCustomerIn]=useState('');
+  const [searchCustomerIn, setSearchCustomerIn] = useState('');
+  const [currentPageLeft, setCurrentPageLeft] = useState(1);
+  const [pageSizeLeft, setPageSizeLeft] = useState(5);
+  const [orderTypeLeft, setOrderTypeLeft] = useState<'ASC' | 'DESC'>('ASC');
+  const [totalLeft, setTotalLeft] = useState<number>(0);
+  const [addCustomer, setAddCustomer] = useState<any[]>([]);
+  const{show}=useNotification();
+  const handleSearchCustomer = debounce(async (value: string) => {
+    try {
+      const data = await CustomerAPI.getCustomersByPageOrder(currentPageLeft, pageSizeLeft, orderTypeLeft, value, undefined, 'Đang hợp tác');
+      if (Array.isArray(data) && data.length > 0) {
+       
+        setFilteredCustomers(data);
+      } 
+    } catch (error) {
+      setTotalLeft(0);
+      console.error('Lỗi khi tìm kiếm khách hàng:', error);
+    }
+  }, 300);
 
-  const filterCustomer = Customers.filter(
-    (Customers) =>
-      Customers.CustomerName.toLowerCase().includes(searchText.toLowerCase()) ||
-      Customers.Email?.toLowerCase().includes(searchText.toLowerCase()),
-  );
+  
+  const handleSearchCustomer_Link = debounce(async (value: string) => {
+    try {
+      if (RelatedId === undefined) return; 
+      const data = await customer_LinkAPI.getcustomer_LinkByPageOrder(currentPageLeft, pageSizeLeft, orderTypeLeft, value, RelatedId, RelatedType);
+      if (Array.isArray(data)) {
+        setTotalLeft(data[0].TotalRecords || 0);
+        setFilteredSelectedCustomers(data);
+      }
+      else {
+        setTotalLeft(0);
+        setFilteredSelectedCustomers([]);
+      }
+    } catch (error) {
+      console.error('Lỗi khi tìm kiếm khách hàng đã chọn:', error);
+    }
+  }, 300);
 
-  const columns = [
-    {
-      title: 'Mã khách hàng',
-      dataIndex: 'Id',
-      key: 'Id',
-      width: '80px',
-    },
-    {
-      title: 'Tên khách hàng',
-      dataIndex: 'CustomerName',
-      key: 'CustomerName',
-      width: '200px',
-      ellipsis: true,
-    },
-    {
-      title: 'Thao Tác',
-      key: 'action',
-      width: '20%',
-      render: (text: string, customer: GetCustomer) => (
-        <Button
-          type="primary"
-          size="small"
-          icon={<UserAddOutlined />}
-          onClick={() => handleAddCustomer(customer)}
-          disabled={selectedCustomer.some((q) => q.Id === customer.Id)}
-        >
-          Thêm
-        </Button>
-      ),
-    },
-  ];
+  
+  useEffect(() => {
+    handleSearchCustomer(searchText);
+  }, [searchText, selectedCustomer, currentPageLeft, pageSizeLeft]);
 
-  const columnsSelected = [
-    {
-      title: 'Mã khách hàng',
-      dataIndex: 'Id',
-      key: 'Id',
-      width: '80px',
-    },
-    {
-      title: 'Tên khách hàng',
-      dataIndex: 'CustomerName',
-      key: 'CustomerName',
-      width: '200px',
-      ellipsis: true,
-    },
-    {
-      title: 'Thao Tác',
-      key: 'action',
-      width: '20%',
-      render: (text: string, customer: GetCustomer) => (
-        <Button
-          type="primary"
-          danger
-          size="small"
-          icon={<DeleteOutlined />}
-          onClick={() => handleRemoveCustomer(customer.Id)}
-        >
-          Xóa
-        </Button>
-      ),
-    },
-  ];
+  useEffect(() => {
+    handleSearchCustomer_Link(searchCustomerIn);
+  }, [searchCustomerIn]);
 
+  
+  const handleSelectCustomer = (selectedIds: number[]) => {
+    const selectedCustomers = filteredCustomers.filter((customer) =>
+      selectedIds.includes(customer.Id)
+    );
+    setAddCustomer(selectedCustomers);
+  };
+  const addListCustomer=async()=>{
+    try{
+      addCustomer.forEach((customer) => handleAddCustomer(customer));
+      show({result:0, messageDone:"Thêm khách hàng thành công!"});
+      setAddCustomer([]);
+    }catch{
+      show({result:1, messageError:"Thêm khách hàng thất bại!"});
+    }
+  }
   return (
     <Modal
       title={
@@ -111,52 +110,92 @@ const Product_Customer: React.FC<Product_CustomerProps> = ({
       open={OpenModal}
       onOk={AddCustomer}
       onCancel={() => SetOpenModal(false)}
-      width={1200}
+      width={800}
+      height={'100vh'}
       okText="Xác nhận"
       cancelText="Hủy"
     >
       <Space direction="vertical" size="large" style={{ width: '100%' }}>
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            gap: '24px',
-          }}
-        >
-          <Card
-            title={<Title level={4}>Danh sách khách hàng</Title>}
-            style={{ width: '50%' }}
-          >
-            <Input
-              placeholder="Tìm kiếm khách hàng..."
-              prefix={<SearchOutlined />}
-              onChange={(e) => setSearchText(e.target.value)}
-              style={{ marginBottom: '16px' }}
+        <div style={{ display: 'flex', justifyContent: 'space-between', gap: '24px' }}>
+          <Card  style={{ width: '100%' }}>
+          <div style={{display:"flex",justifyContent:'space-between'}}>
+          <Select
+              mode="multiple"
+              style={{ marginBottom: '20px',width:'80%' }}
+              placeholder="Chọn khách hàng"
+              onSearch={setSearchText}
+              onChange={handleSelectCustomer}
+              size="large"
+              filterOption={false} 
+              showSearch
+              optionLabelProp="label"
+              value={addCustomer.map((c) => c.Id)} 
+            >
+              {filteredCustomers.map((customer) => (
+                <Option key={customer.Id} value={customer.Id} label={customer.CustomerName}>
+                  {customer.CustomerName} (ID: {customer.Id})
+                </Option>
+              ))}
+            </Select>
+            <Button onClick={addListCustomer} type="primary" icon={<UserAddOutlined/>}>Thêm khách hàng</Button>
+            
+          </div>
+          <Divider/>
+          <Input.Search
+              placeholder="Tìm kiếm Khách hàng..."
+              allowClear
+              enterButton={<SearchOutlined />}
+              size="large"
+              onSearch={setSearchCustomerIn}
+              style={{ marginBottom: '20px',width:'100%' }}
             />
             <Table
-              dataSource={filterCustomer}
-              columns={columns}
-              rowKey="maQuyen"
-              pagination={{ pageSize: 6 }}
+              dataSource={filteredSelectedCustomers.length > 0 ? filteredSelectedCustomers : selectedCustomer}
+              columns={[
+                {
+                  title: 'Mã khách hàng',
+                  dataIndex: 'Id',
+                  key: 'Id',
+                  width: '80px',
+                },
+                {
+                  title: 'Tên khách hàng',
+                  dataIndex: 'CustomerName',
+                  key: 'CustomerName',
+                  width: '200px',
+                  ellipsis: true,
+                },
+                {
+                  title: 'Thao Tác',
+                  key: 'action',
+                  width: '20%',
+                  render: (text: string, customer: GetCustomer) => (
+                    <Button
+                      type="primary"
+                      danger
+                      size="small"
+                      icon={<DeleteOutlined />}
+                      onClick={() => handleRemoveCustomer(customer.Id)}
+                    >
+                      Xóa
+                    </Button>
+                  ),
+                },
+              ]}
+              rowKey="Id"
               size="small"
-            />
-          </Card>
-          <Card
-            title={<Title level={4}>khách hàng đã chọn</Title>}
-            style={{ width: '50%' }}
-          >
-            <Input
-              placeholder="Tìm kiếm khách hàng..."
-              prefix={<SearchOutlined />}
-              onChange={(e) => setsearchCustomerIn(e.target.value)}
-              style={{ marginBottom: '16px' }}
-            />
-            <Table
-              dataSource={selectedCustomer}
-              columns={columnsSelected}
-              rowKey="maQuyen"
-              pagination={{ pageSize: 6 }}
-              size="small"
+              pagination={{
+                current: currentPageLeft,
+                pageSize: pageSizeLeft,
+                total: totalLeft,
+                showSizeChanger: true,
+                showQuickJumper: true,
+                showTotal: (total) => `Total ${total} items`,
+                onChange: (page, size) => {
+                  setCurrentPageLeft(page);
+                  setPageSizeLeft(size || 10);
+                },
+              }}
             />
           </Card>
         </div>

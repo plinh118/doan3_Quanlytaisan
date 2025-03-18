@@ -20,7 +20,7 @@ const createColumns = <T,>({
     {
       title: 'Tác vụ',
       key: 'action',
-      width: '100px',
+      width: addCustomer?'150px':'100px',
       fixed: 'right',
       render: (_: any, record: T) => (
         <Space size="middle">

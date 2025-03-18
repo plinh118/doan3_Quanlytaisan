@@ -40,9 +40,9 @@ export async function POST(request: NextRequest) {
     const Description = body.Description ? body.Description.trim() : null;
 
     const formattedEndDate = body.TopicEndDate ? body.TopicEndDate : null;
-
+    const CustomerId=body.CustomerId ? body.CustomerId : null;
     return db_Provider<any>(
-      'CALL AddTopic(?,?,?,?,?,?)',
+      'CALL AddTopic(?,?,?,?,?,?,?)',
       [
         body.TopicName.trim(),
         body.DepartmentId,
@@ -50,6 +50,7 @@ export async function POST(request: NextRequest) {
         formattedEndDate,
         Description,
         body.TopicStatus,
+        CustomerId
       ],
       true,
     );
@@ -70,9 +71,10 @@ export async function PATCH(request: NextRequest) {
     }
     const formattedEndDate = body.TopicEndDate ? body.TopicEndDate : null;
     const Description = body.Description ? body.Description.trim() : null;
+    const CustomerId=body.CustomerId ? body.CustomerId : null;
 
     return db_Provider<any>(
-      'CALL UpdateTopic(?,?,?,?,?,?,?)',
+      'CALL UpdateTopic(?,?,?,?,?,?,?,?)',
       [
         body.Id,
         body.TopicName.trim(),
@@ -81,6 +83,7 @@ export async function PATCH(request: NextRequest) {
         formattedEndDate,
         Description,
         body.TopicStatus,
+        CustomerId
       ],
       true,
     );
