@@ -10,6 +10,12 @@ import { Services_Colum } from '@/components/services/services_Table';
 import { ServicesForm } from '@/components/services/services_Form';
 import { useNotification } from '../../../components/UI_shared/Notification';
 import Header_Children from '@/components/UI_shared/Children_Head';
+import { GetCustomer } from '@/models/customer.model';
+import { CustomerAPI } from '@/libs/api/customer.api';
+import { customer_LinkAPI } from '@/libs/api/customer_link.api';
+import { handleAddCustomerhook, handleRemoveCustomerhook } from '@/modules/shared/customerLink/customerLinkHooks';
+import { Product_Colum } from '@/components/product/product_Table';
+import Product_Customer from '@/components/UI_shared/Product_Customer_Modal';
 
 const ServicePage = () => {
   const [Services, setServices] = useState<Get_Services[]>([]);
@@ -26,7 +32,10 @@ const ServicePage = () => {
   const [form] = Form.useForm();
   const [total, setTotal] = useState<number>(10);
   const { show } = useNotification();
-
+  const [OpenModalCustomer, setOpenModalCustomer] = useState(false);
+  const [Customers, setCustomers] = useState<GetCustomer[]>([]);
+  const [selectedCustomer, setSelectedCustomer] = useState<any[]>([]);
+ 
   useEffect(() => {
     Get_ServicessByPageOrder(currentPage, pageSize, orderType, searchText);
   }, [currentPage, pageSize, orderType]);
@@ -148,13 +157,43 @@ const ServicePage = () => {
       setLoading(false);
     }
   };
+  const addCustomer = async (value: any) => {
+    const data = await CustomerAPI.getCustomersByPageOrder(1,10,'ASC',undefined,undefined,'Đang hợp tác');
+    const dataTraining = await customer_LinkAPI.getcustomer_LinkByPageOrder(1,10,'ASC',undefined,value.Id,'Services',);
+    setSelectedCustomer(dataTraining);
+    setCustomers(data);
+    setOpenModalCustomer(true);
+    setEditingService(value);
+  };
 
   const columns = COLUMNS({
     columnType: Services_Colum,
     openModal: openEditModal,
     handleDelete: handleDelete,
+    addCustomer:addCustomer,
   });
 
+
+    
+    const handleAddCustomer = async (user: any) => {
+      const result= await handleAddCustomerhook(user,editingService?.Id,'Services',show);
+      if(result===0){
+        setSelectedCustomer((prev) => [...prev, user]);
+      }
+      else{
+        show({ result: 1, messageError: 'Thêm khách hàng thất bại!' });
+      }
+    };
+  
+    const handleRemoveCustomer = async (Id: number) => {
+        setSelectedCustomer((prev) =>
+          prev.filter((customer) => customer.Id !== Id),
+        );
+        handleRemoveCustomerhook(Id,editingService?.Id,'Services',show);
+    };
+    const AddCustomer = async () => {
+      setOpenModalCustomer(false);
+    };
   return (
     <>
       <Header_Children
@@ -205,6 +244,18 @@ const ServicePage = () => {
           }}
         />
       </div>
+       <Product_Customer
+       RelatedId={editingService?.Id}
+        RelatedType='Services'
+              OpenModal={OpenModalCustomer}
+              SetOpenModal={setOpenModalCustomer}
+              Customers={Customers}
+              selectedCustomer={selectedCustomer}
+              handleAddCustomer={handleAddCustomer}
+              handleRemoveCustomer={handleRemoveCustomer}
+              AddCustomer={AddCustomer}
+            />
+
 
       {modalVisible && (
         <div

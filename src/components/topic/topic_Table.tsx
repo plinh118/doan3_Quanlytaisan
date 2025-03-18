@@ -40,6 +40,20 @@ export const Topic_Colum: ColumnType[] = [
     ),
   },
   {
+    title: 'Tên khách hàng',
+    dataIndex: 'CustomerName',
+    key: 'CustomerName',
+    width:'200px',
+    ellipsis: {
+      showTitle: false, 
+    },
+    render: (text) => (
+      <Tooltip placement="topLeft" title={text}>
+        {text}
+      </Tooltip>
+    ),
+  },
+  {
     title: 'Ngày bắt đầu',
     dataIndex: 'TopicStartDate',
     key: 'TopicStartDate',

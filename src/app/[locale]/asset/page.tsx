@@ -210,8 +210,8 @@ const AssetPage = () => {
   const ExportExcel = () => {
     const worksheet = XLSX.utils.json_to_sheet(Assets);
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Danh sách lớp');
-    XLSX.writeFile(workbook, 'danh_sach_lop.xlsx');
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'AMS_Danh tài sản');
+    XLSX.writeFile(workbook, 'danh_sach_tai_san.xlsx');
   
   };
 

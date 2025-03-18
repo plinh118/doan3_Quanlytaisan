@@ -34,6 +34,7 @@ import {
   AddCustomer_Link,
   GetCustomer_Link,
 } from '@/models/customer_Linh.model';
+import { handleAddCustomerhook, handleRemoveCustomerhook } from '@/modules/shared/customerLink/customerLinkHooks';
 const TrainingCousePage = () => {
   const [TrainingCouses, setTrainingCouses] = useState<GetTrainingCourse[]>([]);
   const [loading, setLoading] = useState(false);
@@ -57,6 +58,7 @@ const TrainingCousePage = () => {
   const [Customers, setCustomers] = useState<GetCustomer[]>([]);
   const [selectedCustomer, setSelectedCustomer] = useState<any[]>([]);
   useEffect(() => {
+    document.title="Quản lý khóa đào tạo";
     GetTrainingCousesByPageOrder(
       currentPage,
       pageSize,
@@ -209,44 +211,24 @@ const TrainingCousePage = () => {
   };
 
   const handleAddCustomer = async (user: any) => {
+   const result=await handleAddCustomerhook(user,editingTrainingCouse?.Id,'TrainingCourse',show);
+   if(result===0)
+   {
     setSelectedCustomer((prev) => [...prev, user]);
-    const newCustomer: AddCustomer_Link = {
-      CustomerId: user.Id,
-      RelatedId: editingTrainingCouse?.Id,
-      RelatedType: 'TrainingCourse',
-    };
-    const result:any = await customer_LinkAPI.createcustomer_Link(newCustomer);
-    show({
-      result: result.result,
-      messageDone: 'Thêm khách hàng thành công! ',
-      messageError:'Thêm khách hàng thất bại!'
-    });
+   }
+   else{
+    show({result:1, messageError:"Thêm khách hàng thất bại!"});
+   }
   };
 
   const handleRemoveCustomer = async (Id: number) => {
-    try {
       setSelectedCustomer((prev) =>
         prev.filter((customer) => customer.Id !== Id),
       );
-      const deleteCustomer: AddCustomer_Link = {
-        CustomerId: Id,
-        RelatedId: editingTrainingCouse?.Id,
-        RelatedType: 'TrainingCourse',
-      };
-      await customer_LinkAPI.deletecustomer_Link(deleteCustomer);
-      show({
-        result: 0,
-        messageDone: 'Xóa khách hàng thành công',
-      });
-    } catch {
-      show({
-        result: 1,
-        messageError: 'Lỗii xóa khách hàng',
-      });
-    }
+      handleRemoveCustomerhook(Id,editingTrainingCouse?.Id,'TrainingCourse',show);
   };
   const AddCustomer = async () => {
-    console.log('Thêm đây này');
+    setOpenModalCustomer(false);
   };
   const columns = COLUMNS({
     columnType: trainingCouse_Colum,
@@ -334,6 +316,8 @@ const TrainingCousePage = () => {
       </div>
 
       <Product_Customer
+        RelatedId={editingTrainingCouse?.Id}
+        RelatedType='TrainingCourse'
         OpenModal={OpenModalCustomer}
         SetOpenModal={setOpenModalCustomer}
         Customers={Customers}

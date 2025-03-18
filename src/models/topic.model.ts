@@ -7,6 +7,7 @@ export interface GetTopic {
   Description: string | null;
   TopicStatus: string;
   DepartmentName: string;
+  CustomerName:string;
   TotalRecords: number;
 }
 
@@ -16,6 +17,7 @@ export interface AddTopic {
   TopicStartDate: string;
   TopicEndDate: string | null;
   Description: string | null;
+  CustomerId:number | null;
   TopicStatus: string;
 }
 
@@ -26,5 +28,6 @@ export interface UpTopic {
   TopicStartDate: string;
   TopicEndDate: string | null;
   Description: string | null;
+  CustomerId:number | null;
   TopicStatus: string;
 }

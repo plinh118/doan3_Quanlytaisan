@@ -32,6 +32,8 @@ import {
 } from '../../../modules/shared/document/add_documentHooks';
 import { validateDates } from '@/utils/validator';
 import { UpLoadDocument } from '@/libs/api/newupload';
+import { GetCustomer } from '@/models/customer.model';
+import { CustomerAPI } from '@/libs/api/customer.api';
 
 const TopicPage = () => {
   const [Topics, setTopics] = useState<GetTopic[]>([]);
@@ -52,7 +54,7 @@ const TopicPage = () => {
   const { addDocuments } = useAddDocuments();
   const [departmentFilter,setDepartmentFilter]=useState<number | undefined>(undefined);
   const [topicStatus,setTopicStatus]=useState('');
-
+  const [listCustomers,setListCustom]=useState<GetCustomer[]>([]);
   const fetchTopics = useCallback(async () => {
     try {
       setLoading(true);
@@ -84,10 +86,13 @@ const TopicPage = () => {
     const data = await DepartmentAPI.getDepartmentByPageOrder(1, 100, 'ASC');
     setDepartments(data);
   }, []);
-
+  const getCustomer=async()=>{
+    const data= await CustomerAPI.getCustomersByPageOrder(1,100,"ASC");
+    setListCustom(data);
+  }
   useEffect(() => {
     fetchTopics();
-    fetchDepartments();
+    fetchDepartments();getCustomer();
   }, [fetchTopics, fetchDepartments]);
 
   const handleRefresh = useCallback(() => {
@@ -355,6 +360,7 @@ const TopicPage = () => {
             cancelText="Hủy"
           >
             <TopicForm
+              customers={listCustomers}
               formdata={form}
               documents={documents}
               setDocuments={setDocuments}
