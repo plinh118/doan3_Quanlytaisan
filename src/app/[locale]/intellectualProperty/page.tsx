@@ -12,7 +12,7 @@ import {
   UploadFile,
   Divider,
 } from 'antd';
-import { SearchOutlined, ReloadOutlined } from '@ant-design/icons';
+import { SearchOutlined, ReloadOutlined, UploadOutlined } from '@ant-design/icons';
 import { IntellectualPropertyAPI } from '@/libs/api/IntellectualProperty.api';
 import { COLUMNS } from '../../../components/UI_shared/Table';
 import { IntellectualPropertyForm } from '@/components/intellectualProperty/intellectualProperty_Form';
@@ -24,6 +24,7 @@ import { GetIntellectualProperty } from '@/models/IntellectualProperty.model';
 import { DepartmentAPI } from '@/libs/api/department.api';
 import { Department_DTO } from '@/models/department.model';
 import { fetchFile, NewuploadFiles } from '@/libs/api/newupload';
+import ExportExcel from '@/components/UI_shared/ExportExcel';
 const IntellectualPropertyPage = () => {
   const [IntellectualPropertys, setIntellectualPropertys] = useState<
     GetIntellectualProperty[]
@@ -43,6 +44,7 @@ const IntellectualPropertyPage = () => {
   const [departments, setDepartments] = useState<Department_DTO[]>([]);
 
   useEffect(() => {
+    document.title='Sở hữu trí tuệ';
     GetIntellectualPropertysByPageOrder(
       currentPage,
       pageSize,
@@ -259,7 +261,22 @@ const IntellectualPropertyPage = () => {
     openModal: openEditModal,
     handleDelete: handleDelete,
   });
-
+  const ExportExcelIntellectualProperty =async () => {
+    const IntellectualPropertysAll =await IntellectualPropertyAPI.getIntellectualPropertysByPageOrder(1,100000,"ASC");
+    const headers = [
+      'Tên bản quyền',
+      'Tên đơn vị',
+      'Trạng thái',
+      'Mô tả',
+    ];
+    const formattedData = IntellectualPropertysAll.map((It) => ({
+      'Tên bản quyền':It.IntellectualPropertyName,
+      'Tên đơn vị':It.DepartmentName,
+      'Trạng thái':It.IntellectualPropertyStatus,
+      'Mô tả':It.Description?It.Description:'Không có',
+    }));
+    ExportExcel(headers,formattedData,'ams_intellectualProperty.xlsx')
+  };
   return (
     <>
       <Header_Children
@@ -286,6 +303,9 @@ const IntellectualPropertyPage = () => {
             size="large"
             onClick={handleRefresh}
           />
+           <Button icon={<UploadOutlined />} onClick={ExportExcelIntellectualProperty}>
+                      Xuất Excel
+                    </Button>
         </Space>
       </div>
 

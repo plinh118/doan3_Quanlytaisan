@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Table, Button, Modal, Form, Input, Space, Card, Divider } from 'antd';
-import { SearchOutlined, ReloadOutlined } from '@ant-design/icons';
+import { SearchOutlined, ReloadOutlined, UploadOutlined } from '@ant-design/icons';
 import type { AddCustomer, GetCustomer } from '@/models/customer.model';
 import { CustomerAPI } from '@/libs/api/customer.api';
 import { COLUMNS } from '../../../components/UI_shared/Table';
@@ -10,6 +10,10 @@ import { Customer_Colum } from '@/components/customer/customer_Table';
 import { CustomerForm } from '@/components/customer/customer_Form';
 import { useNotification } from '../../../components/UI_shared/Notification';
 import Header_Children from '@/components/UI_shared/Children_Head';
+import Product_Customer from './modalCustomer_Link';
+import { customer_LinkAPI } from '@/libs/api/customer_link.api';
+import { AddCustomer_Link } from '@/models/customer_Linh.model';
+import ExportExcel from '@/components/UI_shared/ExportExcel';
 const CustomerPage = () => {
   const [Customers, setCustomers] = useState<GetCustomer[]>([]);
   const [loading, setLoading] = useState(false);
@@ -26,7 +30,12 @@ const CustomerPage = () => {
   const [total, setTotal] = useState<number>(10);
   const { show } = useNotification();
 
+  const [OpenModalProductCustomer, setOpenModalProductCustomer] = useState(false);
+  const [selectedProductCustomer, setSelectedProductCustomer] = useState<any[]>([]);
+   
+
   useEffect(() => {
+    document.title="Quản lý khách hàng";
     GetCustomersByPageOrder(currentPage, pageSize, orderType, searchText);
   }, [currentPage, pageSize, orderType, searchText]);
 
@@ -153,13 +162,73 @@ const CustomerPage = () => {
       setLoading(false);
     }
   };
+  const handleAddService = async (service: any, relatedType: string) => {
+    try {
+      const newLink = {
+        CustomerId: editingCustomer?.Id,
+        RelatedId: service.Id,
+        RelatedType: relatedType,
+      };
+      const result: any = await customer_LinkAPI.createcustomer_Link(newLink);
+      if (result.result === 0) {
+        setSelectedProductCustomer((prev) => [...prev, service]);
+        show({ result: 0, messageDone: 'Thêm dịch vụ thành công!' });
+      }
+    } catch (error) {
+      show({ result: 1, messageError: 'Thêm dịch vụ thất bại!' });
+    }
+  };
+  
+  // Trong handleRemoveService
+  const handleRemoveService = async (Id: number | undefined, relatedType: string) => {
+    try {
+      const deleteLink:AddCustomer_Link = {
+        CustomerId: editingCustomer?.Id,
+        RelatedId: Id,
+        RelatedType: relatedType,
+      };
+      await customer_LinkAPI.deletecustomer_Link(deleteLink);
+      setSelectedProductCustomer((prev) => prev.filter((service) => service.Id !== Id));
+      show({ result: 0, messageDone: 'Xóa dịch vụ thành công!' });
+    } catch (error) {
+      show({ result: 1, messageError: 'Xóa dịch vụ thất bại!' });
+    }
+  };
+  const AddService=async()=>{
+    setOpenModalProductCustomer(false);
+    show({result:0, messageDone:'Thêm dịch vụ thành công !'});
+    console.log("thêm thành công!");
+  }
 
+    const addProductCustomer = async (value: any) => {
+      setOpenModalProductCustomer(true);
+      setEditingCustomer(value);
+    };
+  
   const columns = COLUMNS({
     columnType: Customer_Colum,
     openModal: openEditModal,
     handleDelete: handleDelete,
+    addCustomer:addProductCustomer
   });
-
+const ExportExcelCustomer = async() => {
+  const CustomersExcel = await CustomerAPI.getCustomersByPageOrder(1,100000,"ASC");
+    const headers = [
+      'Tên Khách hàng',
+      'Số điện thoại',
+      'Email',
+      'Địa chỉ',
+      'Trạng thái',
+    ];
+    const formattedData = CustomersExcel.map((cs) => ({
+     'Tên Khách hàng':cs.CustomerName,
+      'Số điện thoại':cs.PhoneNumber?cs.PhoneNumber:'Không có',
+      'Email':cs.Email?cs.Email:'Không có',
+      'Địa chỉ':cs.Address?cs.Address:'Không có',
+      'Trạng thái':cs.CustomerStatut?cs.CustomerStatut:'Không có',
+    }));
+    ExportExcel(headers,formattedData,'ams_Customer.xlsx')
+  };
   return (
     <>
       <Header_Children
@@ -186,6 +255,9 @@ const CustomerPage = () => {
             size="large"
             onClick={handleRefresh}
           />
+          <Button icon={<UploadOutlined />} onClick={ExportExcelCustomer}>
+                      Xuất Excel
+                    </Button>
         </Space>
       </div>
 
@@ -210,6 +282,16 @@ const CustomerPage = () => {
           }}
         />
       </div>
+
+      <Product_Customer
+        OpenModal={OpenModalProductCustomer}
+        SetOpenModal={setOpenModalProductCustomer}
+        CustomerId={editingCustomer?.Id}
+        handleAddService={handleAddService}
+        handleRemoveService={handleRemoveService}
+        ConfirmSelection={AddService}
+      />
+
       {modalVisible && (
         <div
           onKeyDown={(e) => {

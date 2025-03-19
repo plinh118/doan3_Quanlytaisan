@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Table, Button, Modal, Form, Input, Space, Card, Divider } from 'antd';
-import { SearchOutlined, ReloadOutlined } from '@ant-design/icons';
+import { SearchOutlined, ReloadOutlined, UploadOutlined } from '@ant-design/icons';
 import type { Partner_DTO } from '@/models/partners.model';
 import { PartnerAPI } from '@/libs/api/partner.api';
 import { COLUMNS } from '../../../components/UI_shared/Table';
@@ -12,6 +12,7 @@ import { useNotification } from '../../../components/UI_shared/Notification';
 import Header_Children from '@/components/UI_shared/Children_Head';
 import { showDateFormat } from '@/utils/date';
 import { validateDates } from '@/utils/validator';
+import ExportExcel from '@/components/UI_shared/ExportExcel';
 const PartnerPage = () => {
   const [Partners, setPartners] = useState<Partner_DTO[]>([]);
   const [loading, setLoading] = useState(false);
@@ -163,7 +164,28 @@ const PartnerPage = () => {
     openModal: openEditModal,
     handleDelete: handleDelete,
   });
-
+  const ExportExcelPartner =async () => {
+    const allPartner = await PartnerAPI.getPartnersByPageOrder(1,100000,"ASC");
+    const headers = [
+      'Tên đối tác',
+      'Số điện thoại',
+      'Email',
+      'Địa chỉ',
+      'Ngày hợp tác',
+      'Ngày kết thúc',
+      'Trạng thái',
+    ];
+    const formattedData = allPartner.map((pr) => ({
+    'Tên đối tác':pr.PartnerName,
+      'Số điện thoại':pr.PhoneNumber?pr.PhoneNumber:'không có',
+      'Email':pr.Email?pr.Email:'không có',
+      'Địa chỉ':pr.Address?pr.Address:'Không có',
+      'Ngày hợp tác':pr.StartDate ? new Date(pr.StartDate).toLocaleDateString('vi-VN') : 'Không có',
+      'Ngày kết thúc':pr.EndDate ? new Date(pr.EndDate).toLocaleDateString('vi-VN') : 'Không có',
+      'Trạng thái':pr.PartnershipStatus,  
+    }));
+    ExportExcel(headers,formattedData,'ams_asset.xlsx')
+  };
   return (
     <>
       <Header_Children
@@ -190,6 +212,9 @@ const PartnerPage = () => {
             size="large"
             onClick={handleRefresh}
           />
+          <Button icon={<UploadOutlined />} onClick={ExportExcelPartner}>
+                      Xuất Excel
+                    </Button>
         </Space>
       </div>
 

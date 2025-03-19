@@ -16,7 +16,6 @@ export const Customer_Colum: ColumnType[] = [
     dataIndex: 'CustomerName',
     key: 'Id',
     width:'200px',
-    fixed:'left',
     ellipsis: {
       showTitle: false, 
     },

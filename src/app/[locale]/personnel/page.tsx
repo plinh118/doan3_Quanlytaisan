@@ -13,7 +13,7 @@ import {
   Divider,
   Select,
 } from 'antd';
-import { SearchOutlined, ReloadOutlined } from '@ant-design/icons';
+import { SearchOutlined, ReloadOutlined, UploadOutlined } from '@ant-design/icons';
 import type { GetPersonnel } from '@/models/persionnel.model';
 import { personnelAPI } from '@/libs/api/personnel.api';
 import { COLUMNS } from '../../../components/UI_shared/Table';
@@ -29,6 +29,7 @@ import { divisionAPI } from '@/libs/api/division.api';
 import { getInforFile, uploadFilesImage } from '@/libs/api/upload.api';
 import { checkDateOfBirth, validateDates } from '@/utils/validator';
 import { fetchFile, NewuploadFiles } from '@/libs/api/newupload';
+import ExportExcel from '@/components/UI_shared/ExportExcel';
 
 
 const PersonnelPage = () => {
@@ -54,6 +55,7 @@ const PersonnelPage = () => {
 
 
   useEffect(() => {
+    document.title="Quản lý nhân viên";
     GetPersonnelsByPageOrder(currentPage, pageSize, orderType, searchText,divisionFilter,positionFilter,WorkStatus);
     getDivision();
     getPosition();
@@ -277,7 +279,36 @@ const PersonnelPage = () => {
     openModal: openEditModal,
     handleDelete: handleDelete,
   });
-
+const ExportExcelPersonnel =async () => {
+  const allPersonnel = await personnelAPI.getpersonnelsByPageOrder(1,100000,'ASC');
+    const headers = [
+      'Tên nhân viên',
+      'Tên bộ phận',
+      'Chức vụ',
+      'Ngày sinh',
+      'Ngày tham gia',
+      'Ngày kết thúc',
+      'Số điện thoại',
+      'Email',
+      'Giới tính',
+      'Trạng thái',
+      'Mô tả',
+    ];
+    const formattedData = allPersonnel.map((pr) => ({
+    'Tên nhân viên':pr.PersonnelName,
+      'Tên bộ phận':pr.DivisionName,
+      'Chức vụ':pr.PositionName,
+      'Ngày sinh':pr.DateOfBirth ? new Date(pr.DateOfBirth).toLocaleDateString('vi-VN') : 'Không có',
+      'Ngày tham gia':pr.JoinDate ? new Date(pr.JoinDate).toLocaleDateString('vi-VN') : 'Không có',
+      'Ngày kết thúc':pr.EndDate ? new Date(pr.EndDate).toLocaleDateString('vi-VN') : 'Không có',
+      'Số điện thoại':pr.PhoneNumber?pr.PhoneNumber:'không có',
+      'Email':pr.Email?pr.Email:'không có',
+      'Giới tính':pr.Gender?pr.Gender:'không có',
+      'Trạng thái':pr.WorkStatus,
+      'Mô tả':pr.Description?pr.Description:'không có',
+    }));
+    ExportExcel(headers,formattedData,'ams_Personnel.xlsx')
+  };
   return (
     <>
       <Header_Children
@@ -288,7 +319,7 @@ const PersonnelPage = () => {
 
       <Divider />
 
-      <div className="py-4">
+      <div className="py-4" >
         <Space size="middle">
           <Input.Search
             placeholder="Tên nhân viên..."
@@ -339,6 +370,9 @@ const PersonnelPage = () => {
             size="large"
             onClick={handleRefresh}
           />
+          <Button icon={<UploadOutlined />} onClick={ExportExcelPersonnel}>
+                                Xuất Excel
+                              </Button>
         </Space>
       </div>
 

@@ -13,6 +13,8 @@ export const customer_LinkAPI = {
     CustomerName?: string,
     RelatedId?: number,
     RelatedType?:string,
+    CustomerId?: number,
+    RelatedName?:string,
   ) => {
     const queryParams = new URLSearchParams({
       pageIndex: pageIndex.toString(),
@@ -20,6 +22,12 @@ export const customer_LinkAPI = {
       orderType,
     });
 
+    if (RelatedName) {
+      queryParams.append('RelatedName', RelatedName);
+    }
+    if (CustomerId) {
+      queryParams.append('CustomerId', CustomerId.toString());
+    }
     if (CustomerName) {
       queryParams.append('CustomerName', CustomerName);
     }
