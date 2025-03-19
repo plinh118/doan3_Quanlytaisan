@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { Table, Button, Modal, Form, Input, Space, Card, Divider } from 'antd';
-import { SearchOutlined, ReloadOutlined } from '@ant-design/icons';
+import { SearchOutlined, ReloadOutlined, UploadOutlined } from '@ant-design/icons';
 import type { Get_Product, Add_Product } from '@/models/product.model';
 import { productAPI } from '@/libs/api/product.api';
 import { COLUMNS } from '../../../components/UI_shared/Table';
@@ -26,6 +26,7 @@ import { customer_LinkAPI } from '@/libs/api/customer_link.api';
 import { GetCustomer } from '@/models/customer.model';
 import { handleAddCustomerhook, handleRemoveCustomerhook } from '@/modules/shared/customerLink/customerLinkHooks';
 import Product_Customer from '@/components/UI_shared/Product_Customer_Modal';
+import ExportExcel from '@/components/UI_shared/ExportExcel';
 
 const ProductPage = () => {
   const [products, setProducts] = useState<Get_Product[]>([]);
@@ -293,6 +294,24 @@ const ProductPage = () => {
       setOpenModalCustomer(false);
     };
   
+    const ExportExcelProduct =async () => {
+      const AllProduct = await productAPI.getproductsByPageOrder(1,100000,'ASC');
+        const headers = [
+          'Tên sản phẩm',
+          'Tên đơn vị',
+          'Ngày bắt đầu',
+          'Ngày kết thúc',
+          'Trạng thái',
+          ];
+        const formattedData = AllProduct.map((pr) => ({
+        'Tên sản phẩm':pr.ProductName,
+          'Tên đơn vị':pr.DepartmentName,
+          'Ngày bắt đầu':pr.ProductStartDate ? new Date(pr.ProductStartDate).toLocaleDateString('vi-VN') : 'Không có',
+          'Ngày kết thúc':pr.ProductEndDate ? new Date(pr.ProductEndDate).toLocaleDateString('vi-VN') : 'Không có',
+          'Trạng thái':pr.ProductStatus,  
+        }));
+        ExportExcel(headers,formattedData,'ams_Product.xlsx')
+      };
   return (
     <>
       <Header_Children
@@ -319,6 +338,9 @@ const ProductPage = () => {
             size="large"
             onClick={handleRefresh}
           />
+           <Button icon={<UploadOutlined />} onClick={ExportExcelProduct}>
+                                Xuất Excel
+                              </Button>
         </Space>
       </div>
 

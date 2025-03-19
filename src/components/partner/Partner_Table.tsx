@@ -16,7 +16,6 @@ export const Partner_Colum: ColumnType[] = [
     dataIndex: 'PartnerName',
     key: 'PartnerName',
     width:'200px',
-    fixed:'left',
     ellipsis: {
       showTitle: false, 
     },

@@ -1827,13 +1827,20 @@ CREATE PROCEDURE GetCustomerLinksByPageOrder(
     IN p_OrderType VARCHAR(4),  -- 'ASC' hoặc 'DESC'
     IN p_CustomerName NVARCHAR(255),  -- Tìm theo tên khách hàng (có thể NULL)
     IN p_RelatedId INT,         -- Mã đối tượng liên quan (có thể NULL)
-    IN p_RelatedType NVARCHAR(50)  -- Kiểu quan hệ (có thể NULL)
+    IN p_RelatedType NVARCHAR(50), -- Kiểu quan hệ (có thể NULL)
+    IN p_CustomerId INT,        -- Tìm theo ID khách hàng (có thể NULL)
+    IN p_RelatedName NVARCHAR(255) -- Tìm theo tên dịch vụ (có thể NULL)
 )
 BEGIN
     DECLARE v_Offset INT;
-    DECLARE v_FilterCondition VARCHAR(500) DEFAULT ' WHERE 1=1 '; -- WHERE mặc định để tránh lỗi SQL
+    DECLARE v_FilterCondition VARCHAR(1000) DEFAULT ' WHERE 1=1 '; -- WHERE mặc định để tránh lỗi SQL
 
     SET v_Offset = (p_PageIndex - 1) * p_PageSize;
+
+    -- Lọc theo CustomerId nếu có
+    IF p_CustomerId IS NOT NULL AND p_CustomerId > 0 THEN
+        SET v_FilterCondition = CONCAT(v_FilterCondition, " AND CL.CustomerId = ", p_CustomerId);
+    END IF;
 
     -- Lọc theo CustomerName nếu có
     IF p_CustomerName IS NOT NULL AND p_CustomerName != '' THEN
@@ -1850,11 +1857,33 @@ BEGIN
         SET v_FilterCondition = CONCAT(v_FilterCondition, " AND CL.RelatedType LIKE '%", p_RelatedType, "%' ");
     END IF;
 
+    -- Lọc theo RelatedName (tên dịch vụ) nếu có
+    IF p_RelatedName IS NOT NULL AND p_RelatedName != '' THEN
+        SET v_FilterCondition = CONCAT(
+            v_FilterCondition,
+            " AND (",
+            "   (CL.RelatedType = 'TrainingCourse' AND TC.CourseName LIKE '%", p_RelatedName, "%')",
+            "   OR (CL.RelatedType = 'Product' AND P.ProductName LIKE '%", p_RelatedName, "%')",
+            "   OR (CL.RelatedType = 'Services' AND S.ServiceName LIKE '%", p_RelatedName, "%')",
+            " )"
+        );
+    END IF;
+
     -- Xây dựng SQL động để lấy dữ liệu
     SET @sql = CONCAT(
-        'SELECT CL.*, CL.CustomerId as Id, C.CustomerName, COUNT(*) OVER () AS TotalRecords
-         FROM Customer_Link CL
-         LEFT JOIN Customer C ON CL.CustomerId = C.Id',
+        'SELECT CL.*, CL.CustomerId AS Id, C.CustomerName, ',
+        'CASE ',
+        '   WHEN CL.RelatedType = ''TrainingCourse'' THEN TC.CourseName ',
+        '   WHEN CL.RelatedType = ''Product'' THEN P.ProductName ',
+        '   WHEN CL.RelatedType = ''Services'' THEN S.ServiceName ',
+        '   ELSE NULL ',
+        'END AS RelatedName, ',
+        'COUNT(*) OVER () AS TotalRecords ',
+        'FROM Customer_Link CL ',
+        'LEFT JOIN Customer C ON CL.CustomerId = C.Id ',
+        'LEFT JOIN TrainingCourse TC ON CL.RelatedId = TC.Id AND CL.RelatedType = ''TrainingCourse'' ',
+        'LEFT JOIN Product P ON CL.RelatedId = P.Id AND CL.RelatedType = ''Product'' ',
+        'LEFT JOIN Services S ON CL.RelatedId = S.Id AND CL.RelatedType = ''Services'' ',
         v_FilterCondition,
         ' ORDER BY CL.RelatedType ', p_OrderType,
         ' LIMIT ', p_PageSize, ' OFFSET ', v_Offset

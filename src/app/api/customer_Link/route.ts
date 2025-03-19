@@ -10,10 +10,12 @@ export async function GET(req: NextRequest) {
   const CustomerName =(searchParams.get('CustomerName') ) || undefined ;
   const p_RelatedId=(searchParams.get('RelatedId') ) || undefined;
   const RelatedType = searchParams.get('RelatedType') || undefined;
+  const CustomerId=searchParams.get('CustomerId') || undefined;
+  const RelatedName=searchParams.get('RelatedName') || undefined;
 
   try {
     const result = await db_Provider<GetCustomer_Link[]>(
-      'CALL GetCustomerLinksByPageOrder(?, ?, ?, ?,?,?)',
+      'CALL GetCustomerLinksByPageOrder(?, ?, ?, ?,?,?,?,?)',
       [
         pageIndex,
         pageSize,
@@ -21,6 +23,8 @@ export async function GET(req: NextRequest) {
         CustomerName || null,
         p_RelatedId || null,
         RelatedType || null,
+        CustomerId || null,
+        RelatedName || null
       ],
     );
     return result;

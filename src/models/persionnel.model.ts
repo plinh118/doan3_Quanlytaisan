@@ -13,6 +13,7 @@ export interface GetPersonnel {
   PhoneNumber: string;
   JoinDate: string | null;
   EndDate: string | null;
+  Description:string | null;
   WorkStatus: string;
   Picture?: string | UploadFile[];
   TotalRecords: number;
