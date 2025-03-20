@@ -44,13 +44,14 @@ export const trainingCouse_Colum: ColumnType[] = [
     title: 'Tổng thời gian (Tuần)',
     dataIndex: 'Duration',
     key: 'Duration',
-    width:'100px'
+    width:'150px',
+    align:'center',
   },
   {
     title: 'Trạng thái',
     dataIndex: 'ServiceStatus',
     key: 'ServiceStatus',
-    width:'150px',
+    width:'120px',
     render: (status) => {
       let color = 'default';
       if (status === 'Đã hoàn thành') color = 'green';

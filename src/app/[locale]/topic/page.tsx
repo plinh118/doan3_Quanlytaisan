@@ -338,7 +338,7 @@ const TopicPage = () => {
             size="large"
             onClick={handleRefresh}
           />
-          <Button icon={<UploadOutlined />} onClick={ExportExcelTopic}>
+          <Button icon={<UploadOutlined />} type="primary"onClick={ExportExcelTopic}>
                                           Xuất Excel
                                         </Button>
         </Space>
@@ -357,7 +357,7 @@ const TopicPage = () => {
             total: total,
             showSizeChanger: true,
             showQuickJumper: true,
-            showTotal: (total) => `Total ${total} items`,
+            showTotal: (total) => `Tổng ${total} đề tài`,
             onChange: handlePageChange,
           }}
         />

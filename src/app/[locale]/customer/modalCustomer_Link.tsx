@@ -115,7 +115,6 @@ const Product_Customer: React.FC<Product_CustomerProps> = ({
   const handleSearchItems = useCallback(
     debounce(async (value: string) => {
       if (!serviceType || !CustomerId) return;
-      setLoading(true);
       try {
         let data: ServiceItem[] = [];
         switch (serviceType) {
@@ -153,8 +152,6 @@ const Product_Customer: React.FC<Product_CustomerProps> = ({
       } catch (error) {
         console.error('Lỗi khi tìm kiếm dịch vụ:', error);
         setFilteredItems([]);
-      } finally {
-        setLoading(false);
       }
     }, 300),
     [serviceType, CustomerId, selectedServices],
@@ -288,7 +285,7 @@ const Product_Customer: React.FC<Product_CustomerProps> = ({
             >
               {filteredItems.map((item) => (
                 <Option key={item.Id} value={item.Id} label={getItemName(item)}>
-                  {getItemName(item)} (ID: {item.Id})
+                  {getItemName(item)} 
                 </Option>
               ))}
             </Select>
@@ -324,6 +321,7 @@ const Product_Customer: React.FC<Product_CustomerProps> = ({
                 title: 'Số thứ tự',
                 key: 'stt',
                 width: '20%',
+                align:'center',
                 render: (
                   text: string,
                   record: GetCustomer_Link,

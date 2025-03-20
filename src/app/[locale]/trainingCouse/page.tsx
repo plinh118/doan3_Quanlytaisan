@@ -304,7 +304,7 @@ const ExportExcelTrainingCouser =async () => {
             size="large"
             onClick={handleRefresh}
           />
-          <Button icon={<UploadOutlined />} onClick={ExportExcelTrainingCouser}>
+          <Button icon={<UploadOutlined />} type="primary"onClick={ExportExcelTrainingCouser}>
                                 Xuất Excel
                               </Button>
         </Space>
@@ -323,7 +323,7 @@ const ExportExcelTrainingCouser =async () => {
             pageSize: pageSize,
             showSizeChanger: true,
             showQuickJumper: true,
-            showTotal: (total) => `Total ${total} items`,
+            showTotal: (total) => `Tổng ${total} Khóa học`,
             onChange: (page, size) => {
               setCurrentPage(page);
               setPageSize(size);

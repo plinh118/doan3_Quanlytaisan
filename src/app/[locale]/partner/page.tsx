@@ -213,7 +213,7 @@ const PartnerPage = () => {
             size="large"
             onClick={handleRefresh}
           />
-          <Button icon={<UploadOutlined />} onClick={ExportExcelPartner}>
+          <Button icon={<UploadOutlined />} type="primary"onClick={ExportExcelPartner}>
                       Xuất Excel
                     </Button>
         </Space>
@@ -232,7 +232,7 @@ const PartnerPage = () => {
             total: total,
             showSizeChanger: true,
             showQuickJumper: true,
-            showTotal: (total) => `Total ${total} items`,
+            showTotal: (total) => `Tổng ${total} đối tác`,
             onChange: (page, size) => {
               setCurrentPage(page);
               setPageSize(size);

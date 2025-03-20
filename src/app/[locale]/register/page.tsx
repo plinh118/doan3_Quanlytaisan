@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Form, Input, Button, Card, Alert, Typography } from 'antd';
@@ -15,8 +15,10 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const { show } = useNotification();
-  document.title="Đăng ký";
 
+  useEffect(()=>{
+    document.title="Đăng ký";
+  },[])
   const onFinish = async (values: {
     email: string;
     password: string;

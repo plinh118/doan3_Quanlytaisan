@@ -211,7 +211,7 @@ const UserPage = () => {
             total: total,
             showSizeChanger: true,
             showQuickJumper: true,
-            showTotal: (total) => `Total ${total} items`,
+            showTotal: (total) => `Tổng ${total} người dùng`,
             onChange: (page, size) => {
               setCurrentPage(page);
               setPageSize(size);

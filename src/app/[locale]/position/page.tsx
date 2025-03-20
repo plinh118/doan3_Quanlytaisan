@@ -191,7 +191,7 @@ const PositionPage = () => {
             total: total,
             showSizeChanger: true,
             showQuickJumper: true,
-            showTotal: (total) => `Total ${total} items`,
+            showTotal: (total) => `Tổng ${total} chức vụ`,
             onChange: (page, size) => {
               setCurrentPage(page);
               setPageSize(size);

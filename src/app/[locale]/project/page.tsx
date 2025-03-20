@@ -322,7 +322,7 @@ const ProjectPage = () => {
             size="large"
             onClick={handleRefresh}
           />
-          <Button icon={<UploadOutlined />} onClick={ExportExcelProject}>
+          <Button icon={<UploadOutlined />} type="primary"onClick={ExportExcelProject}>
             Xuất Excel
           </Button>
         </Space>
@@ -340,7 +340,7 @@ const ProjectPage = () => {
             total,
             showSizeChanger: true,
             showQuickJumper: true,
-            showTotal: (total) => `Total ${total} items`,
+            showTotal: (total) => `Tổng ${total} dự án`,
             onChange: (page, size) => {
               setCurrentPage(page);
               setPageSize(size);

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
@@ -32,7 +32,9 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const { show } = useNotification();
 
-  document.title="Đăng nhập";
+  useEffect(()=>{
+    document.title="Đăng nhập";
+  },[])
   const onFinish = async (values: any) => {
     setLoading(true);
 

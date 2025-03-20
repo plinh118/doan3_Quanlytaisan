@@ -257,7 +257,7 @@ const ExportExcelCustomer = async() => {
             size="large"
             onClick={handleRefresh}
           />
-          <Button icon={<UploadOutlined />} onClick={ExportExcelCustomer}>
+          <Button icon={<UploadOutlined />} type="primary" onClick={ExportExcelCustomer}>
                       Xuất Excel
                     </Button>
         </Space>
@@ -276,7 +276,7 @@ const ExportExcelCustomer = async() => {
             total: total,
             showSizeChanger: true,
             showQuickJumper: true,
-            showTotal: (total) => `Total ${total} items`,
+            showTotal: (total) => `Tổng ${total} khách hàng`,
             onChange: (page, size) => {
               setCurrentPage(page);
               setPageSize(size);

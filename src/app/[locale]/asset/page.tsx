@@ -300,7 +300,7 @@ const AssetPage = () => {
             size="large"
             onClick={handleRefresh}
           />
-          <Button icon={<UploadOutlined />} onClick={ExportExcelAsset}>
+          <Button icon={<UploadOutlined />} type="primary"onClick={ExportExcelAsset}>
             Xuất Excel
           </Button>
         </Space>
@@ -319,7 +319,7 @@ const AssetPage = () => {
             pageSize: pageSize,
             showSizeChanger: true,
             showQuickJumper: true,
-            showTotal: (total) => `Total ${total} items`,
+            showTotal: (total) => `Tổng ${total} tài sản`,
             onChange: (page, size) => {
               setCurrentPage(page);
               setPageSize(size);

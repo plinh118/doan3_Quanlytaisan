@@ -226,7 +226,7 @@ const DivisionPage = () => {
             pageSize: pageSize,
             showSizeChanger: true,
             showQuickJumper: true,
-            showTotal: (total) => `Total ${total} items`,
+            showTotal: (total) => `Tổng ${total} phòng ban`,
             onChange: (page, size) => {
               setCurrentPage(page);
               setPageSize(size);
