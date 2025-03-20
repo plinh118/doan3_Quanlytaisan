@@ -13,7 +13,7 @@ import {
   Divider,
   Select,
 } from 'antd';
-import { SearchOutlined, ReloadOutlined } from '@ant-design/icons';
+import { SearchOutlined, ReloadOutlined, UploadOutlined } from '@ant-design/icons';
 import type { GetTopic, AddTopic } from '@/models/topic.model';
 import { topicAPI } from '@/libs/api/topic.api';
 import { COLUMNS } from '../../../components/UI_shared/Table';
@@ -34,6 +34,7 @@ import { validateDates } from '@/utils/validator';
 import { UpLoadDocument } from '@/libs/api/newupload';
 import { GetCustomer } from '@/models/customer.model';
 import { CustomerAPI } from '@/libs/api/customer.api';
+import ExportExcel from '@/components/UI_shared/ExportExcel';
 
 const TopicPage = () => {
   const [Topics, setTopics] = useState<GetTopic[]>([]);
@@ -91,6 +92,7 @@ const TopicPage = () => {
     setListCustom(data);
   }
   useEffect(() => {
+    document.title="Quản lý đề tài";
     fetchTopics();
     fetchDepartments();getCustomer();
   }, [fetchTopics, fetchDepartments]);
@@ -263,6 +265,28 @@ const TopicPage = () => {
     handleDelete: handleDelete,
   });
 
+  const ExportExcelTopic =async () => {
+    const AllTopic = await topicAPI.gettopicsByPageOrder(1,100000,'ASC');
+      const headers = [
+        'Tên đề tài',
+        'Tên đơn vị',
+        'Tên khách hàng',
+        'Ngày bắt đầu',
+        'Ngày kết thúc',
+        'Trạng thái',
+        'Mô tả',
+        ];
+      const formattedData = AllTopic.map((pr) => ({
+      'Tên đề tài':pr.TopicName,
+        'Tên đơn vị':pr.DepartmentName,
+        'Tên khách hàng':pr.CustomerName?pr.CustomerName:'Khôn có',
+        'Ngày bắt đầu':pr.TopicStartDate ? new Date(pr.TopicStartDate).toLocaleDateString('vi-VN') : 'Không có',
+        'Ngày kết thúc':pr.TopicEndDate ? new Date(pr.TopicEndDate).toLocaleDateString('vi-VN') : 'Không có',
+        'Trạng thái':pr.TopicStatus,
+        'Mô tả':pr.Description?pr.Description:'Không có',
+      }));
+      ExportExcel(headers,formattedData,'ams_Topic.xlsx')
+    };
   return (
     <>
       <Header_Children
@@ -314,6 +338,9 @@ const TopicPage = () => {
             size="large"
             onClick={handleRefresh}
           />
+          <Button icon={<UploadOutlined />} onClick={ExportExcelTopic}>
+                                          Xuất Excel
+                                        </Button>
         </Space>
       </div>
 

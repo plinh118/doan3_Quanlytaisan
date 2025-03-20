@@ -15,6 +15,7 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const { show } = useNotification();
+  document.title="Đăng ký";
 
   const onFinish = async (values: {
     email: string;

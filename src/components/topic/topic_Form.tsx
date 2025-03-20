@@ -112,7 +112,6 @@ export const TopicForm: React.FC<ReusableFormProps> = ({
           <Form.Item
             name="CustomerId"
             label="Tên khách hàng"
-            rules={RULES_FORM.required}
           >
             <Select
               options={customers.map((cus: GetCustomer) => ({

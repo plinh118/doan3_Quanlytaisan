@@ -31,6 +31,7 @@ const DepartmentPage = () => {
   const [orderType, setOrderType] = useState<'ASC' | 'DESC'>('ASC');
 
   useEffect(() => {
+    document.title="Quản lý đơn vị";
     GetDepartmentsByPageOrder(currentPage, pageSize, orderType, searchText);
   }, [currentPage, pageSize, orderType]);
 

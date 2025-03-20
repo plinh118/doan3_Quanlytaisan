@@ -31,6 +31,7 @@ const DivisionPage = () => {
   const [departments, setDepartments] = useState<Department_DTO[]>([]);
 
   useEffect(() => {
+    document.title="Quản lý bộ phận"
     GetPositionsByPageOrder(currentPage, pageSize, orderType, searchText);
     getDepartment();
   }, [currentPage, pageSize, orderType]);
@@ -64,7 +65,7 @@ const DivisionPage = () => {
     } catch (error) {
       show({
         result: 1,
-        messageError: 'Lỗi tải danh sách chức vụ',
+        messageError: 'Lỗi tải danh sách bộ phận',
       });
     } finally {
       setLoading(false);

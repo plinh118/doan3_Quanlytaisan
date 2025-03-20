@@ -28,6 +28,7 @@ const PositionPage = () => {
   const { show } = useNotification();
 
   useEffect(() => {
+    document.title="Quản lý chức vụ";
     GetPositionsByPageOrder(currentPage, pageSize, orderType, searchText);
   }, [currentPage, pageSize, orderType]);
 

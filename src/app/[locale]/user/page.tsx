@@ -25,6 +25,7 @@ const UserPage = () => {
   const { show } = useNotification();
   const [roleFilter,setRoleFilter]=useState('');
   useEffect(() => {
+    document.title = 'Quản lý người dùng';
     GetUsersByPageOrder(currentPage, pageSize, orderType, searchText,roleFilter);
   }, [currentPage, pageSize, orderType, searchText,roleFilter]);
 

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Table, Button, Modal, Form, Input, Space, Card, Divider } from 'antd';
-import { SearchOutlined, ReloadOutlined, UploadOutlined } from '@ant-design/icons';
+import { SearchOutlined, ReloadOutlined, UploadOutlined, AppstoreAddOutlined } from '@ant-design/icons';
 import type { AddCustomer, GetCustomer } from '@/models/customer.model';
 import { CustomerAPI } from '@/libs/api/customer.api';
 import { COLUMNS } from '../../../components/UI_shared/Table';
@@ -209,7 +209,9 @@ const CustomerPage = () => {
     columnType: Customer_Colum,
     openModal: openEditModal,
     handleDelete: handleDelete,
-    addCustomer:addProductCustomer
+    addCustomer:addProductCustomer,
+    Tile1:"Liên kết dịch vụ",
+    icon1:<AppstoreAddOutlined/>
   });
 const ExportExcelCustomer = async() => {
   const CustomersExcel = await CustomerAPI.getCustomersByPageOrder(1,100000,"ASC");

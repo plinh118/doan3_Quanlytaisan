@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Table, Button, Modal, Form, Input, Space, Card, Divider } from 'antd';
-import { SearchOutlined, ReloadOutlined } from '@ant-design/icons';
+import { SearchOutlined, ReloadOutlined, UploadOutlined } from '@ant-design/icons';
 import type { Add_Services, Get_Services } from '@/models/services.model';
 import { servicesAPI } from '@/libs/api/services.api';
 import { COLUMNS } from '../../../components/UI_shared/Table';
@@ -16,6 +16,7 @@ import { customer_LinkAPI } from '@/libs/api/customer_link.api';
 import { handleAddCustomerhook, handleRemoveCustomerhook } from '@/modules/shared/customerLink/customerLinkHooks';
 import { Product_Colum } from '@/components/product/product_Table';
 import Product_Customer from '@/components/UI_shared/Product_Customer_Modal';
+import ExportExcel from '@/components/UI_shared/ExportExcel';
 
 const ServicePage = () => {
   const [Services, setServices] = useState<Get_Services[]>([]);
@@ -37,6 +38,7 @@ const ServicePage = () => {
   const [selectedCustomer, setSelectedCustomer] = useState<any[]>([]);
  
   useEffect(() => {
+    document.title = 'Quản lý dịch vụ';
     Get_ServicessByPageOrder(currentPage, pageSize, orderType, searchText);
   }, [currentPage, pageSize, orderType]);
 
@@ -194,6 +196,21 @@ const ServicePage = () => {
     const AddCustomer = async () => {
       setOpenModalCustomer(false);
     };
+
+    const ExportExcelServices =async () => {
+        const AllServices = await servicesAPI.getservicessByPageOrder(1,100000,'ASC');
+          const headers = [
+            'Tên dịch vụ',
+            'Trạng thái',
+            'Mô tả',
+            ];
+          const formattedData = AllServices.map((pr) => ({
+            'Tên dịch vụ':pr.ServiceName,
+            'Trạng thái':pr.ServiceStatus,
+            'Mô tả':pr.Description?pr.Description:'Không có',
+          }));
+          ExportExcel(headers,formattedData,'ams_Topic.xlsx')
+        };
   return (
     <>
       <Header_Children
@@ -220,6 +237,9 @@ const ServicePage = () => {
             size="large"
             onClick={handleRefresh}
           />
+          <Button icon={<UploadOutlined />} onClick={ExportExcelServices}>
+                                                    Xuất Excel
+                                                  </Button>
         </Space>
       </div>
 

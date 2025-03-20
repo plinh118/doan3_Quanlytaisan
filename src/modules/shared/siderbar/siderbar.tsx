@@ -6,18 +6,21 @@ import { useRouter, usePathname } from 'next/navigation';
 import { useColorState } from '@/stores/color.store';
 import type { MenuProps } from 'antd';
 import {
+  DashboardOutlined, // Thay cho ProjectOutlined (Dashboard)
   UserOutlined,
-  ProjectOutlined,
+  FileOutlined, // Thay cho ProjectOutlined (Quản lý phi vật thể)
   SettingOutlined,
   TeamOutlined,
-  UsergroupAddOutlined,
+  UserSwitchOutlined, // Thay cho UsergroupAddOutlined (Quản lý đối tác)
+  AppstoreOutlined, // Thay cho TabletOutlined (Quản lý tài sản)
+  ShoppingOutlined, // Thay cho FolderOutlined (Quản lý sản phẩm)
+  ProjectOutlined, // Thay cho TrophyOutlined (Quản lý dự án)
   BookOutlined,
-  TrophyOutlined,
-  WalletOutlined,
-  BankOutlined,
-  FolderOutlined,
+  ReadOutlined, // Thay cho BankOutlined (Quản lý khóa đào tạo)
   CustomerServiceOutlined,
-  TabletOutlined,
+  SafetyOutlined, // Thay cho SettingOutlined (Sở hữu trí tuệ)
+  ApartmentOutlined, // Thay cho FolderOutlined (Quản lý bộ phận)
+  IdcardOutlined, // Thay cho BankOutlined (Quản lý chức vụ)
 } from '@ant-design/icons';
 import styles from '@/modules/shared/siderbar/siderbar.module.scss';
 
@@ -65,7 +68,7 @@ const SiderBar: React.FC<SiderBarProps> = ({ collapsed }) => {
 
   const sidebarItems = useMemo<MenuItem[]>(
     () => [
-      { key: 'sub5', label: 'Dashboard', icon: <ProjectOutlined /> },
+      { key: 'sub5', label: 'Dashboard', icon: <DashboardOutlined /> },
       {
         key: 'sub1',
         label: 'Quản lý đối tượng',
@@ -75,28 +78,28 @@ const SiderBar: React.FC<SiderBarProps> = ({ collapsed }) => {
           {
             key: '2',
             label: 'Quản lý đối tác',
-            icon: <UsergroupAddOutlined />,
+            icon: <UserSwitchOutlined />,
           },
-          { key: '3', label: 'Quản lý khách hàng', icon: <WalletOutlined /> },
+          { key: '3', label: 'Quản lý khách hàng', icon: <UserOutlined /> },
           { key: '20', label: 'Quản lý người dùng', icon: <TeamOutlined /> },
-          { key: '30', label: 'Quản lý tài sản', icon: <TabletOutlined /> },
+          { key: '30', label: 'Quản lý tài sản', icon: <AppstoreOutlined /> },
         ],
       },
       {
         key: 'sub2',
         label: 'Quản lý phi vật thể',
-        icon: <ProjectOutlined />,
+        icon: <FileOutlined />,
         children: [
-          { key: '5', label: 'Quản lý sản phẩm', icon: <FolderOutlined /> },
-          { key: '6', label: 'Quản lý dự án', icon: <TrophyOutlined /> },
+          { key: '5', label: 'Quản lý sản phẩm', icon: <ShoppingOutlined /> },
+          { key: '6', label: 'Quản lý dự án', icon: <ProjectOutlined /> },
           { key: '7', label: 'Quản lý đề tài', icon: <BookOutlined /> },
-          { key: '8', label: 'Quản lý khóa đào tạo', icon: <BankOutlined /> },
+          { key: '8', label: 'Quản lý khóa đào tạo', icon: <ReadOutlined /> },
           {
             key: '13',
             label: 'Quản lý dịch vụ',
             icon: <CustomerServiceOutlined />,
           },
-          { key: '9', label: 'Sở hữu trí tuệ', icon: <SettingOutlined /> },
+          { key: '9', label: 'Sở hữu trí tuệ', icon: <SafetyOutlined /> },
         ],
       },
       {
@@ -105,8 +108,8 @@ const SiderBar: React.FC<SiderBarProps> = ({ collapsed }) => {
         icon: <SettingOutlined />,
         children: [
           { key: '11', label: 'Đơn vị/ công ty con', icon: <TeamOutlined /> },
-          { key: '10', label: 'Quản lý bộ phận', icon: <FolderOutlined /> },
-          { key: '12', label: 'Quản lý chức vụ', icon: <BankOutlined /> },
+          { key: '10', label: 'Quản lý bộ phận', icon: <ApartmentOutlined /> },
+          { key: '12', label: 'Quản lý chức vụ', icon: <IdcardOutlined /> },
         ],
       },
     ],
@@ -136,6 +139,7 @@ const SiderBar: React.FC<SiderBarProps> = ({ collapsed }) => {
           alt="Logo"
           width={collapsed ? 50 : 150}
           height={60}
+          priority 
           style={{
             objectFit: 'contain',
             height: 60,

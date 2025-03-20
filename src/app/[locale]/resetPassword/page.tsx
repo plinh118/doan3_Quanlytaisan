@@ -21,6 +21,7 @@ export default function ResetPassword() {
   const [userAfter, setUserAfter] = useState<any>(null);
 
   useEffect(() => {
+    document.title="Thông tin cá nhân";
     const email = localStorage.getItem('Email');
     const fullName = localStorage.getItem('FullName');
     const Id = localStorage.getItem('ID');

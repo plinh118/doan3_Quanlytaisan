@@ -1,6 +1,22 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { Modal, Card, Select, Button, Typography, Space, Input, Table, Empty } from 'antd';
-import { DeleteOutlined, SearchOutlined, UserAddOutlined } from '@ant-design/icons';
+import {
+  Modal,
+  Card,
+  Select,
+  Button,
+  Typography,
+  Space,
+  Input,
+  Table,
+  Empty,
+  Popconfirm,
+  Tooltip,
+} from 'antd';
+import {
+  DeleteOutlined,
+  SearchOutlined,
+  UserAddOutlined,
+} from '@ant-design/icons';
 import { customer_LinkAPI } from '@/libs/api/customer_link.api';
 import { trainingCouseAPI } from '@/libs/api/trainingCouse.api';
 import { productAPI } from '@/libs/api/product.api';
@@ -16,13 +32,20 @@ import { GetCustomer_Link } from '@/models/customer_Linh.model';
 const { Option } = Select;
 const { Title } = Typography;
 
-type ServiceItem = GetTrainingCourse | Get_Product | Get_Services | GetCustomer_Link;
+type ServiceItem =
+  | GetTrainingCourse
+  | Get_Product
+  | Get_Services
+  | GetCustomer_Link;
 
 interface Product_CustomerProps {
   OpenModal: boolean;
   SetOpenModal: (visible: boolean) => void;
   CustomerId: number | undefined;
-  handleAddService: (service: ServiceItem, relatedType: string) => Promise<void>;
+  handleAddService: (
+    service: ServiceItem,
+    relatedType: string,
+  ) => Promise<void>;
   handleRemoveService: (Id: number, relatedType: string) => Promise<void>;
   ConfirmSelection: () => void;
 }
@@ -37,15 +60,21 @@ const Product_Customer: React.FC<Product_CustomerProps> = ({
 }) => {
   const [serviceType, setServiceType] = useState<string | undefined>(undefined);
   const [filteredItems, setFilteredItems] = useState<ServiceItem[]>([]);
-  const [filteredSelectedItems, setFilteredSelectedItems] = useState<GetCustomer_Link[]>([]);
+  const [filteredSelectedItems, setFilteredSelectedItems] = useState<
+    GetCustomer_Link[]
+  >([]);
   const [searchText, setSearchText] = useState('');
   const [searchSelectedText, setSearchSelectedText] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(5);
   const [orderType] = useState<'ASC' | 'DESC'>('ASC');
   const [total, setTotal] = useState<number>(0);
-  const [selectedItemsToAdd, setSelectedItemsToAdd] = useState<ServiceItem[]>([]);
-  const [selectedServices, setSelectedServices] = useState<GetCustomer_Link[]>([]);
+  const [selectedItemsToAdd, setSelectedItemsToAdd] = useState<ServiceItem[]>(
+    [],
+  );
+  const [selectedServices, setSelectedServices] = useState<GetCustomer_Link[]>(
+    [],
+  );
   const [loading, setLoading] = useState(false);
   const { show } = useNotification();
 
@@ -60,7 +89,6 @@ const Product_Customer: React.FC<Product_CustomerProps> = ({
   // Lấy danh sách dịch vụ đã liên kết
   const getCustomerLinkByPageOrder = useCallback(async () => {
     if (!CustomerId) return;
-    setLoading(true);
     try {
       const dataServices = await customer_LinkAPI.getcustomer_LinkByPageOrder(
         currentPage,
@@ -70,7 +98,7 @@ const Product_Customer: React.FC<Product_CustomerProps> = ({
         undefined,
         undefined,
         CustomerId,
-        searchSelectedText || undefined
+        searchSelectedText || undefined,
       );
       setSelectedServices(dataServices);
       setFilteredSelectedItems(dataServices);
@@ -80,9 +108,7 @@ const Product_Customer: React.FC<Product_CustomerProps> = ({
       setSelectedServices([]);
       setFilteredSelectedItems([]);
       setTotal(0);
-    } finally {
-      setLoading(false);
-    }
+   }
   }, [CustomerId, currentPage, pageSize, orderType, searchSelectedText]);
 
   // Tìm kiếm danh sách dịch vụ chưa liên kết
@@ -100,23 +126,30 @@ const Product_Customer: React.FC<Product_CustomerProps> = ({
               'ASC',
               value,
               undefined,
-              'Đang diễn ra'
+              'Đang diễn ra',
             );
             break;
           case 'Product':
             data = await productAPI.getproductsByPageOrder(1, 10, 'ASC', value);
             break;
           case 'Services':
-            data = await servicesAPI.getservicessByPageOrder(1, 10, 'ASC', value);
+            data = await servicesAPI.getservicessByPageOrder(
+              1,
+              10,
+              'ASC',
+              value,
+            );
             break;
           default:
             return;
         }
         const filtered = data.filter(
-          (item) => !selectedServices.some((selected) => selected.RelatedId === item.Id)
+          (item) =>
+            !selectedServices.some(
+              (selected) => selected.RelatedId === item.Id,
+            ),
         );
         setFilteredItems(filtered);
-        
       } catch (error) {
         console.error('Lỗi khi tìm kiếm dịch vụ:', error);
         setFilteredItems([]);
@@ -124,7 +157,7 @@ const Product_Customer: React.FC<Product_CustomerProps> = ({
         setLoading(false);
       }
     }, 300),
-    [serviceType, CustomerId, selectedServices]
+    [serviceType, CustomerId, selectedServices],
   );
 
   // Tìm kiếm trong danh sách dịch vụ đã chọn
@@ -155,7 +188,9 @@ const Product_Customer: React.FC<Product_CustomerProps> = ({
 
   // Chọn dịch vụ để thêm
   const handleSelectItems = (selectedIds: number[]) => {
-    const selected = filteredItems.filter((item) => selectedIds.includes(item.Id));
+    const selected = filteredItems.filter((item) =>
+      selectedIds.includes(item.Id),
+    );
     setSelectedItemsToAdd(selected);
   };
 
@@ -165,7 +200,7 @@ const Product_Customer: React.FC<Product_CustomerProps> = ({
     setLoading(true);
     try {
       await Promise.all(
-        selectedItemsToAdd.map((item) => handleAddService(item, serviceType))
+        selectedItemsToAdd.map((item) => handleAddService(item, serviceType)),
       );
       setSelectedItemsToAdd([]);
       await getCustomerLinkByPageOrder();
@@ -178,7 +213,10 @@ const Product_Customer: React.FC<Product_CustomerProps> = ({
   };
 
   // Xóa dịch vụ đã liên kết
-  const handleDeleteService = async (relatedId: number, relatedType: string) => {
+  const handleDeleteService = async (
+    relatedId: number,
+    relatedType: string,
+  ) => {
     if (!relatedType) return;
     setLoading(true);
     try {
@@ -209,7 +247,14 @@ const Product_Customer: React.FC<Product_CustomerProps> = ({
     >
       <Space direction="vertical" size="middle" style={{ width: '100%' }}>
         <Card>
-          <div style={{ display: 'flex', gap: '16px', alignItems: 'center', marginBottom: '16px' }}>
+          <div
+            style={{
+              display: 'flex',
+              gap: '16px',
+              alignItems: 'center',
+              marginBottom: '16px',
+            }}
+          >
             <Select
               placeholder="Chọn loại dịch vụ"
               style={{ width: 200 }}
@@ -252,7 +297,9 @@ const Product_Customer: React.FC<Product_CustomerProps> = ({
               type="primary"
               icon={<UserAddOutlined />}
               onClick={addSelectedItems}
-              disabled={selectedItemsToAdd.length === 0 || !serviceType || loading}
+              disabled={
+                selectedItemsToAdd.length === 0 || !serviceType || loading
+              }
               loading={loading}
             >
               Thêm
@@ -277,8 +324,11 @@ const Product_Customer: React.FC<Product_CustomerProps> = ({
                 title: 'Số thứ tự',
                 key: 'stt',
                 width: '20%',
-                render: (text: string, record: GetCustomer_Link, index: number) =>
-                  (currentPage - 1) * pageSize + index + 1,
+                render: (
+                  text: string,
+                  record: GetCustomer_Link,
+                  index: number,
+                ) => (currentPage - 1) * pageSize + index + 1,
               },
               {
                 title: 'Tên dịch vụ',
@@ -291,22 +341,34 @@ const Product_Customer: React.FC<Product_CustomerProps> = ({
                 key: 'action',
                 width: '20%',
                 render: (text: string, item: GetCustomer_Link) => (
-                  <Button
-                    type="primary"
-                    danger
-                    size="small"
-                    icon={<DeleteOutlined />}
-                    onClick={() => handleDeleteService(item.RelatedId, item.RelatedType)}
-                    disabled={loading}
+                  <Popconfirm
+                    title="Bạn có chắc chắn muốn xóa?"
+                    onConfirm={() =>
+                      handleDeleteService(item.RelatedId, item.RelatedType)
+                    }
+                    okText="Có"
+                    cancelText="Không"
                   >
-                    Xóa
-                  </Button>
+                    <Tooltip title="Xóa">
+                      <Button
+                        shape="circle"
+                        icon={<DeleteOutlined />}
+                        style={{ backgroundColor: 'red', color: 'white' }}
+                        className="bg-white text-red-500 border-red-500 hover:bg-red-500 hover:text-white"
+                        disabled={loading}
+                      />
+                    </Tooltip>
+                  </Popconfirm>
                 ),
               },
             ]}
-            rowKey={(record) => `${record.CustomerId}-${record.RelatedId}-${record.RelatedType}`}
+            rowKey={(record) =>
+              `${record.CustomerId}-${record.RelatedId}-${record.RelatedType}`
+            }
             size="small"
-            locale={{ emptyText: <Empty description="Không có dịch vụ nào được chọn" /> }}
+            locale={{
+              emptyText: <Empty description="Không có dịch vụ nào được chọn" />,
+            }}
             loading={loading}
             pagination={{
               current: currentPage,

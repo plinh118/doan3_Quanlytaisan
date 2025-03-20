@@ -7,7 +7,17 @@ import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts"
 import { doashBoardAPI } from "@/libs/api/dashBoard.api"
 import Link from "next/link"
 import ThemeChanger from "@/modules/shared/changetheme"
-import { Home, BarChart3, Users, Building2, Briefcase, Layers } from "lucide-react"
+import { 
+  Home, 
+  UserCheck, // Thay cho Users (Nhân sự)
+  User, // Thay cho Building2 (Khách hàng)
+  Handshake, // Thay cho Briefcase (Đối tác)
+  Wrench, // Thay cho Layers (Dịch vụ)
+  Package, // Thay cho BarChart3 (Sản phẩm)
+  FolderKanban, // Thay cho BarChart3 (Dự án)
+  BookOpen, // Thay cho BarChart3 (Đề tài)
+  GraduationCap // Thay cho BarChart3 (Khóa học)
+} from "lucide-react"
 import "./dashboard.scss"
 
 const Dashboard = () => {
@@ -16,6 +26,7 @@ const Dashboard = () => {
   const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear())
 
   useEffect(() => {
+    document.title="Trang chủ";
     fetchData()
   }, [selectedYear])
 
@@ -77,7 +88,6 @@ const Dashboard = () => {
     { name: "Đã Hủy", value: Number(statistics.cancel_trainingCouse) },
   ]
 
-  
   const pieColors = [
     "#00C49F", 
     "#0088FE", 
@@ -119,10 +129,10 @@ const Dashboard = () => {
       {/* Stats Summary */}
       <div className="stats-grid">
         <StatCard
-        link="/vi/personnel"
+          link="/vi/personnel"
           title="Nhân sự"
           value={statistics.total_Personnel}
-          icon={<Users />}
+          icon={<UserCheck />}
           colorClass="personnel-gradient"
           legend={[
             { name: "Nam", value: Number(statistics.male_Personnel), color: "#00C49F" },
@@ -135,7 +145,7 @@ const Dashboard = () => {
           link="/vi/customer"
           title="Khách hàng"
           value={statistics.total_Customer}
-          icon={<Building2 />}
+          icon={<User />}
           colorClass="customer-gradient"
           legend={[
             { name: "Dừng hợp tác", value: Number(statistics.active_Customer), color: "#00C49F" },
@@ -148,7 +158,7 @@ const Dashboard = () => {
           link="/vi/partner"
           title="Đối tác"
           value={statistics.total_Partner}
-          icon={<Briefcase />}
+          icon={<Handshake />}
           colorClass="partner-gradient"
           legend={[
             { name: "Dừng hợp tác", value: Number(statistics.active_Partner), color: "#00C49F" },
@@ -160,7 +170,7 @@ const Dashboard = () => {
           link="/vi/services"
           title="Dịch vụ"
           value={statistics.total_Service}
-          icon={<Layers />}
+          icon={<Wrench />}
           colorClass="service-gradient"
           legend={[
             { name: "Đang phát triển", value: Number(statistics.active_Service), color: "#00C49F" },
@@ -178,7 +188,7 @@ const Dashboard = () => {
           total={statistics.total_products}
           colors={pieColors}
           link="/vi/product"
-          icon={<BarChart3 />}
+          icon={<Package />}
         />
         <DashboardCard
           title="Dự án"
@@ -186,7 +196,7 @@ const Dashboard = () => {
           total={statistics.total_projects}
           colors={pieColors}
           link="/vi/project"
-          icon={<BarChart3 />}
+          icon={<FolderKanban />}
         />
 
         <DashboardCard
@@ -195,7 +205,7 @@ const Dashboard = () => {
           total={statistics.total_topics}
           colors={pieColors}
           link="/vi/topic"
-          icon={<BarChart3 />}
+          icon={<BookOpen />}
         />
         <DashboardCard
           title="Khóa học"
@@ -203,7 +213,7 @@ const Dashboard = () => {
           total={statistics.total_trainingCouse}
           colors={pieColors}
           link="/vi/trainingCouse"
-          icon={<BarChart3 />}
+          icon={<GraduationCap />}
         />
       </div>
     </div>
@@ -217,7 +227,7 @@ interface LegendItem {
 }
 
 interface StatCardProps {
-  link:string,
+  link: string,
   title: string
   value: string | number
   icon: React.ReactNode
@@ -225,31 +235,31 @@ interface StatCardProps {
   legend?: LegendItem[]
 }
 
-const StatCard: React.FC<StatCardProps> = ({ link,title, value, icon, colorClass = "", legend = [] }) => {
+const StatCard: React.FC<StatCardProps> = ({ link, title, value, icon, colorClass = "", legend = [] }) => {
   return (
     <Link href={link}>
-    <div className={`stat-card ${colorClass}`}>
-      <div className="stat-header">
-        <div style={{display:'flex'}}>
+      <div className={`stat-card ${colorClass}`}>
+        <div className="stat-header">
+          <div style={{display:'flex'}}>
             <div className="stat-icon">{icon}</div>
             <p className="stat-title">{title}</p>
-        </div>
-        
-        <div className="stat-info">
-          <h3 className="stat-value">{value}</h3>
-        </div>
-      </div>
-      <div className="stat-legend">
-        {legend.map((item, index) => (
-          <div key={index} className="legend-item">
-            <div className="legend-color" style={{ backgroundColor: item.color }} />
-            <span className="legend-label">
-              {item.name} <span className="legend-value">({item.value})</span>
-            </span>
           </div>
-        ))}
+          
+          <div className="stat-info">
+            <h3 className="stat-value">{value}</h3>
+          </div>
+        </div>
+        <div className="stat-legend">
+          {legend.map((item, index) => (
+            <div key={index} className="legend-item">
+              <div className="legend-color" style={{ backgroundColor: item.color }} />
+              <span className="legend-label">
+                {item.name} <span className="legend-value">({item.value})</span>
+              </span>
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
     </Link>
   )
 }
@@ -268,7 +278,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({ title, data, total, color
     <Link href={link} className="dashboard-card-link">
       <div className="dashboard-card">
         <div className="card-header">
-          <div className="card-icon">{icon}</div>
+          <div className="stat-icon" style={{marginRight:'10px'}}>{icon}</div>
           <h2 className="card-title">{title}</h2>
         </div>
         <div className="card-content">
@@ -346,4 +356,3 @@ const DashboardCard: React.FC<DashboardCardProps> = ({ title, data, total, color
 }
 
 export default Dashboard
-

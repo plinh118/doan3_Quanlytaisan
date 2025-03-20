@@ -1778,7 +1778,6 @@ BEGIN
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 END$$
-
 DELIMITER ;
 
 DELIMITER $$
@@ -1818,7 +1817,8 @@ BEGIN
     
     SELECT 0 AS RESULT;
 END$$
-DELIMITER ;
+DELIMITER 
+
 DELIMITER $$
 
 CREATE PROCEDURE GetCustomerLinksByPageOrder(
@@ -1883,7 +1883,7 @@ BEGIN
         'LEFT JOIN Customer C ON CL.CustomerId = C.Id ',
         'LEFT JOIN TrainingCourse TC ON CL.RelatedId = TC.Id AND CL.RelatedType = ''TrainingCourse'' ',
         'LEFT JOIN Product P ON CL.RelatedId = P.Id AND CL.RelatedType = ''Product'' ',
-        'LEFT JOIN Services S ON CL.RelatedId = S.Id AND CL.RelatedType = ''Services'' ',
+        'LEFT JOIN Service S ON CL.RelatedId = S.Id AND CL.RelatedType = ''Services'' ',
         v_FilterCondition,
         ' ORDER BY CL.RelatedType ', p_OrderType,
         ' LIMIT ', p_PageSize, ' OFFSET ', v_Offset
