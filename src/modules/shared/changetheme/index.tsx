@@ -5,7 +5,7 @@ import {
   themeLightConfig,
   themeBlueConfig,
   themeDarkConfig,
-  themeBrownConfig
+  themeBrownConfig,
 } from '@/constants/theme';
 
 import {
@@ -72,7 +72,7 @@ const ThemeChanger = () => {
       />
       <button
         onClick={() => setThemeColor(themeLightConfig)}
-        style={buttonStyle('#ffffff')}
+        style={buttonStyle('rgb(180, 1, 1)')}
       />
       <button
         onClick={() => setThemeColor(themeBrownConfig)}

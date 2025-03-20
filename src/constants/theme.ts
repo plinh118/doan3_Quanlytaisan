@@ -24,25 +24,26 @@ export const themeDarkConfig: ThemeConfig = {
 export const themeLightConfig: ThemeConfig = {
   algorithm: [theme.defaultAlgorithm],
   token: {
-    colorBgElevated: '#ffffff',
-    colorBgLayout: '#ffffff',
-    colorPrimaryText: '#ffffff',
-    colorPrimary: '#1677ff',
-    colorBorder: 'rgba(5, 5, 5, 0.06)',
+    colorBgElevated: 'rgba(255, 255, 255, 1)', // Nền trắng hoàn toàn
+    colorBgLayout: 'rgba(255, 255, 255, 1)', // Nền layout trắng
+    colorPrimaryText: 'rgba(96, 0, 0, 0.9)', // Chữ chính đỏ đô tối (hơi trong suốt)
+    colorPrimary: 'rgb(180, 1, 1)', // Màu chủ đạo đỏ đô (đậm)
+    colorBorder: 'rgba(139, 0, 0, 0.4)', // Viền đỏ đô nhạt
     borderRadius: 5,
-    colorLink: '#000000',
-    colorLinkHover: '#000000',
+    colorLink: 'rgba(139, 0, 0, 1)', // Link đỏ đô
+    colorLinkHover: 'rgba(107, 0, 0, 1)', // Link hover đỏ đô đậm hơn
     fontFamily: 'Reddit Sans, sans-serif',
   },
   components: {
     Layout: {
-      headerBg: '#ffffff',
+      headerBg: 'rgba(255, 255, 255, 1)', // Header trắng
     },
     Table: {
-      rowExpandedBg: '#ffffff',
+      rowExpandedBg: 'rgba(251, 234, 234, 0.8)', // Màu nền hàng mở rộng đỏ đô nhạt (mờ 20%)
     },
   },
 };
+
 
 export const themeBlueConfig: ThemeConfig = {
   algorithm: [theme.defaultAlgorithm],
@@ -65,8 +66,8 @@ export const themeBlueConfig: ThemeConfig = {
       controlItemBgActive: '#1a3357',
     },
     Typography: {
-      colorLink: '#000000',
-      colorLinkHover: '#000000',
+      colorLink: 'rgb(39, 108, 255)',
+      colorLinkHover: 'rgba(0, 54, 170, 0.65)',
     },
     Drawer: {
       colorBgElevated: 'rgb(13,68,138)',

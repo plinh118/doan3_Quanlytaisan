@@ -67,7 +67,7 @@ const ProjectForm: React.FC<ReusableFormProps> = ({
    useEffect(() => {
       const delaySearch = setTimeout(() => {
         searchPartner();
-      }, 2000); 
+      }, 1000); 
     
       return () => clearTimeout(delaySearch); 
     }, [searchPartnerhValue]);
@@ -91,7 +91,7 @@ const ProjectForm: React.FC<ReusableFormProps> = ({
   useEffect(() => {
     const delaySearch = setTimeout(() => {
       GetsearchCustomer();
-    }, 2000); 
+    }, 1000); 
   
     return () => clearTimeout(delaySearch); 
   }, [searchCustomer]);
