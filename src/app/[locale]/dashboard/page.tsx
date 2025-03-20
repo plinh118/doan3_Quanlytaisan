@@ -26,7 +26,7 @@ const Dashboard = () => {
   const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear())
 
   useEffect(() => {
-    document.title="Trang chủ";
+    document.title="Trang quản trị";
     fetchData()
   }, [selectedYear])
 
