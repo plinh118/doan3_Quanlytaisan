@@ -48,7 +48,7 @@ const ProjectForm: React.FC<ReusableFormProps> = ({
   const [searchCustomer,setSearchCustomer]=useState<string>('');
   const [Customer,setCustomer]=useState<GetCustomer[]>([]);
 
-  const searchPartner=debounce( async ()=>{
+  const searchPartner=async ()=>{
     if(!searchPartnerhValue){
       const data= await PartnerAPI.getPartnersByPageOrder(1,10,"DESC");
       setPartners(data);
@@ -61,14 +61,18 @@ const ProjectForm: React.FC<ReusableFormProps> = ({
     finally{
       setLoading(false);
     }
-  },3000)
-
-  useEffect(()=>{
-    searchPartner();
-  },[searchPartnerhValue])
+  }
 
 
-  const GetsearchCustomer=debounce(async()=>{
+   useEffect(() => {
+      const delaySearch = setTimeout(() => {
+        searchPartner();
+      }, 2000); 
+    
+      return () => clearTimeout(delaySearch); 
+    }, [searchPartnerhValue]);
+
+  const GetsearchCustomer=async()=>{
     if(!searchCustomer){
       const data= await CustomerAPI.getCustomersByPageOrder(1,10,"DESC",searchCustomer);
       setCustomer(data);
@@ -81,11 +85,16 @@ const ProjectForm: React.FC<ReusableFormProps> = ({
     finally{
       setLoading(false);
     }
-  },3000)
+  }
 
-  useEffect(()=>{
-    GetsearchCustomer();
-  },[searchCustomer])
+ 
+  useEffect(() => {
+    const delaySearch = setTimeout(() => {
+      GetsearchCustomer();
+    }, 2000); 
+  
+    return () => clearTimeout(delaySearch); 
+  }, [searchCustomer]);
 
 
 

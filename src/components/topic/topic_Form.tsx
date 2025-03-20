@@ -11,6 +11,7 @@ import {
   Select,
   Card,
   Typography,
+  Empty,
 } from 'antd';
 import { FileOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import { RULES_FORM } from '@/utils/validator';
@@ -20,13 +21,15 @@ import { Popconfirm, Tooltip } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import TextArea from 'antd/es/input/TextArea';
 import { GetCustomer } from '@/models/customer.model';
+import { useEffect, useState } from 'react';
+import { CustomerAPI } from '@/libs/api/customer.api';
 
 const { Text } = Typography;
 interface ReusableFormProps {
   departments: any[];
   formdata: any;
   documents: any[];
-  customers:any[];
+  customers: any[];
   setDocuments: React.Dispatch<React.SetStateAction<any[]>>;
 }
 
@@ -34,9 +37,47 @@ export const TopicForm: React.FC<ReusableFormProps> = ({
   formdata,
   documents,
   setDocuments,
-  departments,customers
+  departments,
+  customers,
 }) => {
+  const [searchCustomer, setSearchCustomer] = useState<string>('');
+  const [Customer, setCustomer] = useState<GetCustomer[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+
   const { show } = useNotification();
+
+  const GetsearchCustomer = async () => {
+    if (!searchCustomer) {
+      const data = await CustomerAPI.getCustomersByPageOrder(
+        1,
+        10,
+        'DESC',
+        searchCustomer,
+      );
+      setCustomer(data);
+    }
+    setLoading(true);
+    try {
+      const data = await CustomerAPI.getCustomersByPageOrder(
+        1,
+        100000,
+        'DESC',
+        searchCustomer,
+      );
+      setCustomer(data);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const delaySearch = setTimeout(() => {
+      GetsearchCustomer();
+    }, 2000);
+
+    return () => clearTimeout(delaySearch);
+  }, [searchCustomer]);
+
   const updateDocument = (index: number, field: string, value: any) => {
     const newDocs = [...documents];
     newDocs[index][field] = value;
@@ -70,7 +111,6 @@ export const TopicForm: React.FC<ReusableFormProps> = ({
             name="TopicName"
             label="Tên đề tài"
             rules={RULES_FORM.required_max50}
-           
           >
             <Input />
           </Form.Item>
@@ -108,13 +148,20 @@ export const TopicForm: React.FC<ReusableFormProps> = ({
         </Col>
       </Row>
       <Row gutter={16}>
-      <Col span={12}>
-          <Form.Item
-            name="CustomerId"
-            label="Tên khách hàng"
-          >
+        <Col span={12}>
+          <Form.Item name="CustomerId" label="Tên khách hàng">
             <Select
-              options={customers.map((cus: GetCustomer) => ({
+              showSearch
+              filterOption={false}
+              onSearch={setSearchCustomer}
+              notFoundContent={
+                loading ? (
+                  'Đang tìm...'
+                ) : (
+                  <Empty description="Không tìm thấy khách hàng" />
+                )
+              }
+              options={Customer.map((cus: GetCustomer) => ({
                 label: cus.CustomerName,
                 value: cus.Id,
               }))}
@@ -122,20 +169,21 @@ export const TopicForm: React.FC<ReusableFormProps> = ({
           </Form.Item>
         </Col>
         <Col span={12}>
-        <Form.Item
-        name="TopicStatus"
-        label="Trạng thái "
-        rules={RULES_FORM.required}
-      >
-        <Select>
-          <Select.Option value="Đã hoàn thành">Đã hoàn thành</Select.Option>
-          <Select.Option value="Đang thực hiện">Đang thực hiện</Select.Option>
-          <Select.Option value="Hủy">Hủy</Select.Option>
-        </Select>
-      </Form.Item>
+          <Form.Item
+            name="TopicStatus"
+            label="Trạng thái "
+            rules={RULES_FORM.required}
+          >
+            <Select>
+              <Select.Option value="Đã hoàn thành">Đã hoàn thành</Select.Option>
+              <Select.Option value="Đang thực hiện">
+                Đang thực hiện
+              </Select.Option>
+              <Select.Option value="Hủy">Hủy</Select.Option>
+            </Select>
+          </Form.Item>
         </Col>
       </Row>
-      
 
       <Form.Item name="Description" label="Mô tả ">
         <TextArea />
