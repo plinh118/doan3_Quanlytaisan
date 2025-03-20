@@ -12,7 +12,7 @@ import {
   Divider,
   Select,
 } from 'antd';
-import { SearchOutlined, ReloadOutlined } from '@ant-design/icons';
+import { SearchOutlined, ReloadOutlined, UploadOutlined } from '@ant-design/icons';
 import {
   AddTrainingCourse,
   GetTrainingCourse,
@@ -28,13 +28,10 @@ import { GetPersonnel } from '@/models/persionnel.model';
 import Product_Customer from '@/components/UI_shared/Product_Customer_Modal';
 import { GetCustomer } from '@/models/customer.model';
 import { CustomerAPI } from '@/libs/api/customer.api';
-import { UndoIcon } from 'lucide-react';
+
 import { customer_LinkAPI } from '@/libs/api/customer_link.api';
-import {
-  AddCustomer_Link,
-  GetCustomer_Link,
-} from '@/models/customer_Linh.model';
 import { handleAddCustomerhook, handleRemoveCustomerhook } from '@/modules/shared/customerLink/customerLinkHooks';
+import ExportExcel from '@/components/UI_shared/ExportExcel';
 const TrainingCousePage = () => {
   const [TrainingCouses, setTrainingCouses] = useState<GetTrainingCourse[]>([]);
   const [loading, setLoading] = useState(false);
@@ -236,7 +233,24 @@ const TrainingCousePage = () => {
     handleDelete: handleDelete,
     addCustomer: addCustomer,
   });
-
+const ExportExcelTrainingCouser =async () => {
+    const allTrainningCouser = await trainingCouseAPI.gettrainingCousesByPageOrder(1,100000,"ASC");
+    const headers = [
+      'Tên khóa học',
+      'Tên giảng viên',
+      'Tổng thời gian',
+      'Trạng thái',
+      'Mô tả',
+    ];
+    const formattedData = allTrainningCouser.map((pr) => ({
+      'Tên khóa học':pr.CourseName,
+      'Tên giảng viên':pr.InstructorName,
+      'Tổng thời gian':pr.Duration,
+      'Trạng thái':pr.ServiceStatus,
+      'Mô tả':pr.Description?pr.Description:'Không có',
+    }));
+    ExportExcel(headers,formattedData,'ams_asset.xlsx')
+  };
   return (
     <>
       {/* Tier 1: Title and Add Button */}
@@ -290,6 +304,9 @@ const TrainingCousePage = () => {
             size="large"
             onClick={handleRefresh}
           />
+          <Button icon={<UploadOutlined />} onClick={ExportExcelTrainingCouser}>
+                                Xuất Excel
+                              </Button>
         </Space>
       </div>
 

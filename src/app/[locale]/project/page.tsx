@@ -2,7 +2,11 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { Table, Button, Modal, Form, Space, Card, Input, Divider } from 'antd';
-import { SearchOutlined, ReloadOutlined } from '@ant-design/icons';
+import {
+  SearchOutlined,
+  ReloadOutlined,
+  UploadOutlined,
+} from '@ant-design/icons';
 import type {
   Get_project,
   Up_project,
@@ -29,6 +33,7 @@ import { validateDates } from '@/utils/validator';
 import { UpLoadDocument } from '@/libs/api/newupload';
 import { CustomerAPI } from '@/libs/api/customer.api';
 import { GetCustomer } from '@/models/customer.model';
+import ExportExcel from '@/components/UI_shared/ExportExcel';
 
 const ProjectPage = () => {
   const [projects, setProjects] = useState<Get_project[]>([]);
@@ -48,7 +53,7 @@ const ProjectPage = () => {
   const [departments, setDepartments] = useState<Department_DTO[]>([]);
   const { updateDocuments } = useUpdateDocuments();
   const { addDocuments } = useAddDocuments();
-  const [customers,setCustomers]=useState<GetCustomer[]>([]);
+  const [customers, setCustomers] = useState<GetCustomer[]>([]);
   const refreshProjects = useCallback(() => {
     const fetchProjects = async () => {
       try {
@@ -75,6 +80,7 @@ const ProjectPage = () => {
   }, [currentPage, pageSize, orderType, searchText]);
 
   useEffect(() => {
+    document.title = 'Quản lý dự án';
     refreshProjects();
     getDepartment();
     getPartner();
@@ -85,10 +91,10 @@ const ProjectPage = () => {
     const data = await DepartmentAPI.getDepartmentByPageOrder(1, 100, 'ASC');
     setDepartments(data);
   };
-  const getCustomer=async()=>{
-    const data= await CustomerAPI.getCustomersByPageOrder(1,100,"ASC");
+  const getCustomer = async () => {
+    const data = await CustomerAPI.getCustomersByPageOrder(1, 100, 'ASC');
     setCustomers(data);
-  }
+  };
   const getPartner = async () => {
     const data = await PartnerAPI.getPartnersByPageOrder(1, 100, 'ASC');
     setPartners(data);
@@ -187,7 +193,7 @@ const ProjectPage = () => {
       let newIDProject, result: any;
 
       if (documents.length > 0) {
-        const uploadResult = await UpLoadDocument(documents,show);
+        const uploadResult = await UpLoadDocument(documents, show);
 
         uploadedDocuments = uploadResult.documents || [];
       }
@@ -260,6 +266,38 @@ const ProjectPage = () => {
     handleDelete,
   });
 
+  const ExportExcelProject = async () => {
+    const AllProject = await projectAPI.getprojectsByPageOrder(
+      1,
+      100000,
+      'ASC',
+    );
+    const headers = [
+      'Tên dự án',
+      'Tên đơn vị',
+      'Tên đối tác',
+      'Tên khách hàng',
+      'Ngày bắt đầu',
+      'Ngày kết thúc',
+      'Trạng thái',
+      'Mô Tả',
+    ];
+    const formattedData = AllProject.map((pr) => ({
+      'Tên dự án': pr.ProjectName,
+      'Tên đơn vị': pr.DepartmentName,
+      'Tên đối tác': pr.PartnerName ? pr.PartnerName : 'Không có',
+      'Tên khách hàng': pr.CustomerName ? pr.CustomerName : 'Không có',
+      'Ngày bắt đầu': pr.ProjectStartDate
+        ? new Date(pr.ProjectStartDate).toLocaleDateString('vi-VN')
+        : 'Không có',
+      'Ngày kết thúc': pr.ProjectEndDate
+        ? new Date(pr.ProjectEndDate).toLocaleDateString('vi-VN')
+        : 'Không có',
+      'Trạng thái': pr.ProjectStatus,
+      'Mô Tả': pr.Description ? pr.Description : 'Không có',
+    }));
+    ExportExcel(headers, formattedData, 'ams_Project.xlsx');
+  };
   return (
     <>
       <Header_Children
@@ -283,8 +321,9 @@ const ProjectPage = () => {
             icon={<ReloadOutlined />}
             size="large"
             onClick={handleRefresh}
-          >
-            Refresh
+          />
+          <Button icon={<UploadOutlined />} onClick={ExportExcelProject}>
+            Xuất Excel
           </Button>
         </Space>
       </div>

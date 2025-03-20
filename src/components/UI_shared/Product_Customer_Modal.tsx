@@ -1,6 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, Card, Select, Button, Typography, Space, Input, Table, Empty, Popconfirm, Tooltip } from 'antd';
-import { DeleteOutlined, SearchOutlined, UserAddOutlined } from '@ant-design/icons';
+import {
+  Modal,
+  Card,
+  Select,
+  Button,
+  Typography,
+  Space,
+  Input,
+  Table,
+  Empty,
+  Popconfirm,
+  Tooltip,
+} from 'antd';
+import {
+  DeleteOutlined,
+  SearchOutlined,
+  UserAddOutlined,
+} from '@ant-design/icons';
 import { GetCustomer } from '@/models/customer.model';
 import { CustomerAPI } from '@/libs/api/customer.api';
 import { customer_LinkAPI } from '@/libs/api/customer_link.api';
@@ -35,7 +51,9 @@ const Product_Customer: React.FC<Product_CustomerProps> = ({
   RelatedId,
 }) => {
   const [filteredCustomers, setFilteredCustomers] = useState<GetCustomer[]>([]);
-  const [filteredSelectedCustomers, setFilteredSelectedCustomers] = useState<any[]>([]);
+  const [filteredSelectedCustomers, setFilteredSelectedCustomers] = useState<
+    any[]
+  >([]);
   const [searchText, setSearchText] = useState('');
   const [searchCustomerIn, setSearchCustomerIn] = useState('');
   const [currentPageLeft, setCurrentPageLeft] = useState(1);
@@ -54,12 +72,13 @@ const Product_Customer: React.FC<Product_CustomerProps> = ({
         orderTypeLeft,
         value,
         undefined,
-        'Đang hợp tác'
+        'Đang hợp tác',
       );
       if (Array.isArray(data) && data.length > 0) {
         // Lọc bỏ các khách hàng đã có trong selectedCustomer
         const filtered = data.filter(
-          (customer) => !selectedCustomer.some((selected) => selected.Id === customer.Id)
+          (customer) =>
+            !selectedCustomer.some((selected) => selected.Id === customer.Id),
         );
         setFilteredCustomers(filtered);
       } else {
@@ -81,7 +100,7 @@ const Product_Customer: React.FC<Product_CustomerProps> = ({
         orderTypeLeft,
         value,
         RelatedId,
-        RelatedType
+        RelatedType,
       );
       if (Array.isArray(data)) {
         setTotalLeft(data[0]?.TotalRecords || 0);
@@ -105,7 +124,7 @@ const Product_Customer: React.FC<Product_CustomerProps> = ({
 
   const handleSelectCustomer = (selectedIds: number[]) => {
     const selectedCustomers = filteredCustomers.filter((customer) =>
-      selectedIds.includes(customer.Id)
+      selectedIds.includes(customer.Id),
     );
     setAddCustomer(selectedCustomers);
   };
@@ -137,7 +156,14 @@ const Product_Customer: React.FC<Product_CustomerProps> = ({
     >
       <Space direction="vertical" size="middle" style={{ width: '100%' }}>
         <Card>
-          <div style={{ display: 'flex', gap: '16px', alignItems: 'center', marginBottom: '16px' }}>
+          <div
+            style={{
+              display: 'flex',
+              gap: '16px',
+              alignItems: 'center',
+              marginBottom: '16px',
+            }}
+          >
             <Select
               mode="multiple"
               style={{ flex: 1 }}
@@ -154,7 +180,11 @@ const Product_Customer: React.FC<Product_CustomerProps> = ({
               }
             >
               {filteredCustomers.map((customer) => (
-                <Option key={customer.Id} value={customer.Id} label={customer.CustomerName}>
+                <Option
+                  key={customer.Id}
+                  value={customer.Id}
+                  label={customer.CustomerName}
+                >
                   {customer.CustomerName} (ID: {customer.Id})
                 </Option>
               ))}
@@ -181,7 +211,11 @@ const Product_Customer: React.FC<Product_CustomerProps> = ({
           />
 
           <Table
-            dataSource={filteredSelectedCustomers.length > 0 ? filteredSelectedCustomers : selectedCustomer}
+            dataSource={
+              filteredSelectedCustomers.length > 0
+                ? filteredSelectedCustomers
+                : selectedCustomer
+            }
             columns={[
               {
                 title: 'Mã khách hàng',
@@ -201,26 +235,30 @@ const Product_Customer: React.FC<Product_CustomerProps> = ({
                 width: '20%',
                 render: (text: string, customer: GetCustomer) => (
                   <Popconfirm
-                              title="Bạn có chắc chắn muốn xóa?"
-                              onConfirm={() =>  handleRemoveCustomer(customer.Id)}
-                              okText="Có"
-                              cancelText="Không"
-                            >
-                              <Tooltip title="Xóa">
-                                <Button
-                                  shape="circle"
-                                  icon={<DeleteOutlined />}
-                                  style={{ backgroundColor: 'red', color: 'white' }}
-                                  className="bg-white text-red-500 border-red-500 hover:bg-red-500 hover:text-white"
-                                />
-                              </Tooltip>
-                            </Popconfirm>
+                    title="Bạn có chắc chắn muốn xóa?"
+                    onConfirm={() => handleRemoveCustomer(customer.Id)}
+                    okText="Có"
+                    cancelText="Không"
+                  >
+                    <Tooltip title="Xóa">
+                      <Button
+                        shape="circle"
+                        icon={<DeleteOutlined />}
+                        style={{ backgroundColor: 'red', color: 'white' }}
+                        className="bg-white text-red-500 border-red-500 hover:bg-red-500 hover:text-white"
+                      />
+                    </Tooltip>
+                  </Popconfirm>
                 ),
               },
             ]}
             rowKey="Id"
             size="small"
-            locale={{ emptyText: <Empty description="Không có khách hàng nào được chọn" /> }}
+            locale={{
+              emptyText: (
+                <Empty description="Không có khách hàng nào được chọn" />
+              ),
+            }}
             pagination={{
               current: currentPageLeft,
               pageSize: pageSizeLeft,

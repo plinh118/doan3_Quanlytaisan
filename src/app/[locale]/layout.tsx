@@ -9,7 +9,6 @@ import { App as AntApp } from "antd"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons"
-
 const { Sider, Content } = Layout
 
 interface RootLayoutProps {

@@ -30,6 +30,7 @@ const PartnerPage = () => {
   const { show } = useNotification();
 
   useEffect(() => {
+    document.title="Quản lý đối tác";
     Partner_DTOsByPageOrder(currentPage, pageSize, orderType, searchText);
   }, [currentPage, pageSize, orderType, searchText]);
 

@@ -32,6 +32,7 @@ export interface Get_project {
   ProjectStartDate: string;
   ProjectEndDate: string | null;
   ProjectStatus: string;
+  CustomerName:string;
   CustomerId:number | null;
   TotalRecords: number;
 }

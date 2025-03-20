@@ -106,7 +106,7 @@ const AssetPage = () => {
     } catch (error) {
       show({
         result: 1,
-        messageError: 'Lỗi tải danh sách chức vụ',
+        messageError: 'Lỗi tải danh sách tài sản',
       });
     } finally {
       setLoading(false);

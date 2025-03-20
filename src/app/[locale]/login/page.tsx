@@ -32,6 +32,7 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const { show } = useNotification();
 
+  document.title="Đăng nhập";
   const onFinish = async (values: any) => {
     setLoading(true);
 
