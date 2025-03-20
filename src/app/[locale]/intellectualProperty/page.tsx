@@ -303,7 +303,7 @@ const IntellectualPropertyPage = () => {
             size="large"
             onClick={handleRefresh}
           />
-           <Button icon={<UploadOutlined />} onClick={ExportExcelIntellectualProperty}>
+           <Button icon={<UploadOutlined />} type="primary"onClick={ExportExcelIntellectualProperty}>
                       Xuất Excel
                     </Button>
         </Space>
@@ -322,7 +322,7 @@ const IntellectualPropertyPage = () => {
             total: total,
             showSizeChanger: true,
             showQuickJumper: true,
-            showTotal: (total) => `Total ${total} items`,
+            showTotal: (total) => `Tổng ${total} bản quyền`,
             onChange: (page, size) => {
               setCurrentPage(page);
               setPageSize(size);

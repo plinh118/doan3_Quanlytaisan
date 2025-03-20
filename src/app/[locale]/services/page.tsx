@@ -237,7 +237,7 @@ const ServicePage = () => {
             size="large"
             onClick={handleRefresh}
           />
-          <Button icon={<UploadOutlined />} onClick={ExportExcelServices}>
+          <Button icon={<UploadOutlined />} type="primary"onClick={ExportExcelServices}>
                                                     Xuất Excel
                                                   </Button>
         </Space>
@@ -256,7 +256,7 @@ const ServicePage = () => {
             total: total,
             showSizeChanger: true,
             showQuickJumper: true,
-            showTotal: (total) => `Total ${total} items`,
+            showTotal: (total) => `Tổng ${total} dịch vụ`,
             onChange: (page, size) => {
               setCurrentPage(page);
               setPageSize(size);

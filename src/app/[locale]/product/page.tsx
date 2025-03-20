@@ -338,7 +338,7 @@ const ProductPage = () => {
             size="large"
             onClick={handleRefresh}
           />
-           <Button icon={<UploadOutlined />} onClick={ExportExcelProduct}>
+           <Button icon={<UploadOutlined />} type="primary"onClick={ExportExcelProduct}>
                                 Xuất Excel
                               </Button>
         </Space>
@@ -357,7 +357,7 @@ const ProductPage = () => {
             total: total,
             showSizeChanger: true,
             showQuickJumper: true,
-            showTotal: (total) => `Total ${total} items`,
+            showTotal: (total) => `Tổng ${total} sản phẩm`,
             onChange: handlePageChange,
           }}
         />

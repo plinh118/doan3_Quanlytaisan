@@ -11,6 +11,7 @@ import {
   Empty,
   Popconfirm,
   Tooltip,
+  Spin,
 } from 'antd';
 import {
   DeleteOutlined,
@@ -43,7 +44,6 @@ const Product_Customer: React.FC<Product_CustomerProps> = ({
   RelatedType,
   OpenModal,
   SetOpenModal,
-  Customers,
   selectedCustomer,
   handleAddCustomer,
   handleRemoveCustomer,
@@ -51,9 +51,7 @@ const Product_Customer: React.FC<Product_CustomerProps> = ({
   RelatedId,
 }) => {
   const [filteredCustomers, setFilteredCustomers] = useState<GetCustomer[]>([]);
-  const [filteredSelectedCustomers, setFilteredSelectedCustomers] = useState<
-    any[]
-  >([]);
+  const [filteredSelectedCustomers, setFilteredSelectedCustomers] = useState<any[]>([]);
   const [searchText, setSearchText] = useState('');
   const [searchCustomerIn, setSearchCustomerIn] = useState('');
   const [currentPageLeft, setCurrentPageLeft] = useState(1);
@@ -61,10 +59,13 @@ const Product_Customer: React.FC<Product_CustomerProps> = ({
   const [orderTypeLeft, setOrderTypeLeft] = useState<'ASC' | 'DESC'>('ASC');
   const [totalLeft, setTotalLeft] = useState<number>(0);
   const [addCustomer, setAddCustomer] = useState<GetCustomer[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [loadingSelected, setLoadingSelected] = useState(false);
   const { show } = useNotification();
 
   // Tìm kiếm khách hàng chưa được chọn
   const handleSearchCustomer = debounce(async (value: string) => {
+    setLoading(true);
     try {
       const data = await CustomerAPI.getCustomersByPageOrder(
         currentPageLeft,
@@ -74,8 +75,7 @@ const Product_Customer: React.FC<Product_CustomerProps> = ({
         undefined,
         'Đang hợp tác',
       );
-      if (Array.isArray(data) && data.length > 0) {
-        // Lọc bỏ các khách hàng đã có trong selectedCustomer
+      if (Array.isArray(data)) {
         const filtered = data.filter(
           (customer) =>
             !selectedCustomer.some((selected) => selected.Id === customer.Id),
@@ -85,13 +85,15 @@ const Product_Customer: React.FC<Product_CustomerProps> = ({
         setFilteredCustomers([]);
       }
     } catch (error) {
-      setTotalLeft(0);
       console.error('Lỗi khi tìm kiếm khách hàng:', error);
+    } finally {
+      setLoading(false);
     }
   }, 300);
 
-  // Tìm kiếm trong danh sách khách hàng đã chọn
+  // Tìm kiếm khách hàng đã chọn
   const handleSearchCustomer_Link = debounce(async (value: string) => {
+    setLoadingSelected(true);
     try {
       if (RelatedId === undefined) return;
       const data = await customer_LinkAPI.getcustomer_LinkByPageOrder(
@@ -111,6 +113,8 @@ const Product_Customer: React.FC<Product_CustomerProps> = ({
       }
     } catch (error) {
       console.error('Lỗi khi tìm kiếm khách hàng đã chọn:', error);
+    } finally {
+      setLoadingSelected(false);
     }
   }, 300);
 
@@ -141,29 +145,17 @@ const Product_Customer: React.FC<Product_CustomerProps> = ({
 
   return (
     <Modal
-      title={
-        <Title level={3} style={{ margin: 0 }}>
-          <UserAddOutlined /> Danh sách khách hàng
-        </Title>
-      }
+      title={<Title level={3}><UserAddOutlined /> Danh sách khách hàng</Title>}
       open={OpenModal}
       onOk={AddCustomer}
       onCancel={() => SetOpenModal(false)}
       width={900}
       okText="Xác nhận"
       cancelText="Hủy"
-      bodyStyle={{ padding: '16px' }}
     >
       <Space direction="vertical" size="middle" style={{ width: '100%' }}>
         <Card>
-          <div
-            style={{
-              display: 'flex',
-              gap: '16px',
-              alignItems: 'center',
-              marginBottom: '16px',
-            }}
-          >
+          <div style={{ display: 'flex', gap: '16px', alignItems: 'center', marginBottom: '16px' }}>
             <Select
               mode="multiple"
               style={{ flex: 1 }}
@@ -173,55 +165,42 @@ const Product_Customer: React.FC<Product_CustomerProps> = ({
               size="large"
               filterOption={false}
               showSearch
+              loading={loading}
               optionLabelProp="label"
               value={addCustomer.map((c) => c.Id)}
-              notFoundContent={
-                <Empty description="Không tìm thấy khách hàng" />
-              }
+              notFoundContent={loading ? <Spin /> : <Empty description="Không tìm thấy khách hàng" />}
             >
               {filteredCustomers.map((customer) => (
-                <Option
-                  key={customer.Id}
-                  value={customer.Id}
-                  label={customer.CustomerName}
-                >
-                  {customer.CustomerName} (ID: {customer.Id})
+                <Option key={customer.Id} value={customer.Id} label={customer.CustomerName}>
+                  {customer.CustomerName}
                 </Option>
               ))}
             </Select>
-            <Button
-              type="primary"
-              icon={<UserAddOutlined />}
-              onClick={addListCustomer}
-              disabled={addCustomer.length === 0}
-            >
+            <Button type="primary" icon={<UserAddOutlined />} onClick={addListCustomer} disabled={addCustomer.length === 0}>
               Thêm
             </Button>
           </div>
 
-          <Divider style={{ margin: '16px 0' }} />
+          <Divider />
 
           <Input.Search
             placeholder="Tìm kiếm trong danh sách đã chọn..."
             allowClear
             enterButton={<SearchOutlined />}
             size="large"
+            loading={loadingSelected}
             onSearch={setSearchCustomerIn}
-            style={{ marginBottom: '16px' }}
           />
 
           <Table
-            dataSource={
-              filteredSelectedCustomers.length > 0
-                ? filteredSelectedCustomers
-                : selectedCustomer
-            }
+            dataSource={filteredSelectedCustomers.length > 0 ? filteredSelectedCustomers : selectedCustomer}
             columns={[
               {
-                title: 'Mã khách hàng',
-                dataIndex: 'Id',
-                key: 'Id',
+                title: 'Số thứ tự',
+                key: 'stt',
                 width: '20%',
+                align: 'center',
+                render: (text, record, index) => (currentPageLeft - 1) * pageSizeLeft + index + 1,
               },
               {
                 title: 'Tên khách hàng',
@@ -233,44 +212,17 @@ const Product_Customer: React.FC<Product_CustomerProps> = ({
                 title: 'Thao tác',
                 key: 'action',
                 width: '20%',
-                render: (text: string, customer: GetCustomer) => (
-                  <Popconfirm
-                    title="Bạn có chắc chắn muốn xóa?"
-                    onConfirm={() => handleRemoveCustomer(customer.Id)}
-                    okText="Có"
-                    cancelText="Không"
-                  >
+                render: (text, customer) => (
+                  <Popconfirm title="Bạn có chắc chắn muốn xóa?" onConfirm={() => handleRemoveCustomer(customer.Id)} okText="Có" cancelText="Không">
                     <Tooltip title="Xóa">
-                      <Button
-                        shape="circle"
-                        icon={<DeleteOutlined />}
-                        style={{ backgroundColor: 'red', color: 'white' }}
-                        className="bg-white text-red-500 border-red-500 hover:bg-red-500 hover:text-white"
-                      />
+                      <Button shape="circle" icon={<DeleteOutlined />} style={{ backgroundColor: 'red', color: 'white' }} />
                     </Tooltip>
                   </Popconfirm>
                 ),
               },
             ]}
             rowKey="Id"
-            size="small"
-            locale={{
-              emptyText: (
-                <Empty description="Không có khách hàng nào được chọn" />
-              ),
-            }}
-            pagination={{
-              current: currentPageLeft,
-              pageSize: pageSizeLeft,
-              total: totalLeft,
-              showSizeChanger: true,
-              showQuickJumper: true,
-              showTotal: (total) => `Tổng ${total} khách hàng`,
-              onChange: (page, size) => {
-                setCurrentPageLeft(page);
-                setPageSizeLeft(size || 10);
-              },
-            }}
+            pagination={{ current: currentPageLeft, pageSize: pageSizeLeft, total: totalLeft, onChange: setCurrentPageLeft }}
           />
         </Card>
       </Space>
