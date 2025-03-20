@@ -83,21 +83,11 @@ const ProjectPage = () => {
     document.title = 'Quản lý dự án';
     refreshProjects();
     getDepartment();
-    getPartner();
-    getCustomer();
   }, [refreshProjects]);
 
   const getDepartment = async () => {
     const data = await DepartmentAPI.getDepartmentByPageOrder(1, 100, 'ASC');
     setDepartments(data);
-  };
-  const getCustomer = async () => {
-    const data = await CustomerAPI.getCustomersByPageOrder(1, 100, 'ASC');
-    setCustomers(data);
-  };
-  const getPartner = async () => {
-    const data = await PartnerAPI.getPartnersByPageOrder(1, 100, 'ASC');
-    setPartners(data);
   };
 
   const handleRefresh = () => {
@@ -375,9 +365,7 @@ const ProjectPage = () => {
               formdata={form}
               documents={documents}
               setDocuments={setDocuments}
-              partners={partners}
               departments={departments}
-              customers={customers}
             />
           </Modal>
         </div>
