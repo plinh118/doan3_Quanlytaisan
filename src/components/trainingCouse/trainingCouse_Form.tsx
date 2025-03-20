@@ -21,7 +21,7 @@ export const TrainingCouseForm: React.FC<ReusableFormProps> = ({
     [],
   );
   const [loading, setLoading] = useState(false);
-  const getIntructor = debounce(async () => {
+  const getIntructor = async () => {
     if (!searchIntructor) {
       const data = await personnelAPI.getpersonnelsByPageOrder(1, 10, 'ASC');
       setFilteredIntructors(data);
@@ -38,9 +38,13 @@ export const TrainingCouseForm: React.FC<ReusableFormProps> = ({
     } finally {
       setLoading(false);
     }
-  }, 3000);
+  };
   useEffect(() => {
-    getIntructor();
+    const delaySearch = setTimeout(() => {
+      getIntructor();
+    }, 2000); 
+  
+    return () => clearTimeout(delaySearch); 
   }, [searchIntructor]);
   return (
     <Form form={formdata} layout="vertical">
