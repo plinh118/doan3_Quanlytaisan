@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Form,
   Input,
@@ -10,6 +10,7 @@ import {
   Button,
   Upload,
   Typography,
+  Empty,
 } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import { RULES_FORM } from '@/utils/validator';
@@ -21,12 +22,13 @@ import { DeleteOutlined } from '@ant-design/icons';
 import { documentAPI } from '@/libs/api/document.api';
 import { useNotification } from '../UI_shared/Notification';
 import { GetCustomer } from '@/models/customer.model';
+import { PartnerAPI } from '@/libs/api/partner.api';
+import { debounce } from 'lodash';
+import { CustomerAPI } from '@/libs/api/customer.api';
 
 const { Text } = Typography;
 
 interface ReusableFormProps {
-  partners: Partner_DTO[];
-  customers: GetCustomer[];
   departments: Department_DTO[];
   formdata: FormInstance<any>;
   documents: any[];
@@ -35,20 +37,65 @@ interface ReusableFormProps {
 
 const ProjectForm: React.FC<ReusableFormProps> = ({
   formdata,
-  customers,
   documents,
   setDocuments,
   departments,
-  partners,
 }) => {
   const { show } = useNotification();
+  const [searchPartnerhValue, setsearchPartnerhValue] = useState<string>(''); 
+  const [loading, setLoading] = useState<boolean>(false); 
+  const [Partners,setPartners]=useState<Partner_DTO[]>([]);
+  const [searchCustomer,setSearchCustomer]=useState<string>('');
+  const [Customer,setCustomer]=useState<GetCustomer[]>([]);
 
+  const searchPartner=debounce( async ()=>{
+    if(!searchPartnerhValue){
+      const data= await PartnerAPI.getPartnersByPageOrder(1,10,"DESC");
+      setPartners(data);
+    };
+    setLoading(true);
+    try{
+      const data= await PartnerAPI.getPartnersByPageOrder(1,100000,"DESC",searchPartnerhValue);
+      setPartners(data);
+    }
+    finally{
+      setLoading(false);
+    }
+  },3000)
+
+  useEffect(()=>{
+    searchPartner();
+  },[searchPartnerhValue])
+
+
+  const GetsearchCustomer=debounce(async()=>{
+    if(!searchCustomer){
+      const data= await CustomerAPI.getCustomersByPageOrder(1,10,"DESC",searchCustomer);
+      setCustomer(data);
+    }
+    setLoading(true);
+    try{
+      const data= await CustomerAPI.getCustomersByPageOrder(1,100000,"DESC",searchCustomer);
+      setCustomer(data);
+    }
+    finally{
+      setLoading(false);
+    }
+  },3000)
+
+  useEffect(()=>{
+    GetsearchCustomer();
+  },[searchCustomer])
+
+
+
+
+  
   const updateDocument = (index: number, field: string, value: any) => {
     const newDocs = [...documents];
     newDocs[index][field] = value;
     setDocuments(newDocs);
   };
-
   const addDocument = () => {
     setDocuments([
       ...documents,
@@ -79,7 +126,6 @@ const ProjectForm: React.FC<ReusableFormProps> = ({
               name="ProjectName"
               label="Tên dự án"
               rules={RULES_FORM.required_max50}
-             
             >
               <Input />
             </Form.Item>
@@ -103,7 +149,17 @@ const ProjectForm: React.FC<ReusableFormProps> = ({
           <Col span={8}>
             <Form.Item name="PartnerId" label="Tên đối tác">
               <Select
-                options={partners.map((partner: any) => ({
+                showSearch
+                filterOption={false} 
+                onSearch={setsearchPartnerhValue} 
+                notFoundContent={
+                  loading ? (
+                    'Đang tìm...'
+                  ) : (
+                    <Empty description="Không tìm thấy đối tác" />
+                  )
+                }
+                options={Partners.map((partner: any) => ({
                   label: partner.PartnerName,
                   value: partner.Id,
                 }))}
@@ -113,7 +169,17 @@ const ProjectForm: React.FC<ReusableFormProps> = ({
           <Col span={8}>
             <Form.Item name="CustomerId" label="Tên khách hàng">
               <Select
-                options={customers.map((cs: GetCustomer) => ({
+                 showSearch
+                 filterOption={false} 
+                 onSearch={setSearchCustomer} 
+                 notFoundContent={
+                   loading ? (
+                     'Đang tìm...'
+                   ) : (
+                     <Empty description="Không tìm thấy khách hàng" />
+                   )
+                 }
+                options={Customer.map((cs: GetCustomer) => ({
                   label: cs.CustomerName,
                   value: cs.Id,
                 }))}
@@ -154,7 +220,11 @@ const ProjectForm: React.FC<ReusableFormProps> = ({
             </Form.Item>
           </Col>
         </Row>
-        <Form.Item name="Description" label="Mô tả" rules={RULES_FORM.Description_max50}>
+        <Form.Item
+          name="Description"
+          label="Mô tả"
+          rules={RULES_FORM.Description_max50}
+        >
           <TextArea />
         </Form.Item>
       </Card>
@@ -181,7 +251,7 @@ const ProjectForm: React.FC<ReusableFormProps> = ({
                 <Upload
                   beforeUpload={(file) => {
                     updateDocument(index, 'DocumentFile', file);
-                    return false; // Ngăn upload tự động
+                    return false; 
                   }}
                   showUploadList={false}
                 >

@@ -224,9 +224,9 @@ const ProductPage = () => {
             return;
           }
 
-          show({ result: 0, messageDone: 'Cập nhật dự án thành công!' });
+          show({ result: 0, messageDone: 'Cập nhật sản phẩm thành công!' });
         } else {
-          show({ result: 1, messageError: 'Cập nhật dự án thất bại!' });
+          show({ result: 1, messageError: 'Cập nhật sản phẩm thất bại!' });
           return;
         }
       } else {
@@ -241,9 +241,9 @@ const ProductPage = () => {
             show({ result: 1, messageError: 'Thêm một số tài liệu thất bại!' });
             return;
           }
-          show({ result: 0, messageDone: 'Thêm dự án thành công!' });
+          show({ result: 0, messageDone: 'Thêm sản phẩm thành công!' });
         } else {
-          show({ result: 1, messageError: 'Thêm dự án thất bại!' });
+          show({ result: 1, messageError: 'Thêm sản phẩm thất bại!' });
           return;
         }
       }
@@ -251,7 +251,7 @@ const ProductPage = () => {
       fetchProducts();
       closeModal();
     } catch (error) {
-      show({ result: 1, messageError: 'Lỗi lưu dự án' });
+      show({ result: 1, messageError: 'Lỗi lưu sản phẩm' });
     } finally {
       setLoading(false);
     }

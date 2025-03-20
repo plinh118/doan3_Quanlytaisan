@@ -226,9 +226,9 @@ const TopicPage = () => {
             return;
           }
 
-          show({ result: 0, messageDone: 'Cập nhật dự án thành công!' });
+          show({ result: 0, messageDone: 'Cập nhật đề tài thành công!' });
         } else {
-          show({ result: 1, messageError: 'Cập nhật dự án thất bại!' });
+          show({ result: 1, messageError: 'Cập nhật đề tài thất bại!' });
           return;
         }
       } else {
@@ -243,9 +243,9 @@ const TopicPage = () => {
             show({ result: 1, messageError: 'Thêm một số tài liệu thất bại!' });
             return;
           }
-          show({ result: 0, messageDone: 'Thêm dự án thành công!' });
+          show({ result: 0, messageDone: 'Thêm đề tài thành công!' });
         } else {
-          show({ result: 1, messageError: 'Thêm dự án thất bại!' });
+          show({ result: 1, messageError: 'Thêm đề tài thất bại!' });
           return;
         }
       }
@@ -253,7 +253,7 @@ const TopicPage = () => {
       fetchTopics();
       closeModal();
     } catch (error) {
-      show({ result: 1, messageError: 'Lỗi lưu dự án' });
+      show({ result: 1, messageError: 'Lỗi lưu đề tài' });
     } finally {
       setLoading(false);
     }

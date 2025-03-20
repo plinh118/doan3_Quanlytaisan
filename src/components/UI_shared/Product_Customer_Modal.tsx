@@ -222,7 +222,13 @@ const Product_Customer: React.FC<Product_CustomerProps> = ({
               },
             ]}
             rowKey="Id"
-            pagination={{ current: currentPageLeft, pageSize: pageSizeLeft, total: totalLeft, onChange: setCurrentPageLeft }}
+            size="small"
+            
+                        locale={{
+                          emptyText: <Empty description="Không có khách hàng nào được chọn" />,
+                        }}
+            pagination={{  showSizeChanger: true,
+              showQuickJumper: true, current: currentPageLeft, pageSize: pageSizeLeft, total: totalLeft, onChange:(page,size)=>{ setCurrentPageLeft(page); setPageSizeLeft(size)} }}
           />
         </Card>
       </Space>
