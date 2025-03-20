@@ -43,7 +43,15 @@ export default function LoginPage() {
 
       show({ result: data, messageDone: 'Đăng nhập thành công' });
       if (data === 0) {
-        router.push('/vi/dashboard');
+       const role= localStorage.getItem('ROLE');
+       debugger;
+        if(role==='admin')
+        {
+          router.push('/vi/dashboard');  
+        }
+        else{
+          router.push('/vi/home_user');
+        }
       }
     } catch (err: any) {
       const errorCode = err.response?.data?.errorCode || 8;
