@@ -37,7 +37,7 @@ export const AssetForm: React.FC<ReusableFormProps> = ({ formdata, divisions, is
    useEffect(() => {
       const delaySearch = setTimeout(() => {
         getPersonnel();
-      }, 2000); 
+      }, 1000); 
     
       return () => clearTimeout(delaySearch); 
     }, [divisionFilter, searchValue]);

@@ -7,6 +7,7 @@ import { Form, Input, Button, Card, Alert, Typography } from 'antd';
 import { UserOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
 import { authAPI } from '@/libs/api/auth.api';
 import { useNotification } from '@/components/UI_shared/Notification';
+import { RULES_FORM } from '@/utils/validator';
 
 const { Title, Text } = Typography;
 
@@ -111,30 +112,21 @@ export default function RegisterPage() {
 
           <Form.Item
             name="email"
-            rules={[
-              { required: true, message: 'Vui lòng nhập địa chỉ email!' },
-              { type: 'email', message: 'Email không hợp lệ!' },
-            ]}
+            rules={RULES_FORM.email}
           >
             <Input prefix={<MailOutlined />} placeholder="Địa chỉ email" />
           </Form.Item>
 
           <Form.Item
             name="password"
-            rules={[
-              { required: true, message: 'Vui lòng nhập mật khẩu!' },
-              { min: 6, message: 'Mật khẩu phải có ít nhất 6 ký tự!' },
-            ]}
+            rules={RULES_FORM.password}
           >
             <Input.Password prefix={<LockOutlined />} placeholder="Mật khẩu" />
           </Form.Item>
 
           <Form.Item
             name="comfilmPassword"
-            rules={[
-              { required: true, message: 'Vui lòng nhập mật khẩu!' },
-              { min: 6, message: 'Mật khẩu phải có ít nhất 6 ký tự!' },
-            ]}
+            rules={RULES_FORM.password}
           >
             <Input.Password
               prefix={<LockOutlined />}

@@ -73,7 +73,7 @@ export const TopicForm: React.FC<ReusableFormProps> = ({
   useEffect(() => {
     const delaySearch = setTimeout(() => {
       GetsearchCustomer();
-    }, 2000);
+    }, 1000);
 
     return () => clearTimeout(delaySearch);
   }, [searchCustomer]);

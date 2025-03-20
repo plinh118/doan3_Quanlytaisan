@@ -42,7 +42,7 @@ export const TrainingCouseForm: React.FC<ReusableFormProps> = ({
   useEffect(() => {
     const delaySearch = setTimeout(() => {
       getIntructor();
-    }, 2000); 
+    }, 1000); 
   
     return () => clearTimeout(delaySearch); 
   }, [searchIntructor]);
