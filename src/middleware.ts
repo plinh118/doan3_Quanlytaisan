@@ -18,7 +18,7 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (pathname === '/vi') {
-    return NextResponse.rewrite(new URL('/vi/login', request.url));
+    return NextResponse.rewrite(new URL('/vi/home_user', request.url));
   }
   return NextResponse.next();
 }
