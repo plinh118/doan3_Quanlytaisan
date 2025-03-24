@@ -1783,7 +1783,7 @@ DELIMITER ;
 DELIMITER $$
 
 -- Thêm Customer_Link
-CREATE PROCEDURE AddCustomerLink(
+CREATE  PROCEDURE AddCustomerLink(
     IN p_CustomerId INT,
     IN p_RelatedId INT,
     IN p_RelatedType NVARCHAR(50)
@@ -1818,10 +1818,9 @@ BEGIN
     SELECT 0 AS RESULT;
 END$$
 DELIMITER 
-
 DELIMITER $$
 
-CREATE PROCEDURE GetCustomerLinksByPageOrder(
+CREATE  PROCEDURE GetCustomerLinksByPageOrder(
     IN p_PageIndex INT,         -- Trang hiện tại
     IN p_PageSize INT,          -- Số dòng trên mỗi trang
     IN p_OrderType VARCHAR(4),  -- 'ASC' hoặc 'DESC'
@@ -1833,51 +1832,57 @@ CREATE PROCEDURE GetCustomerLinksByPageOrder(
 )
 BEGIN
     DECLARE v_Offset INT;
-    DECLARE v_FilterCondition VARCHAR(1000) DEFAULT ' WHERE 1=1 '; -- WHERE mặc định để tránh lỗi SQL
+    DECLARE v_FilterCondition TEXT DEFAULT ' WHERE 1=1 '; -- WHERE mặc định để tránh lỗi SQL
 
     SET v_Offset = (p_PageIndex - 1) * p_PageSize;
 
     -- Lọc theo CustomerId nếu có
     IF p_CustomerId IS NOT NULL AND p_CustomerId > 0 THEN
-        SET v_FilterCondition = CONCAT(v_FilterCondition, " AND CL.CustomerId = ", p_CustomerId);
+        SET v_FilterCondition = CONCAT(v_FilterCondition, ' AND CL.CustomerId = ', p_CustomerId);
     END IF;
 
     -- Lọc theo CustomerName nếu có
     IF p_CustomerName IS NOT NULL AND p_CustomerName != '' THEN
-        SET v_FilterCondition = CONCAT(v_FilterCondition, " AND C.CustomerName LIKE '%", p_CustomerName, "%' ");
+        SET v_FilterCondition = CONCAT(v_FilterCondition, ' AND C.CustomerName LIKE ''%', p_CustomerName, '%'' ');
     END IF;
 
     -- Lọc theo RelatedId nếu có
     IF p_RelatedId IS NOT NULL AND p_RelatedId > 0 THEN
-        SET v_FilterCondition = CONCAT(v_FilterCondition, " AND CL.RelatedId = ", p_RelatedId);
+        SET v_FilterCondition = CONCAT(v_FilterCondition, ' AND CL.RelatedId = ', p_RelatedId);
     END IF;
 
     -- Lọc theo RelatedType nếu có
     IF p_RelatedType IS NOT NULL AND p_RelatedType != '' THEN
-        SET v_FilterCondition = CONCAT(v_FilterCondition, " AND CL.RelatedType LIKE '%", p_RelatedType, "%' ");
+        SET v_FilterCondition = CONCAT(v_FilterCondition, ' AND CL.RelatedType LIKE ''%', p_RelatedType, '%'' ');
     END IF;
 
     -- Lọc theo RelatedName (tên dịch vụ) nếu có
     IF p_RelatedName IS NOT NULL AND p_RelatedName != '' THEN
         SET v_FilterCondition = CONCAT(
             v_FilterCondition,
-            " AND (",
-            "   (CL.RelatedType = 'TrainingCourse' AND TC.CourseName LIKE '%", p_RelatedName, "%')",
-            "   OR (CL.RelatedType = 'Product' AND P.ProductName LIKE '%", p_RelatedName, "%')",
-            "   OR (CL.RelatedType = 'Services' AND S.ServiceName LIKE '%", p_RelatedName, "%')",
-            " )"
+            ' AND (',
+            '   (CL.RelatedType = ''TrainingCourse'' AND TC.CourseName LIKE ''%', p_RelatedName, '%'' ) ',
+            '   OR (CL.RelatedType = ''Product'' AND P.ProductName LIKE ''%', p_RelatedName, '%'' ) ',
+            '   OR (CL.RelatedType = ''Services'' AND S.ServiceName LIKE ''%', p_RelatedName, '%'' ) ',
+            ' ) '
         );
     END IF;
 
     -- Xây dựng SQL động để lấy dữ liệu
     SET @sql = CONCAT(
         'SELECT CL.*, CL.CustomerId AS Id, C.CustomerName, ',
-        'CASE ',
-        '   WHEN CL.RelatedType = ''TrainingCourse'' THEN TC.CourseName ',
-        '   WHEN CL.RelatedType = ''Product'' THEN P.ProductName ',
-        '   WHEN CL.RelatedType = ''Services'' THEN S.ServiceName ',
-        '   ELSE NULL ',
+        'CASE ', 
+        '   WHEN CL.RelatedType = ''TrainingCourse'' THEN TC.CourseName ', 
+        '   WHEN CL.RelatedType = ''Product'' THEN P.ProductName ', 
+        '   WHEN CL.RelatedType = ''Services'' THEN S.ServiceName ', 
+        '   ELSE NULL ', 
         'END AS RelatedName, ',
+        'CASE ', 
+        '   WHEN CL.RelatedType = ''TrainingCourse'' THEN TC.ServiceStatus ', 
+        '   WHEN CL.RelatedType = ''Product'' THEN P.ProductStatus ', 
+        '   WHEN CL.RelatedType = ''Services'' THEN S.ServiceStatus ', 
+        '   ELSE NULL ', 
+        'END AS RelatedStatus, ',
         'COUNT(*) OVER () AS TotalRecords ',
         'FROM Customer_Link CL ',
         'LEFT JOIN Customer C ON CL.CustomerId = C.Id ',
@@ -1885,9 +1890,16 @@ BEGIN
         'LEFT JOIN Product P ON CL.RelatedId = P.Id AND CL.RelatedType = ''Product'' ',
         'LEFT JOIN Service S ON CL.RelatedId = S.Id AND CL.RelatedType = ''Services'' ',
         v_FilterCondition,
-        ' ORDER BY CL.RelatedType ', p_OrderType,
+        ' AND C.IsDeleted=0 ',
+        ' AND (TC.Id IS NULL OR TC.IsDeleted=0) ',
+        ' AND (P.Id IS NULL OR P.IsDeleted=0) ',
+        ' AND (S.Id IS NULL OR S.IsDeleted=0) ',
+        ' ORDER BY CL.RelatedType ', ' ', p_OrderType,  -- Sửa lỗi ORDER BY
         ' LIMIT ', p_PageSize, ' OFFSET ', v_Offset
     );
+
+    -- Debug SQL (nếu cần)
+    -- SELECT @sql; 
 
     -- Thực thi SQL động
     PREPARE stmt FROM @sql;
@@ -1898,3 +1910,8 @@ END$$
 DELIMITER ;
 
 
+
+
+
+CALL GetCustomerLinksByPageOrder(1,10,"ASC",NULL,NULL,NULL,NULL,NULL)
+SELECT*FROM Customer_Link

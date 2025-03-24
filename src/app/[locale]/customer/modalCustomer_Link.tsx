@@ -11,6 +11,7 @@ import {
   Empty,
   Popconfirm,
   Tooltip,
+  Tag,
 } from 'antd';
 import {
   DeleteOutlined,
@@ -125,7 +126,7 @@ const Product_Customer: React.FC<Product_CustomerProps> = ({
               'ASC',
               value,
               undefined,
-              'Đang diễn ra',
+              'Đang đào tạo',
             );
             break;
           case 'Product':
@@ -333,6 +334,19 @@ const Product_Customer: React.FC<Product_CustomerProps> = ({
                 dataIndex: 'RelatedName',
                 key: 'RelatedName',
                 ellipsis: true,
+              },
+              {
+                title: 'Trạng thái',
+                dataIndex: 'RelatedStatus',
+                key: 'RelatedStatus',
+                ellipsis: true,
+                render: (status) => {
+                  let color = 'default';
+                  if (status === 'Đang sử dụng' || status === 'Hoàn thành') color = 'green';
+                  else if (status === 'Tạm dừng' || status === 'Đang đào tạo') color = 'blue';
+                  else if (status === 'Hủy') color = 'red';
+                  return <Tag color={color}>{status}</Tag>;
+              },
               },
               {
                 title: 'Thao tác',

@@ -62,35 +62,35 @@ const Dashboard = () => {
   }
 
   const projectData = [
-    { name: "Đang thực hiện", value: Number(statistics.active_projects) },
-    { name: "Đã Hoàn thành", value: Number(statistics.completed_projects) },
-    { name: "Đã Hủy", value: Number(statistics.cancel_projects) },
+    { name: "Tạm dừng", value: Number(statistics.active_projects) },
+    { name: "Đang sử dụng", value: Number(statistics.completed_projects) },
+    { name: "Đã hủy", value: Number(statistics.cancel_projects) },
   ]
 
   const productData = [
-    { name: "Đang thực hiện", value: Number(statistics.available_products) },
-    { name: "Đã Hoàn thành", value: Number(statistics.completed_products) },
-    { name: "Đã Hủy", value: Number(statistics.cancel_products) },
+    { name: "Tạm dừng", value: Number(statistics.available_products) },
+    { name: "Đang sử dụng", value: Number(statistics.completed_products) },
+    { name: "Đã hủy", value: Number(statistics.cancel_products) },
   ]
 
   const topicData = [
-    { name: "Đang thực hiện", value: Number(statistics.active_topics) },
-    { name: "Đã Hoàn thành", value: Number(statistics.completed_topics) },
-    { name: "Đã Hủy", value: Number(statistics.cancel_topics) },
+    { name: "Tạm dừng", value: Number(statistics.active_topics) },
+    { name: "Đang sử dụng", value: Number(statistics.completed_topics) },
+    { name: "Đã hủy", value: Number(statistics.cancel_topics) },
   ]
 
   const trainingCouseData = [
-    { name: "Đang thực hiện", value: Number(statistics.active_trainingCouse) },
+    { name: "Đang đào tạo", value: Number(statistics.active_trainingCouse) },
     {
-      name: "Đã Hoàn thành",
+      name: "Hoàn thành",
       value: Number(statistics.completed_trainingCouse),
     },
-    { name: "Đã Hủy", value: Number(statistics.cancel_trainingCouse) },
+    { name: "Đã hủy", value: Number(statistics.cancel_trainingCouse) },
   ]
 
   const pieColors = [
-    "#00C49F", 
     "#0088FE", 
+    "#00C49F", 
     "#FF5252", 
   ]
 
@@ -148,8 +148,8 @@ const Dashboard = () => {
           icon={<User />}
           colorClass="customer-gradient"
           legend={[
-            { name: "Dừng hợp tác", value: Number(statistics.active_Customer), color: "#00C49F" },
-            { name: "Đang hợp tác", value: Number(statistics.completed_Customer), color: "#0088FE" },
+            { name: "Dừng hợp tác", value: Number(statistics.active_Customer), color: "#0088FE" },
+            { name: "Đang hợp tác", value: Number(statistics.completed_Customer), color: "#00C49F" },
             { name: "Hủy hợp tác", value: Number(statistics.cancel_Customer), color: "#FF5252" },
           ]}
         />
@@ -161,8 +161,8 @@ const Dashboard = () => {
           icon={<Handshake />}
           colorClass="partner-gradient"
           legend={[
-            { name: "Dừng hợp tác", value: Number(statistics.active_Partner), color: "#00C49F" },
-            { name: "Đang hợp tác", value: Number(statistics.completed_Partner), color: "#0088FE" },
+            { name: "Dừng hợp tác", value: Number(statistics.active_Partner), color: "#0088FE" },
+            { name: "Đang hợp tác", value: Number(statistics.completed_Partner), color: "#00C49F" },
             { name: "Hủy hợp tác", value: Number(statistics.cancel_Partner), color: "#FF5252" },
           ]}
         />
@@ -173,8 +173,8 @@ const Dashboard = () => {
           icon={<Wrench />}
           colorClass="service-gradient"
           legend={[
-            { name: "Đang phát triển", value: Number(statistics.active_Service), color: "#00C49F" },
-            { name: "Đang cung cấp", value: Number(statistics.completed_Service), color: "#0088FE" },
+            { name: "Đang phát triển", value: Number(statistics.active_Service), color: "#0088FE" },
+            { name: "Đang cung cấp", value: Number(statistics.completed_Service), color: "#00C49F" },
             { name: "Hủy dịch vụ", value: Number(statistics.cancel_Service), color: "#FF5252" },
           ]}
         />
@@ -341,7 +341,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({ title, data, total, color
           </div>
           <div className="legend-container">
             {data.map((item, index) => (
-              <div key={index} className={`legend-item ${item.name === "Đang thực hiện" ? "active" : ""}`}>
+              <div key={index} className={`legend-item ${item.name === "Tạm dừng" ? "active" : ""}`}>
                 <div className="legend-color" style={{ backgroundColor: colors[index % colors.length] }} />
                 <span className="legend-label">
                   {item.name} <span className="legend-value">({item.value})</span>
