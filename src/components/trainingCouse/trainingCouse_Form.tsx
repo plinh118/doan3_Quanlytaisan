@@ -100,11 +100,11 @@ export const TrainingCouseForm: React.FC<ReusableFormProps> = ({
             rules={RULES_FORM.required}
           >
             <Select>
-              <Select.Option key="1" value="Đang diễn ra">
-                Đang diễn ra
+              <Select.Option key="1" value="Đang đào tạo">
+                Đang đào tạo
               </Select.Option>
-              <Select.Option key="2" value="Đã hoàn thành">
-                Đã hoàn thành
+              <Select.Option key="2" value="Hoàn thành">
+              Hoàn thành
               </Select.Option>
               <Select.Option key="3" value="Hủy">
                 Hủy

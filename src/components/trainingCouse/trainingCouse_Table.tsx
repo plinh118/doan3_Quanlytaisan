@@ -54,8 +54,8 @@ export const trainingCouse_Colum: ColumnType[] = [
     width:'120px',
     render: (status) => {
       let color = 'default';
-      if (status === 'Đã hoàn thành') color = 'green';
-      else if (status === 'Đang diễn ra') color = 'blue';
+      if (status === 'Đang đào tạo') color = 'green';
+      else if (status === 'Hoàn thành') color = 'blue';
       else if (status === 'Hủy') color = 'red';
       return <Tag color={color}>{status}</Tag>;
   },

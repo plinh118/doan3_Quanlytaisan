@@ -8,6 +8,7 @@ export interface GetCustomer_Link{
     RelatedId:number;
     RelatedType:string;
     RelatedName:string;
+    RelatedStatus:string;
     CustomerId:number;
     CustomerName:string;
     TotalRecords:number;
