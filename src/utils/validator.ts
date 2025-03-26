@@ -30,6 +30,10 @@ export const RULES_FORM: Record<keyof keyValidator, FormRule[]> = {
   ],
   email: [
     {
+      required: true,
+      message: 'Không được để trống',
+    },
+    {
       pattern: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g,
       message: 'Email không đúng định dạng',
     },

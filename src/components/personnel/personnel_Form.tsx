@@ -135,7 +135,7 @@ export const PersonnelForm: React.FC<ReusableFormProps> = ({
         <Form.Item
         name="Gender"
         label="Giới tính "
-        required
+        rules={[{required: true, message: 'Không được để trống',}]}
       >
         <Select>
           <Select.Option key="1" value="Nam">
