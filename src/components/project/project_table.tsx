@@ -85,8 +85,8 @@ export const Project_Colum: ColumnType[] = [
     width: '150px',
     render: (status) => {
       let color = 'default';
-      if (status === 'Đã hoàn thành') color = 'green';
-      else if (status === 'Đang thực hiện') color = 'blue';
+      if (status === 'Đang sử dụng') color = 'green';
+      else if (status === 'Tạm dừng') color = 'blue';
       else if (status === 'Hủy') color = 'red';
       return <Tag color={color}>{status}</Tag>;
   },

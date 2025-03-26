@@ -326,8 +326,8 @@ const TopicPage = () => {
             size="large"
             style={{ width: 200 }}
             options={[
-              { label: 'Đang thực hiện', value: 'Đang thực hiện' },
-              { label: 'Đã hoàn thành', value: 'Đã hoàn thành' },
+              { label: 'Tạm dừng', value: 'Tạm dừng' },
+              { label: 'Đang sử dụng', value: 'Đang sử dụng' },
               { label: 'Hủy', value: 'Hủy' },
             ]}
             onChange={(value) => setTopicStatus(value)}

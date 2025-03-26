@@ -292,8 +292,8 @@ const ExportExcelTrainingCouser =async () => {
             size="large"
             style={{ width: 200 }}
             options={[
-              { label: 'Đang diễn ra', value: 'Đang diễn ra' },
-              { label: 'Đã hoàn thành', value: 'Đã hoàn thành' },
+              { label: 'Đang đào tạo', value: 'Đang đào tạo' },
+              { label: 'Hoàn thành', value: 'Hoàn thành' },
               { label: 'Hủy', value: 'Hủy' },
             ]}
             onChange={(value) => setserviceStatus(value)}

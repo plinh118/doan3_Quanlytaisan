@@ -14,8 +14,8 @@ export async function GET(request: Request) {
     const projects = await executeQuery<any[]>(`
       SELECT 
         COUNT(*) AS total_projects,
-        SUM(CASE WHEN ProjectStatus = 'Đã hoàn thành' THEN 1 ELSE 0 END) AS completed_projects,
-        SUM(CASE WHEN ProjectStatus = 'Đang thực hiện' THEN 1 ELSE 0 END) AS active_projects,
+        SUM(CASE WHEN ProjectStatus = 'Đang sử dụng' THEN 1 ELSE 0 END) AS completed_projects,
+        SUM(CASE WHEN ProjectStatus = 'Tạm dừng' THEN 1 ELSE 0 END) AS active_projects,
         SUM(CASE WHEN ProjectStatus = 'Hủy' THEN 1 ELSE 0 END) AS canceled_projects
       FROM Project 
       WHERE IsDeleted = 0 AND YEAR(created_at) = ?
@@ -25,8 +25,8 @@ export async function GET(request: Request) {
     const products = await executeQuery<any[]>(`
       SELECT 
         COUNT(*) AS total_products,
-        SUM(CASE WHEN ProductStatus = 'Đã hoàn thành' THEN 1 ELSE 0 END) AS completed_products,
-        SUM(CASE WHEN ProductStatus = 'Đang thực hiện' THEN 1 ELSE 0 END) AS available_products,
+        SUM(CASE WHEN ProductStatus = 'Đang sử dụng' THEN 1 ELSE 0 END) AS completed_products,
+        SUM(CASE WHEN ProductStatus = 'Tạm dừng' THEN 1 ELSE 0 END) AS available_products,
         SUM(CASE WHEN ProductStatus = 'Hủy' THEN 1 ELSE 0 END) AS canceled_products
       FROM Product 
       WHERE IsDeleted = 0 AND YEAR(created_at) = ?
@@ -36,8 +36,8 @@ export async function GET(request: Request) {
     const topics = await executeQuery<any[]>(`
       SELECT 
         COUNT(*) AS total_topics,
-        SUM(CASE WHEN TopicStatus = 'Đã hoàn thành' THEN 1 ELSE 0 END) AS completed_topics,
-        SUM(CASE WHEN TopicStatus = 'Đang thực hiện' THEN 1 ELSE 0 END) AS active_topics,
+        SUM(CASE WHEN TopicStatus = 'Đang sử dụng' THEN 1 ELSE 0 END) AS completed_topics,
+        SUM(CASE WHEN TopicStatus = 'Tạm dừng' THEN 1 ELSE 0 END) AS active_topics,
         SUM(CASE WHEN TopicStatus = 'Hủy' THEN 1 ELSE 0 END) AS canceled_topics
       FROM Topic 
       WHERE IsDeleted = 0 AND YEAR(created_at) = ?
@@ -46,8 +46,8 @@ export async function GET(request: Request) {
     const trainingCouse = await executeQuery<any[]>(`
       SELECT 
         COUNT(*) AS total_trainingCouse,
-        SUM(CASE WHEN ServiceStatus = 'Đang diễn ra' THEN 1 ELSE 0 END) AS completed_trainingCouse,
-        SUM(CASE WHEN ServiceStatus = 'Đã hoàn thành' THEN 1 ELSE 0 END) AS active_trainingCouse,
+        SUM(CASE WHEN ServiceStatus = 'Hoàn thành' THEN 1 ELSE 0 END) AS completed_trainingCouse,
+        SUM(CASE WHEN ServiceStatus = 'Đang đào tạo' THEN 1 ELSE 0 END) AS active_trainingCouse,
         SUM(CASE WHEN ServiceStatus = 'Hủy' THEN 1 ELSE 0 END) AS canceled_trainingCouse
       FROM TrainingCourse 
       WHERE IsDeleted = 0 AND YEAR(created_at) = ?
@@ -85,9 +85,9 @@ export async function GET(request: Request) {
     const Service = await executeQuery<any[]>(`
       SELECT 
         COUNT(*) AS total_Service,
-        SUM(CASE WHEN ServiceStatus = 'Đang phát triển' THEN 1 ELSE 0 END) AS completed_Service,
-        SUM(CASE WHEN ServiceStatus = 'Đang cung cấp' THEN 1 ELSE 0 END) AS active_Service,
-        SUM(CASE WHEN ServiceStatus = 'Hủy dịch vụ' THEN 1 ELSE 0 END) AS canceled_Service
+        SUM(CASE WHEN ServiceStatus = 'Đang sử dụng' THEN 1 ELSE 0 END) AS completed_Service,
+        SUM(CASE WHEN ServiceStatus = 'Tạm dừng' THEN 1 ELSE 0 END) AS active_Service,
+        SUM(CASE WHEN ServiceStatus = 'Hủy' THEN 1 ELSE 0 END) AS canceled_Service
       FROM Service 
       WHERE IsDeleted = 0 AND YEAR(created_at) = ?
     `, [year]);

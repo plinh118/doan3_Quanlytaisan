@@ -22,7 +22,7 @@ body{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: aliceblue;
+    background-color: white;
     color: #6f7174;
     height: 80px;
     backdrop-filter: blur(10px);
@@ -58,7 +58,7 @@ body{
   }
   
   .nav-menu li:hover {
-    background: rgba(255, 150, 64, 0.1);
+    background: rgba(235, 123, 31, 0.1);
     color: #f06418;
   }
   
@@ -106,38 +106,69 @@ body{
   }
   
   /* About Section */
-  .about-section {
+  .about-section-introduce {
     display: flex;
     width: 100%; /* Đảm bảo about-section rộng 100% */
-    height: 100vh;
+    height: 600px;
+    padding-right: 40px;
+    /* padding-left: 30px; */
+    display: flex;
+    justify-content: flex-end; /* Hoặc space-between nếu có nhiều phần tử */
+    align-items: center;
     background: linear-gradient(90deg, #1b263b, #2a3b5b);
   }
   
   .about-content {
     width: 50%;
-    padding: 50px;
+    padding: 15px 50px 50px 0;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    margin-top: 0px;
   }
   
   .about-content h1 {
-    font-size: 2.5rem;
-    color: #40c4ff;
+    font-size: 44px;
+    font-weight: bold;
+    color: #9edcf8;
     margin-bottom: 20px;
-    text-shadow: 0 0 5px rgba(64, 196, 255, 0.5);
+    text-shadow: 0 0 5px rgsba(127, 210, 249, 0.5);
   }
   
   .about-content p {
-    font-size: 1.1rem;
+    font-size: 18px;
     line-height: 1.6;
+    text-align: justify; /* Căn lề 2 bên */
     max-width: 600px;
   }
+  .xem-them-btn {
+    width: 150px;
+    height: 40px;
+    margin-top: 30px;
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    background-color: #f06418;
+    border: 1px solid #f06418;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+  }
+  
+  .xem-them-btn:hover {
+    background-color: #d95314;
+  }
+  
   
   .about-image {
-    width: 50%;
+    text-align: center;
+    width: 40%;
+    margin-right: 50px;
+    margin-top: 20px;
+    height: 400px;
     position: relative;
     overflow: hidden;
+    background-size: cover;
     box-shadow: 0 0 20px rgba(64, 196, 255, 0.3);
   }
   
@@ -158,9 +189,220 @@ body{
     color: #ffffff;
     text-shadow: 0 0 10px rgba(64, 196, 255, 0.5);
   }
+  .about-section-value-mision {
+    height: 1000px;
+    background-color: white;
+    background-image: url('/valuemission.png');
+    background-size: 100% auto;  /* Ảnh rộng 100% nhưng giữ nguyên tỷ lệ */
+    background-repeat: no-repeat; /* Tránh lặp lại ảnh */
+    position: relative;
+
+  }
+  .contain_value{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    .containleft {
+  width: 50%;
+  height: 100%;
+  position: relative;  /* 🔹 Thêm dòng này để .tron căn giữa trong .containleft */
+  display: flex;
+  align-items: center; /* 🔹 Căn giữa theo chiều dọc */
+  justify-content: center; /* 🔹 Căn giữa theo chiều ngang */
+}
+
+.tron {
+  position: absolute;
+  z-index: 500;
+  top: 20%;  
+  left: 55%;
+  transform: translate(-50%, -50%);  /* 🔹 Dịch ngược lại 50% kích thước chính nó */
+  height: 250px;
+  width: 250px;
+  background-image: url('/value.png');
+
+  background-size: cover;
+}
+.text_title{
+  font-size: 38px;
+  margin-top: -100px;
+  margin-left: 80px;
+}
+.text_title p{
+  font-size: 18px;
+  color: black;
+  text-align: center; /* Căn lề 2 bên */
+}
+    
+  }
+.content-value2 {
+
+    height: 200px;
+    width: 80%;
+    clear: both; /* 🔹 Ngăn bị đẩy lên, đảm bảo nằm dưới */
+    margin-top: 300px;
+    float: right;
+    position: absolute;  /* Nếu đang dùng absolute */
+    right: auto;
+    padding-left: 50px;
+}
+.content-value2 img {
+  margin-right: 10px; /* Tạo khoảng cách giữa img và h2 */
+}
+
+.content-value2 h2 {
+  font-size: 20px;
+  color: black;
+  margin: 0; /* Xóa margin mặc định của h2 */
+}
+
+.content-value2 p{
+  font-size: 18px;
+  color: black;
+  text-align:left; /* Căn lề 2 bên */
+  margin-left: 55px;
+}
+.containright{
+  width: 50%;
+  height: 100%;
+  color: white;
+  text-align: center;
+  margin-right: 80px;
+  margin-top: 60px;
+}
+.containright p{
+  font-size: 18px;
+  margin-left: 30px;
+}
+.imagemission{
+  position: absolute;
+  z-index: 500;
+  top: 60%;  
+  right: 10%;
+  transform: translate(-50%, -50%);  /* 🔹 Dịch ngược lại 50% kích thước chính nó */
+  height: 250px;
+  width: 250px;
+  background-image: url('/mission.png');
+
+  background-size: cover;
+}.expert {
+  height: 500px;
+  background-image: url('/expert.png');
+  width: 100%;
+  background-size: cover;
+  padding-top: 30px;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.expert h1 {
+  text-align: center;
+  margin-top: 0px;
+  font-size: 38px;
+}
+
+.expert-container {
+  position: relative;
+  width: 90%;
+  margin: auto;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.expert-information {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  white-space: nowrap;
+  width: 100%;
+  padding: 10px;
+}
+
+.expert-information::-webkit-scrollbar {
+  display: none; /* Ẩn thanh cuộn */
+}
+
+.expert-information-card {
+  flex: 0 0 auto;
+  width: 250px; /* Kích thước card cố định */
+  height: 330px;
+  position: relative;
+}
+
+.inforImage {
+  height: 80%;
+  width: 100%;
+  background-color: #d95314;
+  position: relative;
+  border-radius: 5px;
+}
+
+.inforImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.information_container {
+  height: 20%;
+  width: 100%;
+  background-color: aliceblue;
+  text-align: center;
+  padding: 10px;
+  color: #0d1b2a;
+}
+
+.information_container h2 {
+  color: #f06418;
+}
+
+.scroll-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 10px 15px;
+  font-size: 20px;
+  z-index: 10;
+  border-radius: 5px;
+}
+
+.scroll-button.left {
+  left: 10px;
+}
+
+.scroll-button.right {
+  right: 10px;
+}
+
+.scroll-button:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.partner{
+  height: 600px;
+  width: 100%;
+  background-image: url('/partner.png');
+  background-size: cover;
+  background-color: white;
+  padding-top: 5px;
+}
+.partner h1{
+  font-size: 38px;
+  color: black;
+  text-align: center;
+}
+.footer{
+  background-color: #ecefef;
+  height: 500px;
+  margin-top: 100px;
+}
   
-  .section-1 { background: linear-gradient(135deg, #2a3b5b, #3a4b7b); }
-  .section-2 { background: linear-gradient(135deg, #3a4b7b, #4a5b9b); }
-  .section-3 { background: linear-gradient(135deg, #4a5b9b, #5a6bbb); }
-  .section-4 { background: linear-gradient(135deg, #5a6bbb, #6a7bdb); }
-  .section-5 { background: linear-gradient(135deg, #6a7bdb, #7a8bfb); }

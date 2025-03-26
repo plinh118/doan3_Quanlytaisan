@@ -43,7 +43,7 @@ export default function LoginPage() {
 
       show({ result: data, messageDone: 'Đăng nhập thành công' });
       if (data === 0) {
-      //  const role= localStorage.getItem('ROLE');
+       const role= localStorage.getItem('ROLE');
       //  debugger;
       //   if(role==='admin')
       //   {

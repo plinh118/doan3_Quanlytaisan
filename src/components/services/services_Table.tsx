@@ -33,9 +33,9 @@ export const Services_Colum: ColumnType[] = [
     width:'200px',
     render: (status) => {
       let color = 'default';
-      if (status === 'Đang cung cấp') color = 'green';
-      else if (status === 'Đang phát triển') color = 'blue';
-      else if (status === 'Hủy dịch vụ') color = 'red';
+      if (status === 'Đang sử dụng') color = 'green';
+      else if (status === 'Tạm dừng') color = 'blue';
+      else if (status === 'Hủy') color = 'red';
       return <Tag color={color}>{status}</Tag>;
   },
   },
