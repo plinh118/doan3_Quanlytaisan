@@ -94,6 +94,7 @@ export default function Home() {
         break;
       case "Sản phẩm":
         console.log("Điều hướng đến Sản phẩm");
+        router.push('/vi/home_product')
         break;
       case "Nghiên cứu":
         console.log("Điều hướng đến Nghiên cứu");
