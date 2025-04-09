@@ -1,5 +1,6 @@
 import { GetAsset_DTO, AddAsset_DTO, UpAsset_DTO } from '@/models/asset.model';
 import { CallApi } from '@/libs/call_API';
+import axios from 'axios';
 
 export const assetAPI = {
   getAllasset: async () => {
@@ -37,6 +38,7 @@ export const assetAPI = {
     );
 
     return data;
+
   },
 
   createasset: async (newasset: AddAsset_DTO) => {

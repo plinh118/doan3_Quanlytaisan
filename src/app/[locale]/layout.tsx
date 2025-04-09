@@ -19,7 +19,8 @@ export default function RootLayout({ children }: RootLayoutProps) {
   const pathname = usePathname()
   const [collapsed, setCollapsed] = useState(false)
 
-  const isAuthPage = pathname === "/vi" || pathname === "/vi/register" || pathname ==="/vi/home_user" || pathname ==="/vi/login" || pathname==="/vi/home_product";
+  const isAuthPage = pathname === "/vi" || pathname === "/vi/register" || pathname ==="/vi/home_user" || pathname ==="/vi/login" || pathname==="/vi/home_user/home_product"
+  || pathname==="/vi/home_user/home_trainingcouse";
 
   const siderStyle: React.CSSProperties = {
     position: "fixed",

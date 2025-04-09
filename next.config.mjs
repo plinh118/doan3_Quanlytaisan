@@ -11,7 +11,7 @@ const nextConfig = {
           source: '/uploads/:path*',
           destination: '/api/uploads/:path*', // dùng để lấy file
 
-        },
+        }
       ],
     webpack(config) {
         config.module.rules.push({
@@ -20,6 +20,7 @@ const nextConfig = {
         });
         return config;
     }
+    
 };
 
 export default withNextIntl(nextConfig);

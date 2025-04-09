@@ -1,0 +1,355 @@
+/* Base Styles - Mobile First */
+.banner {
+  height: 250px;
+  width: 100%;
+  background-image: url('/macbook.jpg');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: white;
+  padding-left: 20px;
+}
+.banner a{
+  font-size: 14px;
+  color: rgb(255, 255, 255);
+}
+.banner a:hover{
+  color: rgb(226, 114, 3);
+}
+.banner h1 {
+  font-size: 24px;
+  margin-bottom: 8px;
+  float: none; /* Remove float for better mobile layout */
+}
+
+.banner p {
+  font-size: 14px;
+}
+
+.content {
+  height: auto; /* Change from fixed height */
+  min-height: 300px;
+  width: 100%;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0;
+}
+
+.center {
+  width: 90%;
+  height: auto; /* Change from fixed height */
+  padding: 20px 0;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  background-image: url('/tamgiac.png');
+  background-size: 200px 200px; /* Smaller for mobile */
+  background-position: right center;
+  background-repeat: no-repeat;
+}
+
+.center h1 {
+  font-size: 28px; /* Smaller for mobile */
+  font-weight: bold;
+  color: #f06418;
+  margin-top: 40px;
+  margin-bottom: 10px;
+  text-align: center; /* Center on mobile */
+}
+
+.center p {
+  color: black;
+  font-size: 16px;
+  max-width: 100%;
+  line-height: 1.5;
+  text-align: left; /* Change from justify for better mobile reading */
+  padding: 0 15px;
+}
+
+.pr {
+  height: 300px; /* Smaller for mobile */
+  width: 100%;
+  background-color: aliceblue;
+  background-image: url('/nextco.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+/* Tablet Styles (min-width: 768px) */
+@media (min-width: 768px) {
+  .banner {
+    height: 350px;
+    padding-left: 50px;
+  }
+  
+  .banner h1 {
+    font-size: 28px;
+    margin-bottom: 10px;
+  }
+  
+  .banner p {
+    font-size: 16px;
+  }
+  
+  .content {
+    min-height: 350px;
+  }
+  
+  .center {
+    background-size: 250px 250px;
+  }
+  
+  .center h1 {
+    font-size: 36px;
+    margin-top: 60px;
+    text-align: left; /* Align left on larger screens */
+  }
+  
+  .center p {
+    font-size: 17px;
+    text-align: justify; /* Re-enable justify for larger screens */
+    padding: 0 30px;
+  }
+  
+  .pr {
+    height: 450px;
+  }
+}
+
+/* Desktop Styles (min-width: 1024px) */
+@media (min-width: 1024px) {
+  .banner {
+    height: 400px;
+    padding-left: 100px;
+  }
+  
+  .banner h1 {
+    font-size: 30px;
+  }
+  
+  .banner p {
+    font-size: 18px;
+  }
+  
+  .content {
+    min-height: 350px;
+  }
+  
+  .center {
+    background-size: 345px 345px;
+  }
+  
+  .center h1 {
+    font-size: 48px;
+    margin-top: 80px;
+    margin-bottom: -20px;
+  }
+  
+  .center p {
+    font-size: 18px;
+    padding: 0 50px;
+  }
+  
+  .pr {
+    height: 650px;
+  }
+}
+
+/* Large Desktop Styles (min-width: 1440px) */
+@media (min-width: 1440px) {
+  .center {
+    max-width: 1400px; /* Limit max width for very large screens */
+    margin: 0 auto;
+  }
+  
+  .center p {
+    max-width: 80%; /* Limit text width for better readability */
+  }
+}
+
+/* Special Cases for Very Small Screens */
+@media (max-width: 480px) {
+  .banner {
+    height: 200px;
+    padding-left: 15px;
+  }
+  
+  .center {
+    background-image: none; /* Remove background image on very small screens */
+  }
+  
+  .center h1 {
+    font-size: 24px;
+    margin-top: 20px;
+  }
+  
+  .center p {
+    font-size: 15px;
+  }
+  
+  .pr {
+    height: 250px;
+  }
+}
+/* Products Section */
+.products-section {
+  width: 100%;
+  padding: 60px 0;
+  background-color: #f9f9f9;
+}
+
+.products-container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.products-title {
+  text-align: center;
+  font-size: 32px;
+  color: #f06418;
+  margin-bottom: 40px;
+  font-weight: 600;
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 30px;
+  padding: 20px 0;
+}
+
+.product-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+}
+
+.product-image {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+}
+
+.product-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.product-card:hover .product-img {
+  transform: scale(1.05);
+}
+
+.product-status {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+}
+
+.product-status.active {
+  background-color: #4CAF50;
+}
+
+.product-status.inactive {
+  background-color: #F44336;
+}
+
+.product-status.pending {
+  background-color: #FFC107;
+  color: #333;
+}
+
+.product-info {
+  padding: 20px;
+}
+
+.product-name {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.product-department {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 15px;
+}
+
+.product-dates {
+  margin-bottom: 20px;
+}
+
+.date-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.date-label {
+  color: #666;
+  font-weight: 500;
+}
+
+.date-value {
+  color: #333;
+  font-weight: 600;
+}
+
+.product-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #f06418;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.product-button:hover {
+  background-color: #e0550b;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .products-title {
+    font-size: 28px;
+  }
+  
+  .products-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .products-title {
+    font-size: 24px;
+    margin-bottom: 30px;
+  }
+  
+  .products-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .product-card {
+    max-width: 100%;
+  }
+}

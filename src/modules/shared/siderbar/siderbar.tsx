@@ -20,7 +20,8 @@ import {
   CustomerServiceOutlined,
   SafetyOutlined, // Thay cho SettingOutlined (Sở hữu trí tuệ)
   ApartmentOutlined, // Thay cho FolderOutlined (Quản lý bộ phận)
-  IdcardOutlined, // Thay cho BankOutlined (Quản lý chức vụ)
+  IdcardOutlined,
+  PullRequestOutlined, // Thay cho BankOutlined (Quản lý chức vụ)
 } from '@ant-design/icons';
 import styles from '@/modules/shared/siderbar/siderbar.module.scss';
 
@@ -45,6 +46,7 @@ const routeMap: Record<string, string> = {
   '13': '/vi/services',
   '20': '/vi/user',
   '30': '/vi/asset',
+  '31':'/vi/reques_asset',
 };
 
 const SiderBar: React.FC<SiderBarProps> = ({ collapsed }) => {
@@ -83,6 +85,8 @@ const SiderBar: React.FC<SiderBarProps> = ({ collapsed }) => {
           { key: '3', label: 'Quản lý khách hàng', icon: <UserOutlined /> },
           { key: '20', label: 'Quản lý người dùng', icon: <TeamOutlined /> },
           { key: '30', label: 'Quản lý tài sản', icon: <AppstoreOutlined /> },
+          { key: '31', label: 'Yêu cầu mua tài sản', icon: <PullRequestOutlined /> },
+        
         ],
       },
       {

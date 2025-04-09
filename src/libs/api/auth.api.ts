@@ -1,5 +1,6 @@
 import { CallApi } from '@/libs/call_API';
 import { API_URL } from '@/libs/call_API';
+import axios from 'axios';
 interface User {
   id: number;
   email: string;
@@ -61,7 +62,6 @@ export const authAPI = {
       return 8;
     }
   },
-
   getCurrentUser: async (): Promise<User> => {
     try {
       const data = await CallApi.getAll<User>('auth/me');
