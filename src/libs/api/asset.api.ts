@@ -38,7 +38,6 @@ export const assetAPI = {
     );
 
     return data;
-
   },
 
   createasset: async (newasset: AddAsset_DTO) => {
