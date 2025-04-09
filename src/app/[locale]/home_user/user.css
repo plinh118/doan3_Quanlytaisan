@@ -1,351 +1,282 @@
-body{
-    margin: 0;
-    width: 100%;
-}
+/* Reset CSS */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Orbitron", "Reddit Sans", sans-serif;
-  }
-  
-  .container {
-    background: linear-gradient(135deg, #0d1b2a, #1b263b);
-    color: #e0e0e0;
-    min-height: 100vh;
-    width: 100%; 
-  }
-  
-  /* Header */
-  .header {
-    position: fixed;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: white;
-    color: #6f7174;
-    height: 80px;
-    backdrop-filter: blur(10px);
-    top: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-    z-index: 1000;
-    ul>li{
-      font-size: large;
-    }
-  }
-  
-  .logo img {
-    transition: transform 0.3s ease;
-  }
-  
-  .logo img:hover {
-    transform: scale(1.1);
-  }
-  
-  .nav-menu ul {
-    display: flex;
-    list-style: none;
-  }
-  
-  .nav-menu li {
-    font-size: 1.1rem;
-    cursor: pointer;
-    padding: 8px 16px;
-    border-radius: 5px;
-    transition: background 0.3s ease;
-  }
-  
-  .nav-menu li:hover {
-    background: rgba(235, 123, 31, 0.1);
-    color: #f06418;
-  }
-  
-  /* Slideshow */
-  .slideshow {
-    position: relative;
-    width: 100%; /* Đảm bảo slideshow rộng 100% */
-    height: 100vh;
-    overflow: hidden;
-  }
-  
-  .slide {
-    position: relative;
-    width: 100%;
-    height: 100vh;
-  }
-  
-  .slide img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  
-  .overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(13, 27, 42, 0.5);
-  }
-  
-  .slide-text {
-    position: absolute;
-    bottom: 100px;
-    left: 50px;
-    color: #ffffff;
-    text-shadow: 0 0 10px rgba(64, 196, 255, 0.8);
-  }
-  
-  .slide-text h3 {
-    font-size: 2.5rem;
-    max-width: 600px;
-    line-height: 1.3;
-  }
-  
-  /* About Section */
-  .about-section-introduce {
-    display: flex;
-    width: 100%; /* Đảm bảo about-section rộng 100% */
-    height: 600px;
-    padding-right: 40px;
-    /* padding-left: 30px; */
-    display: flex;
-    justify-content: flex-end; /* Hoặc space-between nếu có nhiều phần tử */
-    align-items: center;
-    background: linear-gradient(90deg, #1b263b, #2a3b5b);
-  }
-  
-  .about-content {
-    width: 50%;
-    padding: 15px 50px 50px 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    margin-top: 0px;
-  }
-  
-  .about-content h1 {
-    font-size: 44px;
-    font-weight: bold;
-    color: #9edcf8;
-    margin-bottom: 20px;
-    text-shadow: 0 0 5px rgsba(127, 210, 249, 0.5);
-  }
-  
-  .about-content p {
-    font-size: 18px;
-    line-height: 1.6;
-    text-align: justify; /* Căn lề 2 bên */
-    max-width: 600px;
-  }
-  .xem-them-btn {
-    width: 150px;
-    height: 40px;
-    margin-top: 30px;
-    font-size: 14px;
-    font-weight: bold;
-    color: white;
-    background-color: #f06418;
-    border: 1px solid #f06418;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: background 0.3s ease-in-out;
-  }
-  
-  .xem-them-btn:hover {
-    background-color: #d95314;
-  }
-  
-  
-  .about-image {
-    text-align: center;
-    width: 40%;
-    margin-right: 50px;
-    margin-top: 20px;
-    height: 400px;
-    position: relative;
-    overflow: hidden;
-    background-size: cover;
-    box-shadow: 0 0 20px rgba(64, 196, 255, 0.3);
-  }
-  
-  .about-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  
-  /* Placeholder Sections */
-  .section {
-    width: 100%; /* Đảm bảo tất cả section rộng 100% */
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 2rem;
-    color: #ffffff;
-    text-shadow: 0 0 10px rgba(64, 196, 255, 0.5);
-  }
-  .about-section-value-mision {
-    height: 1000px;
-    background-color: white;
-    background-image: url('/valuemission.png');
-    background-size: 100% auto;  /* Ảnh rộng 100% nhưng giữ nguyên tỷ lệ */
-    background-repeat: no-repeat; /* Tránh lặp lại ảnh */
-    position: relative;
-
-  }
-  .contain_value{
-    height: 100%;
-    width: 100%;
-    display: flex;
-    .containleft {
-  width: 50%;
-  height: 100%;
-  position: relative;  /* 🔹 Thêm dòng này để .tron căn giữa trong .containleft */
-  display: flex;
-  align-items: center; /* 🔹 Căn giữa theo chiều dọc */
-  justify-content: center; /* 🔹 Căn giữa theo chiều ngang */
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Orbitron", "Reddit Sans", sans-serif;
 }
 
-.tron {
-  position: absolute;
-  z-index: 500;
-  top: 20%;  
-  left: 55%;
-  transform: translate(-50%, -50%);  /* 🔹 Dịch ngược lại 50% kích thước chính nó */
-  height: 250px;
-  width: 250px;
-  background-image: url('/value.png');
-
-  background-size: cover;
-}
-.text_title{
-  font-size: 38px;
-  margin-top: -100px;
-  margin-left: 80px;
-}
-.text_title p{
-  font-size: 18px;
-  color: black;
-  text-align: center; /* Căn lề 2 bên */
-}
-    
-  }
-.content-value2 {
-
-    height: 200px;
-    width: 80%;
-    clear: both; /* 🔹 Ngăn bị đẩy lên, đảm bảo nằm dưới */
-    margin-top: 300px;
-    float: right;
-    position: absolute;  /* Nếu đang dùng absolute */
-    right: auto;
-    padding-left: 50px;
-}
-.content-value2 img {
-  margin-right: 10px; /* Tạo khoảng cách giữa img và h2 */
-}
-
-.content-value2 h2 {
-  font-size: 20px;
-  color: black;
-  margin: 0; /* Xóa margin mặc định của h2 */
-}
-
-.content-value2 p{
-  font-size: 18px;
-  color: black;
-  text-align:left; /* Căn lề 2 bên */
-  margin-left: 55px;
-}
-.containright{
-  width: 50%;
-  height: 100%;
-  color: white;
-  text-align: center;
-  margin-right: 80px;
-  margin-top: 60px;
-}
-.containright p{
-  font-size: 18px;
-  margin-left: 30px;
-}
-.imagemission{
-  position: absolute;
-  z-index: 500;
-  top: 60%;  
-  right: 10%;
-  transform: translate(-50%, -50%);  /* 🔹 Dịch ngược lại 50% kích thước chính nó */
-  height: 250px;
-  width: 250px;
-  background-image: url('/mission.png');
-
-  background-size: cover;
-}.expert {
-  height: 500px;
-  background-image: url('/expert.png');
+body {
+  margin: 0;
   width: 100%;
-  background-size: cover;
-  padding-top: 30px;
-  justify-content: center;
-  text-align: center;
-  align-items: center;
+}
+
+/* Container chính */
+.container {
+  background: linear-gradient(135deg, #0d1b2a, #1b263b);
+  color: #e0e0e0;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* Slideshow */
+.slideshow {
+  position: relative;
+  width: 100%;
+  height: 100vh;
   overflow: hidden;
 }
 
-.expert h1 {
+.slide {
+  width: 100%;
+  height: 100vh;
+}
+
+.slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(13, 27, 42, 0.5);
+}
+
+.slide-text {
+  position: absolute;
+  bottom: 20px; /* Giảm khoảng cách trên mobile */
+  left: 20px;
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(64, 196, 255, 0.8);
+}
+
+.slide-text h3 {
+  font-size: 1.5rem; /* Giữ nguyên cho mobile */
+  max-width: 90%;
+  line-height: 1.3;
+}
+
+/* About Section */
+.about-section-introduce {
+  display: flex;
+  flex-direction: column; /* Chuyển thành cột trên mobile */
+  width: 100%;
+  min-height: 500px; /* Giảm chiều cao tối thiểu */
+  padding: 20px;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(90deg, #1b263b, #2a3b5b);
+}
+
+.about-content {
+  width: 100%; /* Full width trên mobile */
+  padding: 20px;
   text-align: center;
-  margin-top: 0px;
-  font-size: 38px;
+}
+
+.about-content h1 {
+  font-size: 2rem; /* Giữ nguyên cho mobile */
+  font-weight: bold;
+  color: #9edcf8;
+  margin-bottom: 15px;
+}
+
+.about-content p {
+  font-size: 1rem; /* Giữ nguyên cho mobile */
+  line-height: 1.6;
+  text-align: justify;
+  max-width: 100%;
+}
+
+.xem-them-btn {
+  width: 120px;
+  height: 35px;
+  margin-top: 20px;
+  font-size: 0.9rem; /* Giữ nguyên cho mobile */
+  font-weight: bold;
+  color: white;
+  background-color: #f06418;
+  border: 1px solid #f06418;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out;
+}
+
+.xem-them-btn:hover {
+  background-color: #d95314;
+}
+
+.about-image {
+  width: 100%;
+  max-width: 400px;
+  height: 300px;
+  margin: 20px 0;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(64, 196, 255, 0.3);
+  position: relative;
+}
+
+.about-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Value & Mission Section */
+.about-section-value-mision {
+  height: auto; /* Chiều cao tự động */
+  min-height: 800px;
+  background: white url("/valuemission.png") no-repeat center;
+  background-size: cover;
+  position: relative;
+  padding: 20px;
+}
+
+.contain_value {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column; /* Chuyển thành cột trên mobile */
+}
+
+.containleft {
+  width: 100%;
+  padding: 20px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.tron {
+  height: 200px;
+  width: 200px;
+  background: url("/value.png") no-repeat center;
+  background-size: cover;
+  margin-bottom: 20px;
+}
+
+.text_title {
+  font-size: 1.8rem; /* Giữ nguyên cho mobile */
+  margin: 0;
+  text-align: center;
+}
+
+.text_title p {
+  font-size: 1rem; /* Giữ nguyên cho mobile */
+  color: black;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.content-value2 {
+  width: 100%;
+  padding: 20px;
+  text-align: left;
+}
+
+.content-value2 h2 {
+  font-size: 1.2rem; /* Giữ nguyên cho mobile */
+  color: black;
+  margin: 10px 0;
+  display: flex;
+  align-items: center;
+}
+
+.content-value2 img {
+  height: 30px;
+  width: 30px;
+  margin-right: 10px;
+}
+
+.content-value2 p {
+  font-size: 1rem; /* Giữ nguyên cho mobile */
+  color: black;
+  margin-left: 40px;
+}
+
+.containright {
+  width: 100%;
+  padding: 20px;
+  text-align: center;
+}
+
+.containright h1 {
+  font-size: 1.8rem; /* Giữ nguyên cho mobile */
+  color: black;
+}
+
+.containright p {
+  font-size: 1rem; /* Giữ nguyên cho mobile */
+  color: black;
+  margin: 10px 0;
+}
+
+.imagemission {
+  height: 200px;
+  width: 200px;
+  background: url("/mission.png") no-repeat center;
+  background-size: cover;
+  margin: 20px auto;
+}
+
+/* Expert Section */
+.expert {
+  width: 100%;
+  min-height: 400px;
+  background: url("/expert.png") no-repeat center;
+  background-size: cover;
+  padding: 20px;
+  text-align: center;
+}
+
+.expert h1 {
+  font-size: 1.8rem; /* Giữ nguyên cho mobile */
+  color: white;
+  margin-bottom: 20px;
 }
 
 .expert-container {
   position: relative;
-  width: 90%;
+  width: 100%;
   margin: auto;
   overflow: hidden;
-  display: flex;
-  align-items: center;
 }
 
 .expert-information {
   display: flex;
-  gap: 20px;
+  gap: 15px;
   overflow-x: auto;
   scroll-behavior: smooth;
-  white-space: nowrap;
-  width: 100%;
   padding: 10px;
 }
 
 .expert-information::-webkit-scrollbar {
-  display: none; /* Ẩn thanh cuộn */
+  display: none;
 }
 
 .expert-information-card {
-  flex: 0 0 auto;
-  width: 250px; /* Kích thước card cố định */
-  height: 330px;
-  position: relative;
+  flex: 0 0 200px; /* Giảm chiều rộng card */
+  height: 280px;
 }
 
 .inforImage {
   height: 80%;
   width: 100%;
-  background-color: #d95314;
-  position: relative;
+  background-color: #ffffff;
   border-radius: 5px;
+  overflow: hidden;
 }
 
 .inforImage img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 5px;
 }
 
 .information_container {
@@ -353,12 +284,13 @@ body{
   width: 100%;
   background-color: aliceblue;
   text-align: center;
-  padding: 10px;
+  padding: 5px;
   color: #0d1b2a;
 }
 
 .information_container h2 {
   color: #f06418;
+  font-size: 1rem; /* Giữ nguyên cho mobile */
 }
 
 .scroll-button {
@@ -369,8 +301,8 @@ body{
   color: white;
   border: none;
   cursor: pointer;
-  padding: 10px 15px;
-  font-size: 20px;
+  padding: 8px 12px;
+  font-size: 16px;
   z-index: 10;
   border-radius: 5px;
 }
@@ -387,22 +319,153 @@ body{
   background-color: rgba(0, 0, 0, 0.8);
 }
 
-.partner{
-  height: 600px;
+/* Partner Section */
+.partner {
   width: 100%;
-  background-image: url('/partner.png');
+  min-height: 400px;
+  background: url("/partner.png") no-repeat center;
   background-size: cover;
-  background-color: white;
-  padding-top: 5px;
-}
-.partner h1{
-  font-size: 38px;
-  color: black;
+  padding: 20px;
   text-align: center;
 }
-.footer{
-  background-color: #ecefef;
-  height: 500px;
-  margin-top: 100px;
+
+.partner h1 {
+  font-size: 1.8rem; /* Giữ nguyên cho mobile */
+  color: black;
 }
-  
+
+/* Footer */
+.footer {
+  background-color: #ecefef;
+  width: 100%;
+  min-height: 300px;
+  padding: 20px;
+}
+
+/* Media Queries */
+@media (min-width: 768px) {
+  /* Tablet trở lên */
+  .header {
+    height: 80px;
+  }
+
+  .nav-menu li {
+    font-size: 1.1rem;
+    padding: 8px 16px;
+  }
+
+  .logo img {
+    height: 50px;
+  }
+
+  .slide-text h3 {
+    font-size: 2rem;
+  }
+
+  .about-section-introduce {
+    flex-direction: row;
+    padding: 40px;
+  }
+
+  .about-content {
+    width: 50%;
+    padding: 0 50px 0 0;
+    text-align: left;
+  }
+
+  .about-content h1 {
+    font-size: 2.5rem;
+  }
+
+  .about-image {
+    width: 40%;
+    height: 400px;
+    margin: 0 50px 0 0;
+  }
+
+  .contain_value {
+    flex-direction: row;
+  }
+
+  .containleft {
+    width: 50%;
+  }
+
+  .containright {
+    width: 50%;
+  }
+
+  .tron,
+  .imagemission {
+    height: 250px;
+    width: 250px;
+  }
+
+  .expert-information-card {
+    flex: 0 0 250px;
+    height: 330px;
+  }
+}
+
+@media (min-width: 1024px) {
+  /* Desktop (tăng font-size thêm) */
+  .slide-text {
+    bottom: 100px;
+    left: 50px;
+  }
+
+  .slide-text h3 {
+    font-size: 3.5rem; /* Tăng từ 2.5rem → 3.5rem (56px) */
+    max-width: 600px;
+  }
+
+  .about-content h1 {
+    font-size: 4rem; /* Tăng từ 2.75rem → 4rem (64px) */
+  }
+
+  .about-content p {
+    font-size: 1.5rem; /* Tăng từ 1.125rem → 1.5rem (24px) */
+  }
+
+  .xem-them-btn {
+    font-size: 1.25rem; /* Tăng từ 0.9rem → 1.25rem (20px) */
+    width: 150px;
+    height: 40px;
+  }
+
+  .text_title {
+    font-size: 2.5rem; /* Tăng từ 1.8rem → 2.5rem (40px) */
+  }
+
+  .text_title p {
+    font-size: 1.25rem; /* Tăng từ 1rem → 1.25rem (20px) */
+  }
+
+  .content-value2 h2 {
+    font-size: 1.75rem; /* Tăng từ 1.2rem → 1.75rem (28px) */
+  }
+
+  .content-value2 p {
+    font-size: 1.25rem; /* Tăng từ 1rem → 1.25rem (20px) */
+  }
+
+  .containright h1 {
+    font-size: 2.5rem; /* Tăng từ 1.8rem → 2.5rem (40px) */
+  }
+
+  .containright p {
+    font-size: 1.25rem; /* Tăng từ 1rem → 1.25rem (20px) */
+  }
+
+  .expert h1 {
+    font-size: 2.5rem; /* Tăng từ 1.8rem → 2.5rem (40px) */
+  }
+
+  .information_container h2 {
+    font-size: 1.25rem; /* Tăng từ 1rem → 1.25rem (20px) */
+  }
+
+  .partner h1 {
+    font-size: 2.5rem; /* Tăng từ 1.8rem → 2.5rem (40px) */
+  }
+}
