@@ -18,6 +18,7 @@ import { documentAPI } from '@/libs/api/document.api';
 import { useNotification } from '../UI_shared/Notification';
 import { Popconfirm, Tooltip } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
+import TextArea from 'antd/es/input/TextArea';
 
 const { Text } = Typography;
 interface ReusableFormProps {
@@ -115,6 +116,13 @@ export const ProductForm: React.FC<ReusableFormProps> = ({
           <Select.Option value="Tạm dừng">Tạm dừng</Select.Option>
           <Select.Option value="Hủy">Hủy</Select.Option>
         </Select>
+      </Form.Item>
+      <Form.Item
+        name="Description"
+        label="Mô tả"
+        rules={RULES_FORM.required}
+      >
+       <TextArea/>
       </Form.Item>
 
       <Card title="Tài liệu đính kèm">

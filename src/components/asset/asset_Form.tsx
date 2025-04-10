@@ -121,6 +121,7 @@ export const AssetForm: React.FC<ReusableFormProps> = ({ formdata, divisions, is
           <Select.Option value="Tốt">Tốt</Select.Option>
           <Select.Option value="Chờ sửa chữa">Chờ sửa chữa</Select.Option>
           <Select.Option value="Cần thay thế">Cần thay thế</Select.Option>
+          <Select.Option value="Yêu cầu mua">Yêu cầu mua</Select.Option>
         </Select>
       </Form.Item>
 

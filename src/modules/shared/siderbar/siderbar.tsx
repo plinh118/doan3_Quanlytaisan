@@ -46,7 +46,7 @@ const routeMap: Record<string, string> = {
   '13': '/vi/services',
   '20': '/vi/user',
   '30': '/vi/asset',
-  '31':'/vi/reques_asset',
+  '31':'/vi/request_asset',
 };
 
 const SiderBar: React.FC<SiderBarProps> = ({ collapsed }) => {
@@ -85,8 +85,7 @@ const SiderBar: React.FC<SiderBarProps> = ({ collapsed }) => {
           { key: '3', label: 'Quản lý khách hàng', icon: <UserOutlined /> },
           { key: '20', label: 'Quản lý người dùng', icon: <TeamOutlined /> },
           { key: '30', label: 'Quản lý tài sản', icon: <AppstoreOutlined /> },
-          { key: '31', label: 'Yêu cầu mua tài sản', icon: <PullRequestOutlined /> },
-        
+          { key: '31', label: 'Duyệt yêu cầu mua tài sản', icon: <PullRequestOutlined /> },
         ],
       },
       {

@@ -1,6 +1,6 @@
 "use client";
 import { color, motion } from "framer-motion";
-import "./trainingcouse.scss";
+import style  from "./trainingcouse.module.scss";
 import { useCallback, useEffect, useState } from "react";
 import { useNotification } from "@/components/UI_shared/Notification";
 import Image from "next/image";
@@ -28,21 +28,16 @@ export default function TrainingCourse() {
     }
   }, []);
 
-  // Hàm định dạng ngày
-  const formatDate = (dateString: string) => {
-    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'short', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString('vi-VN', options);
-  };
 
   return (
     <>
-      <section className="banner">
+      <section className={style.banner}>
         <h1>Đào tạo</h1>
-        <p><a href="/">Trang chủ</a> 〉Đào tạo</p>
+        <p><a href="/vi/home_user">Trang chủ</a> 〉Đào tạo</p>
       </section>
 
-      <section className="content">
-        <div className="center">
+      <section className={style.content}>
+        <div className={style.center}>
           <motion.h1
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -64,18 +59,18 @@ export default function TrainingCourse() {
         </div>
       </section>
 
-      <section className="products-section">
-        <div className="products-container">
+      <section className={style.products_section} >
+        <div className={style.products_container}>
           <motion.h2
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ duration: 0.6 }}
-            className="products-title"
+            className={style.products_title}
           >
             Danh sách khóa đào tạo của chúng tôi
           </motion.h2>
 
-          <div className="products-grid">
+          <div className={style.products_grid}>
             {trainingcouse.map((product) => (
               <motion.div
                 key={product.Id}
@@ -83,35 +78,35 @@ export default function TrainingCourse() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
                 whileHover={{ y: -5, boxShadow: "0 10px 20px rgba(0,0,0,0.1)" }}
-                className="product-card"
+                className={style.product_card}
               >
-                <div className="product-image">
+                <div className={style.product_image}>
                   <Image
                     src={`/trainings/training-${product.CourseName}.jpg`} // Giả sử có 5 ảnh mẫu
                     alt={product.CourseName}
                     width={300}
                     height={200}
-                    className="product-img"
+                    className={style.product_img}
                   />
-                  <div className={`product-status ${product.ServiceStatus.toLowerCase()}`}>
+                  <div className={`${style.product_status} ${product.ServiceStatus.toLowerCase()}`}>
                     <Tag color={product.ServiceStatus === "Đang đào tạo" ? "#f06418" : "default"}>
                       {product.ServiceStatus}
                     </Tag>
                   </div>
                 </div>
 
-                <div className="product-info">
-                  <h3 className="product-name">{product.CourseName}</h3>
-                  <p className="product-department">Giảng Viên: <strong>{"" + product.InstructorName}</strong></p>
+                <div className={style.product_info}>
+                  <h3 className={style.product_name}>{product.CourseName}</h3>
+                  <p className= {style.product_department}>Giảng Viên: <strong>{"" + product.InstructorName}</strong></p>
 
-                  <div className="product-dates">
+                  <div className={style.product_dates}>
 
                     <div>
-                      <span className="date-label">{product.Description}</span>
+                      <span className={style.date_label}>{product.Description}</span>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', paddingTop: "10px" }}>
                       <img src="/image/date.png" height={24} width={24} style={{ display: 'block' }} />
-                      <span className="date-value">{product.Duration + " Tuần"}</span>
+                      <span className={style.date_value}>{product.Duration + " Tuần"}</span>
                     </div>
                   </div>
 

@@ -289,6 +289,8 @@ const AssetPage = () => {
               { label: 'Tốt', value: 'Tốt' },
               { label: 'Chờ sửa chữa', value: 'Chờ sửa chữa' },
               { label: 'Cần thay thế', value: 'Cần thay thế' },
+              { label: 'Yêu cầu mua', value: 'Yêu cầu mua' },
+              { label: 'Từ chối yêu cầu mua', value: 'Từ chối yêu cầu mua' },
             ]}
             onChange={(value) => setStatusFilter(value)}
           />

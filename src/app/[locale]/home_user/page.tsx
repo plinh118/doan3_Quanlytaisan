@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import "./user.css";
+import "./user.scss";
 import { useRouter } from 'next/navigation';
 import { GetPersonnel } from "@/models/persionnel.model";
 import { personnelAPI } from "@/libs/api/personnel.api";
@@ -341,12 +341,7 @@ export default function Home() {
           </button>
         </div>
       </section>
-      <section className="partner">
-        <h1>Đối tác của AIA</h1>
-      </section>
-      <section className="footer">
-
-      </section>
+    
     </div>
   );
 }

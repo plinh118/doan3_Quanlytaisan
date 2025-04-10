@@ -104,6 +104,7 @@ CREATE TABLE Project(
 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+
 CREATE TABLE Product(
     Id INT AUTO_INCREMENT PRIMARY KEY,
     ProductName NVARCHAR(50),
@@ -111,6 +112,7 @@ CREATE TABLE Product(
     ProductStartDate DATE,
     ProductEndDate DATE NULL,
     ProductStatus NVARCHAR(50),
+     Description TEXT NULL,
     IsDeleted BOOLEAN DEFAULT 0,
     FOREIGN KEY (DepartmentId) REFERENCES Department(Id) ON UPDATE CASCADE,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
