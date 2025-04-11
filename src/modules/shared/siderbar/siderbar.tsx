@@ -6,22 +6,24 @@ import { useRouter, usePathname } from 'next/navigation';
 import { useColorState } from '@/stores/color.store';
 import type { MenuProps } from 'antd';
 import {
-  DashboardOutlined, // Thay cho ProjectOutlined (Dashboard)
+  DashboardOutlined, 
   UserOutlined,
-  FileOutlined, // Thay cho ProjectOutlined (Quản lý phi vật thể)
+  FileOutlined, 
   SettingOutlined,
   TeamOutlined,
-  UserSwitchOutlined, // Thay cho UsergroupAddOutlined (Quản lý đối tác)
-  AppstoreOutlined, // Thay cho TabletOutlined (Quản lý tài sản)
-  ShoppingOutlined, // Thay cho FolderOutlined (Quản lý sản phẩm)
-  ProjectOutlined, // Thay cho TrophyOutlined (Quản lý dự án)
+  UserSwitchOutlined, 
+  AppstoreOutlined, 
+  ShoppingOutlined, 
+  ProjectOutlined, 
   BookOutlined,
-  ReadOutlined, // Thay cho BankOutlined (Quản lý khóa đào tạo)
+  ReadOutlined, 
   CustomerServiceOutlined,
-  SafetyOutlined, // Thay cho SettingOutlined (Sở hữu trí tuệ)
-  ApartmentOutlined, // Thay cho FolderOutlined (Quản lý bộ phận)
+  SafetyOutlined, 
+  ApartmentOutlined, 
   IdcardOutlined,
-  PullRequestOutlined, // Thay cho BankOutlined (Quản lý chức vụ)
+  PullRequestOutlined,
+  HolderOutlined,
+  AudioOutlined, 
 } from '@ant-design/icons';
 import styles from '@/modules/shared/siderbar/siderbar.module.scss';
 
@@ -46,13 +48,17 @@ const routeMap: Record<string, string> = {
   '13': '/vi/services',
   '20': '/vi/user',
   '30': '/vi/asset',
-  '31':'/vi/reques_asset',
+  '31':'/vi/request_asset',
+  '32':'/vi/manageConsultPage',
 };
 
 const SiderBar: React.FC<SiderBarProps> = ({ collapsed }) => {
   const router = useRouter();
   const pathname = usePathname();
   const { themeColor } = useColorState();
+
+  const userRole = typeof window !== 'undefined' ? localStorage.getItem('ROLE') : null;
+  const isLeader = userRole === 'leader';
 
   const getCurrentKey = useCallback(() => {
     const entry = Object.entries(routeMap).find(
@@ -69,55 +75,63 @@ const SiderBar: React.FC<SiderBarProps> = ({ collapsed }) => {
   };
 
   const sidebarItems = useMemo<MenuItem[]>(
-    () => [
-      { key: 'sub5', label: 'Dashboard', icon: <DashboardOutlined /> },
-      {
-        key: 'sub1',
-        label: 'Quản lý đối tượng',
-        icon: <UserOutlined />,
-        children: [
-          { key: '1', label: 'Quản lý nhân viên', icon: <TeamOutlined /> },
-          {
-            key: '2',
-            label: 'Quản lý đối tác',
-            icon: <UserSwitchOutlined />,
-          },
-          { key: '3', label: 'Quản lý khách hàng', icon: <UserOutlined /> },
-          { key: '20', label: 'Quản lý người dùng', icon: <TeamOutlined /> },
-          { key: '30', label: 'Quản lý tài sản', icon: <AppstoreOutlined /> },
-          { key: '31', label: 'Yêu cầu mua tài sản', icon: <PullRequestOutlined /> },
-        
-        ],
-      },
-      {
-        key: 'sub2',
-        label: 'Quản lý phi vật thể',
-        icon: <FileOutlined />,
-        children: [
-          { key: '5', label: 'Quản lý sản phẩm', icon: <ShoppingOutlined /> },
-          { key: '6', label: 'Quản lý dự án', icon: <ProjectOutlined /> },
-          { key: '7', label: 'Quản lý đề tài', icon: <BookOutlined /> },
-          { key: '8', label: 'Quản lý khóa đào tạo', icon: <ReadOutlined /> },
-          {
-            key: '13',
-            label: 'Quản lý dịch vụ',
-            icon: <CustomerServiceOutlined />,
-          },
-          { key: '9', label: 'Sở hữu trí tuệ', icon: <SafetyOutlined /> },
-        ],
-      },
-      {
-        key: 'sub4',
-        label: 'Danh Mục',
-        icon: <SettingOutlined />,
-        children: [
-          { key: '11', label: 'Đơn vị/ công ty con', icon: <TeamOutlined /> },
-          { key: '10', label: 'Quản lý bộ phận', icon: <ApartmentOutlined /> },
-          { key: '12', label: 'Quản lý chức vụ', icon: <IdcardOutlined /> },
-        ],
-      },
-    ],
-    [],
+    () => {
+      const baseItems: MenuItem[] = [
+        { key: 'sub5', label: 'Dashboard', icon: <DashboardOutlined /> },
+        {
+          key: 'sub1',
+          label: 'Quản lý đối tượng',
+          icon: <UserOutlined />,
+          children: [
+            { key: '1', label: 'Quản lý nhân viên', icon: <TeamOutlined /> },
+            {
+              key: '2',
+              label: 'Quản lý đối tác',
+              icon: <UserSwitchOutlined />,
+            },
+            { key: '3', label: 'Quản lý khách hàng', icon: <UserOutlined /> },
+            { key: '20', label: 'Quản lý người dùng', icon: <TeamOutlined /> },
+            { key: '30', label: 'Quản lý tài sản', icon: <AppstoreOutlined /> },
+           
+            ...(isLeader ? [
+              { key: '31', label: 'Duyệt yêu cầu mua tài sản', icon: <PullRequestOutlined /> }
+            ] : [])
+          ].filter(Boolean) as MenuItem[], 
+        },
+        {
+          key: 'sub2',
+          label: 'Quản lý phi vật thể',
+          icon: <FileOutlined />,
+          children: [
+            { key: '5', label: 'Quản lý sản phẩm', icon: <ShoppingOutlined /> },
+            { key: '6', label: 'Quản lý dự án', icon: <ProjectOutlined /> },
+            { key: '7', label: 'Quản lý đề tài', icon: <BookOutlined /> },
+            { key: '8', label: 'Quản lý khóa đào tạo', icon: <ReadOutlined /> },
+            {
+              key: '13',
+              label: 'Quản lý dịch vụ',
+              icon: <CustomerServiceOutlined />,
+            },
+            { key: '9', label: 'Sở hữu trí tuệ', icon: <SafetyOutlined /> },
+            { key: '32', label: 'Liên hệ tư vấn', icon: <AudioOutlined /> },
+
+          ],
+        },
+        {
+          key: 'sub4',
+          label: 'Danh Mục',
+          icon: <SettingOutlined />,
+          children: [
+            { key: '11', label: 'Đơn vị/ công ty con', icon: <TeamOutlined /> },
+            { key: '10', label: 'Quản lý bộ phận', icon: <ApartmentOutlined /> },
+            { key: '12', label: 'Quản lý chức vụ', icon: <IdcardOutlined /> },
+          ],
+        },
+      ];
+
+      return baseItems;
+    },
+    [isLeader], // Thêm isLeader vào dependencies
   );
 
   const sidebarBg = themeColor?.token?.colorPrimary || 'rgb(13,68,138)';

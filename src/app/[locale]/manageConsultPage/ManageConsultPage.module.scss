@@ -1,0 +1,78 @@
+/* ManageConsultPage.module.scss */
+
+/* Table style */
+.table {
+    :global(.ant-table) {
+      border-radius: 8px;
+      overflow: hidden;
+    }
+  
+    :global(.ant-table-thead > tr > th) {
+      background-color: #fafafa;
+      font-weight: 600;
+      color: #333;
+    }
+  
+    :global(.ant-table-tbody > tr > td) {
+      color: #555;
+    }
+  
+    :global(.ant-table-row) {
+      transition: background-color 0.3s ease;
+  
+      &:hover {
+        background-color: #e6f7ff;
+      }
+    }
+  }
+  
+  /* Modal style */
+  .modal {
+    :global(.ant-modal-header) {
+      border-bottom: 1px solid #e8e8e8;
+      padding-bottom: 16px;
+    }
+  
+    :global(.ant-modal-title) {
+      font-size: 18px;
+      font-weight: 600;
+      color: #333;
+    }
+  
+    :global(.ant-modal-body) {
+      padding: 24px;
+    }
+  
+    :global(.ant-form-item) {
+      margin-bottom: 16px;
+    }
+  
+    :global(.ant-form-item-label > label) {
+      font-weight: 500;
+      color: #555;
+    }
+  
+    :global(.ant-input),
+    :global(.ant-select-selector) {
+      border-radius: 4px;
+      height: 40px;
+    }
+  
+    :global(.ant-input-textarea) {
+      border-radius: 4px;
+    }
+  
+    :global(.ant-btn-primary) {
+      background-color: #1890ff;
+      border-color: #1890ff;
+      border-radius: 4px;
+      height: 40px;
+      padding: 0 24px;
+    }
+  
+    :global(.ant-btn-default) {
+      border-radius: 4px;
+      height: 40px;
+      padding: 0 24px;
+    }
+  }

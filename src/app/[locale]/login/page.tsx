@@ -40,18 +40,29 @@ export default function LoginPage() {
 
     try {
       const data = await authAPI.login(values.email, values.password);
+      debugger  
+      if (data.errorCode === 0) {
+        show({ result: data, messageDone: 'Đăng nhập thành công' });
+        router.push('/vi/dashboard');  ;
+      } else {
+        switch (data.errorCode) {
+          case 5:
+            show({ result: 1, messageError: 'Vui lòng nhập email và mật khẩu' });
 
-      show({ result: data, messageDone: 'Đăng nhập thành công' });
-      if (data === 0) {
-       const role= localStorage.getItem('ROLE');
-      //  debugger;
-      //   if(role==='admin')
-      //   {
-          router.push('/vi/dashboard');  
-        // }
-        // else{
-        //   router.push('/vi/home_user');
-        // }
+            break;
+          case 6:
+            show({ result: 1, messageError: 'Tài khoản không tồn tại!' });
+
+          case 7:
+            show({ result: 1, messageError: 'Email hoặc mật khẩu không đúng' });
+
+            break;
+          case 8:
+            show({ result: 1, messageError: 'Lỗi hệ thống, vui lòng thử lại sau' });
+            break;
+          default:
+            setError('Đăng nhập thất bại');
+        }
       }
     } catch (err: any) {
       const errorCode = err.response?.data?.errorCode || 8;

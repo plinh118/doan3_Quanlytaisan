@@ -1,0 +1,446 @@
+/* Product.module.scss */
+
+/* Base Styles - Mobile First */
+.banner {
+    height: 250px;
+    width: 100%;
+    background-image: url('/macbook.jpg');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: white;
+    padding-left: 20px;
+  
+    a {
+      font-size: 20px;
+      color: rgb(255, 255, 255);
+  
+      &:hover {
+        color: rgb(226, 114, 3);
+      }
+    }
+  
+    h1 {
+      font-size: 24px;
+      margin-bottom: 8px;
+      float: none;
+    }
+  
+    p {
+      font-size: 14px;
+    }
+  }
+  
+  .content {
+    height: auto;
+    min-height: 300px;
+    width: 100%;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 0;
+  }
+  
+  .center {
+    width: 90%;
+    height: auto;
+    padding: 20px 0;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    background-image: url('/tamgiac.png');
+    background-size: 200px 200px;
+    background-position: right center;
+    background-repeat: no-repeat;
+  
+    h1 {
+      font-size: 28px;
+      font-weight: bold;
+      color: #f06418;
+      margin-top: 40px;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+  
+    p {
+      color: black;
+      font-size: 16px;
+      max-width: 100%;
+      line-height: 1.5;
+      text-align: left;
+      padding: 0 15px;
+    }
+  }
+  
+  /* Products Section - NEXTCO Style */
+  .productsSection {
+    width: 100%;
+    padding: 40px 0;
+  }
+  
+  .productsContainer {
+    width: 90%;
+    margin: 0 auto;
+  }
+  
+  .productsTitle {
+    text-align: center;
+    font-size: 32px;
+    color: #f06418;
+    margin-bottom: 40px;
+    font-weight: 600;
+  }
+  
+  /* Product Items in NEXTCO Style */
+  .productItemContainer {
+    margin-bottom: 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .productItem {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0;
+    position: relative;
+    background-color: #f8f9fa;
+  }
+  
+  .productInfo {
+    padding: 20px;
+    max-width: 100%;
+    z-index: 2;
+  }
+  
+  .productTitle {
+    font-size: 32px;
+    color: #f06418;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+  
+  .productDescription {
+    color: #333;
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 25px;
+  }
+  
+  .productButton {
+    display: inline-flex;
+    align-items: center;
+    padding: 12px 24px;
+    background-color: #f06418;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+  
+    &:hover {
+      background-color: #e0550b;
+    }
+  
+    svg {
+      margin-right: 10px;
+    }
+  }
+  
+  .productImageContainer {
+    width: 100%;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+  }
+  
+  .productImageWrapper {
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+  
+    &:hover {
+      transform: translateY(-5px);
+    }
+  }
+  
+  .productImg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  
+  /* Wave shape decoration */
+  .waveShape {
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    background-color: white;
+    z-index: 1;
+  
+    svg {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+  }
+  
+  /* Status tag styling */
+  .productStatusTag {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    z-index: 3;
+  }
+  
+  /* Date display styling */
+  .productDates {
+    margin-bottom: 25px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 8px;
+    padding: 10px 15px;
+    display: inline-block;
+  }
+  
+  .dateItem {
+    display: flex;
+    margin-bottom: 5px;
+    font-size: 14px;
+  }
+  
+  .dateLabel {
+    color: #666;
+    font-weight: 500;
+    margin-right: 10px;
+    min-width: 70px;
+  }
+  
+  .dateValue {
+    color: #333;
+    font-weight: 600;
+  }
+  
+  /* Additional section styles */
+  .sectionWaveTop {
+    width: 100%;
+    height: 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .sectionWaveBottom {
+    width: 100%;
+    height: 80px;
+    position: relative;
+    overflow: hidden;
+    transform: rotate(180deg);
+    margin-top: -1px;
+  }
+  
+  /* Responsive styling */
+  @media (min-width: 768px) {
+    .banner {
+      height: 350px;
+      padding-left: 50px;
+  
+      h1 {
+        font-size: 28px;
+        margin-bottom: 10px;
+      }
+  
+      p {
+        font-size: 16px;
+      }
+    }
+  
+    .content {
+      min-height: 350px;
+    }
+  
+    .center {
+      background-size: 250px 250px;
+  
+      h1 {
+        font-size: 36px;
+        margin-top: 60px;
+        text-align: left;
+      }
+  
+      p {
+        font-size: 17px;
+        text-align: justify;
+        padding: 0 30px;
+      }
+    }
+  
+    .productItem {
+      flex-direction: row;
+      min-height: 300px;
+      padding: 40px 0;
+  
+      &:nth-child(even) {
+        flex-direction: row-reverse;
+      }
+    }
+  
+    .productInfo {
+      max-width: 50%;
+      padding: 40px;
+    }
+  
+    .productTitle {
+      font-size: 38px;
+    }
+  
+    .productDescription {
+      font-size: 17px;
+    }
+  
+    .productImageContainer {
+      width: 50%;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .banner {
+      height: 400px;
+      padding-left: 100px;
+  
+      h1 {
+        font-size: 36px; /* Tăng thêm cho desktop */
+      }
+  
+      p {
+        font-size: 20px; /* Tăng thêm cho desktop */
+      }
+    }
+  
+    .center {
+      background-size: 345px 345px;
+  
+      h1 {
+        font-size: 56px; /* Tăng thêm cho desktop */
+        margin-top: 80px;
+        margin-bottom: -20px;
+      }
+  
+      p {
+        font-size: 20px; /* Tăng thêm cho desktop */
+        padding: 0 50px;
+      }
+    }
+  
+    .productsTitle {
+      font-size: 48px; /* Tăng thêm cho desktop */
+    }
+  
+    .productTitle {
+      font-size: 48px; /* Tăng thêm cho desktop */
+    }
+  
+    .productDescription {
+      font-size: 20px; /* Tăng thêm cho desktop */
+    }
+  
+    .productButton {
+      font-size: 18px; /* Tăng thêm cho desktop */
+      padding: 14px 28px;
+    }
+  
+    .dateItem {
+      font-size: 16px; /* Tăng thêm cho desktop */
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .banner {
+      height: 200px;
+      padding-left: 15px;
+      a{
+        font-size: 20px;
+      }
+    }
+  
+    .center {
+      background-image: none;
+  
+      h1 {
+        font-size: 24px;
+        margin-top: 20px;
+      }
+  
+      p {
+        font-size: 15px;
+      }
+      
+    }
+  
+    .productsTitle {
+      font-size: 24px;
+      margin-bottom: 30px;
+    }
+  
+    .productTitle {
+      font-size: 28px;
+    }
+  
+    .productButton {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+  
+  /* Alternate background colors for products */
+  .productItemContainer {
+    &:nth-child(odd) {
+      .productItem {
+        background-color: rgb(255, 255, 255);
+        background-image: url('/tamgiac.png');
+        background-size: 200px 200px;
+        background-position: right center;
+        background-repeat: no-repeat;
+      }
+  
+      .waveShape {
+        background-color: rgb(255, 255, 255);
+        background-image: url('/tamgiac.png');
+        background-size: 200px 200px;
+        background-position: right center;
+        background-repeat: no-repeat;
+      }
+    }
+  
+    &:nth-child(even) {
+      .productItem {
+        background-color: rgb(255, 255, 255);
+        background-image: url('/nextco.png');
+        background-size: 200px 200px;
+        background-position: right center;
+        background-repeat: no-repeat;
+      }
+  
+      .waveShape {
+        background-color: rgb(255, 255, 255);
+        background-image: url('/nextco.png');
+        background-size: 200px 200px;
+        background-position: right center;
+        background-repeat: no-repeat;
+      }
+    }
+  }

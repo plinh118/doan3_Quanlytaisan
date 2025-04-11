@@ -1,24 +1,26 @@
 "use client";
-import { color, motion } from "framer-motion";
-import "./trainingcouse.scss";
+import { motion } from "framer-motion";
+import style from "./trainingcouse.module.scss";
 import { useCallback, useEffect, useState } from "react";
 import { useNotification } from "@/components/UI_shared/Notification";
 import Image from "next/image";
 import { trainingCouseAPI } from "@/libs/api/trainingCouse.api";
 import { GetTrainingCourse } from "@/models/trainingCourse.api";
-import { Tag } from "antd";
+import { Button, Tag } from "antd";
+import ConsultationFormModal from "@/components/home_user/modal_Consult";
 
 export default function TrainingCourse() {
   const { show } = useNotification();
   const [trainingcouse, settrainingcouse] = useState<GetTrainingCourse[]>([]);
-
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedTrainingCouse, setSelectedTrainingCouse] = useState<GetTrainingCourse | null>(null);
   useEffect(() => {
     fetchtrainingcouse();
   }, []);
 
   const fetchtrainingcouse = useCallback(async () => {
     try {
-      const data = await trainingCouseAPI.gettrainingCousesByPageOrder(1, 10, "ASC","",undefined,"Đang đào tạo");
+      const data = await trainingCouseAPI.gettrainingCousesByPageOrder(1, 10, "ASC", "", undefined, "Đang đào tạo");
       settrainingcouse(data || []);
     } catch (error) {
       show({
@@ -28,27 +30,35 @@ export default function TrainingCourse() {
     }
   }, []);
 
-  // Hàm định dạng ngày
-  const formatDate = (dateString: string) => {
-    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'short', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString('vi-VN', options);
+
+
+  // Mở modal đăng ký tư vấn
+  const openConsultModal = (training_course: GetTrainingCourse | null) => {
+    setSelectedTrainingCouse(training_course);
+    setModalVisible(true);
   };
 
+  // Đóng modal
+  const closeModal = () => {
+    setModalVisible(false);
+    setSelectedTrainingCouse(null);
+  };
+ 
   return (
     <>
-      <section className="banner">
+      <section className={style.banner}>
         <h1>Đào tạo</h1>
-        <p><a href="/">Trang chủ</a> 〉Đào tạo</p>
+        <p><a href="/vi/home_user">Trang chủ</a> 〉Đào tạo</p>
       </section>
 
-      <section className="content">
-        <div className="center">
+      <section className={style.content}>
+        <div className={style.center}>
           <motion.h1
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            Sản phẩm luôn đặt khách hàng làm trung tâm
+            Đào tạo hướng đến sự phát triển toàn diện của học viên
           </motion.h1>
           <br />
           <motion.p
@@ -56,26 +66,23 @@ export default function TrainingCourse() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.2 }}
           >
-            Chúng tôi đồng hành và giúp khách hàng tối ưu quy trình sản xuất, nâng cao hiệu quả công việc
-            nhờ áp dụng AI trong chuyển đổi số, giúp khách hàng tiến đến thành công trên con đường kinh doanh của họ.
-            Đối với chúng tôi, khách hàng chính là người quyết định sứ mệnh và định hướng cho sản phẩm và dịch vụ.
-            Sự thành công của khách hàng chính là sự thành công của chúng tôi.
+           "Chúng tôi đồng hành cùng học viên, tối ưu hóa hành trình học tập bằng các phương pháp hiện đại và công nghệ tiên tiến, giúp họ chinh phục tri thức và đạt được thành công trong sự nghiệp. Với chúng tôi, học viên là trung tâm của mọi chương trình đào tạo, và sự tiến bộ của họ chính là thành công lớn nhất của chúng tôi."
           </motion.p>
         </div>
       </section>
 
-      <section className="products-section">
-        <div className="products-container">
+      <section className={style.products_section} >
+        <div className={style.products_container}>
           <motion.h2
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ duration: 0.6 }}
-            className="products-title"
+            className={style.products_title}
           >
             Danh sách khóa đào tạo của chúng tôi
           </motion.h2>
 
-          <div className="products-grid">
+          <div className={style.products_grid}>
             {trainingcouse.map((product) => (
               <motion.div
                 key={product.Id}
@@ -83,35 +90,38 @@ export default function TrainingCourse() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
                 whileHover={{ y: -5, boxShadow: "0 10px 20px rgba(0,0,0,0.1)" }}
-                className="product-card"
+                className={style.product_card}
               >
-                <div className="product-image">
+                <div className={style.product_image}>
                   <Image
                     src={`/trainings/training-${product.CourseName}.jpg`} // Giả sử có 5 ảnh mẫu
                     alt={product.CourseName}
                     width={300}
                     height={200}
-                    className="product-img"
+                    className={style.product_img}
                   />
-                  <div className={`product-status ${product.ServiceStatus.toLowerCase()}`}>
+                  <div className={`${style.product_status} ${product.ServiceStatus.toLowerCase()}`}>
                     <Tag color={product.ServiceStatus === "Đang đào tạo" ? "#f06418" : "default"}>
                       {product.ServiceStatus}
                     </Tag>
                   </div>
                 </div>
 
-                <div className="product-info">
-                  <h3 className="product-name">{product.CourseName}</h3>
-                  <p className="product-department">Giảng Viên: <strong>{"" + product.InstructorName}</strong></p>
+                <div className={style.product_info}>
+                  <h3 className={style.product_name}>{product.CourseName}</h3>
+                  <p className={style.product_department}>Giảng Viên: <strong>{"" + product.InstructorName}</strong></p>
 
-                  <div className="product-dates">
-
+                  <div className={style.product_dates}>
                     <div>
-                      <span className="date-label">{product.Description}</span>
+                      <span className={style.date_label}>{product.Description}</span>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', paddingTop: "10px" }}>
                       <img src="/image/date.png" height={24} width={24} style={{ display: 'block' }} />
-                      <span className="date-value">{product.Duration + " Tuần"}</span>
+                      <span className={style.date_value}>{product.Duration + " Tuần"}</span>
+                      <Button className={style.TrainingButton} onClick={(e) => {
+                        e.preventDefault();
+                        openConsultModal(product);
+                      }}>Tham gia ngay </Button>
                     </div>
                   </div>
 
@@ -121,6 +131,12 @@ export default function TrainingCourse() {
           </div>
         </div>
       </section>
+      <ConsultationFormModal
+        visible={modalVisible}
+        relatedItem={selectedTrainingCouse}
+        relatedType="training_course"
+        onClose={closeModal}
+      />
     </>
   );
 }

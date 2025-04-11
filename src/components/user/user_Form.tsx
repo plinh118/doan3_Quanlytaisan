@@ -28,6 +28,9 @@ export const UserForm: React.FC<ReusableFormProps> = ({ formdulieu }) => {
         <Col span={12}>
           <Form.Item name="Role" label="Vai trò" rules={RULES_FORM.required}>
             <Select>
+            <Select.Option key="3" value="leader">
+                Lãnh đạo
+              </Select.Option>
               <Select.Option key="1" value="admin">
                 Quản trị viên
               </Select.Option>

@@ -155,7 +155,7 @@ END$$
 
 DELIMITER $$
 
-CREATE PROCEDURE GetDepartmentByPageOrder(
+create PROCEDURE GetDepartmentByPageOrder(
     IN p_PageIndex INT,
     IN p_PageSize INT,
     IN p_OrderType VARCHAR(4),
@@ -167,7 +167,7 @@ BEGIN
 
     -- Truy vấn danh sách Department cùng số lượng Division của từng Department
     SELECT 
-        d.Id AS Department,
+        d.Id AS DepartmentId,
         d.DepartmentName,
         d.Description,
         COUNT(dv.Id) AS TotalDivisions,  -- Đếm số lượng Division
@@ -189,6 +189,40 @@ DELIMITER ;
 
 
 -- Division
+DELIMITER $$
+
+CREATE PROCEDURE GetDivisionByPageOrder(
+    IN p_PageIndex INT,
+    IN p_PageSize INT,
+    IN p_OrderType VARCHAR(4),
+    IN P_DivisionName VARCHAR(255),
+    IN p_DepartmentName VARCHAR(255)
+)
+BEGIN
+    DECLARE v_Offset INT;
+    SET v_Offset = (p_PageIndex - 1) * p_PageSize;
+
+    -- Truy vấn danh sách Division cùng số lượng Division của từng Department
+    SELECT 
+        d.Id ,
+        d.DivisionName,
+        dp.DepartmentName,
+        d.Description AS DivisionDescription,
+        dp.Description AS DepartmentDescription,
+        COUNT(*) OVER () AS TotalRecords
+    FROM Division d
+    LEFT JOIN Department dp ON d.DepartmentId = dp.Id AND dp.IsDeleted = 0 
+    WHERE d.IsDeleted = 0
+        AND (P_DivisionName IS NULL OR P_DivisionName = '' OR d.DivisionName LIKE CONCAT('%', P_DivisionName, '%'))
+        AND (p_DepartmentName IS NULL OR p_DepartmentName = '' OR dp.DepartmentName LIKE CONCAT('%', p_DepartmentName, '%'))
+    ORDER BY 
+        dp.DepartmentName
+        -- Sử dụng điều kiện sắp xếp theo p_OrderType, nếu 'ASC' thì sắp xếp tăng dần, nếu 'DESC' thì giảm dần
+        LIMIT p_PageSize OFFSET v_Offset;
+END$$
+
+DELIMITER ;
+
 
 DELIMITER $$
 
@@ -300,54 +334,6 @@ DELIMITER ;
 
 -- Partner
 
-	DELIMITER $$
-
-CREATE PROCEDURE GetPartnerByPageOrder(
-    IN p_PageIndex INT,         -- Trang hiện tại
-    IN p_PageSize INT,          -- Số dòng trên mỗi trang
-    IN p_OrderType VARCHAR(4),  -- 'ASC' hoặc 'DESC'
-    IN p_PartnerName VARCHAR(255),
-    IN p_PhoneNumber VARCHAR(10)
-)
-BEGIN
-    DECLARE v_Offset INT;
-    DECLARE v_FilterCondition VARCHAR(500);
-    
-    SET v_Offset = (p_PageIndex - 1) * p_PageSize;
-    SET v_FilterCondition = '';
-
-    -- Xây dựng điều kiện WHERE dựa trên giá trị đầu vào
-    IF p_PartnerName IS NOT NULL AND p_PartnerName <> '' THEN
-        SET v_FilterCondition = CONCAT(" PartnerName LIKE '%", p_PartnerName, "%' ");
-    END IF;
-    
-    IF p_PhoneNumber IS NOT NULL AND p_PhoneNumber <> '' THEN
-        IF v_FilterCondition <> '' THEN
-            SET v_FilterCondition = CONCAT(v_FilterCondition, " AND ");
-        END IF;
-        SET v_FilterCondition = CONCAT(v_FilterCondition, " PhoneNumber LIKE '%", p_PhoneNumber, "%' ");
-    END IF;
-    
-    -- Kiểm tra xem có điều kiện WHERE không
-    IF v_FilterCondition <> '' THEN
-        SET v_FilterCondition = CONCAT(" WHERE ", v_FilterCondition);
-    END IF;
-
-    -- Tạo câu truy vấn động
-    SET @sql = CONCAT(
-        'SELECT * FROM Partner where isdeleted=0',  
-        v_FilterCondition,
-        ' ORDER BY PartnerName ', p_OrderType,
-        ' LIMIT ', p_PageSize, ' OFFSET ', v_Offset
-    );
-
-   
-    PREPARE stmt FROM @sql;
-    EXECUTE stmt;
-    DEALLOCATE PREPARE stmt;
-END$$
-
-DELIMITER ;
 DELIMITER $$
 
 -- Thêm mới Partner
@@ -865,16 +851,15 @@ DELIMITER ;
 
 
 -- PRODUCT
-
 DELIMITER $$
 
--- Thêm Product
 CREATE PROCEDURE AddProduct(
     IN p_ProductName NVARCHAR(50),
     IN p_DepartmentId INT,
     IN p_ProductStartDate DATE,
     IN p_ProductEndDate DATE,
-    IN p_ProductStatus NVARCHAR(50)
+    IN p_ProductStatus NVARCHAR(50),
+    IN p_Description TEXT -- Thêm Description
 )
 BEGIN
     DECLARE v_NewProductId INT;
@@ -884,8 +869,8 @@ BEGIN
         SELECT -1 AS NewProductId; -- Nếu lỗi, trả về -1
     END;
 
-    INSERT INTO Product (ProductName, DepartmentId, ProductStartDate, ProductEndDate, ProductStatus)
-    VALUES (p_ProductName, p_DepartmentId, p_ProductStartDate, p_ProductEndDate, p_ProductStatus);
+    INSERT INTO Product (ProductName, DepartmentId, ProductStartDate, ProductEndDate, ProductStatus, Description)
+    VALUES (p_ProductName, p_DepartmentId, p_ProductStartDate, p_ProductEndDate, p_ProductStatus, p_Description);
 
     SET v_NewProductId = LAST_INSERT_ID(); -- Lấy ID vừa thêm
 
@@ -895,14 +880,14 @@ END$$
 DELIMITER ;
 DELIMITER $$
 
--- Cập nhật Product
 CREATE PROCEDURE UpdateProduct(
     IN p_Id INT,
     IN p_ProductName NVARCHAR(50),
     IN p_DepartmentId INT,
     IN p_ProductStartDate DATE,
     IN p_ProductEndDate DATE,
-    IN p_ProductStatus NVARCHAR(50)
+    IN p_ProductStatus NVARCHAR(50),
+    IN p_Description TEXT -- Thêm Description
 )
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION 
@@ -915,12 +900,16 @@ BEGIN
         DepartmentId = p_DepartmentId,
         ProductStartDate = p_ProductStartDate,
         ProductEndDate = p_ProductEndDate,
-        ProductStatus = p_ProductStatus
+        ProductStatus = p_ProductStatus,
+        Description = p_Description -- Cập nhật Description
     WHERE Id = p_Id AND IsDeleted = 0;
     
     SELECT 0 AS RESULT;
 END$$
 
+DELIMITER ;
+
+DELIMITER $$
 -- Xóa mềm Product
 CREATE PROCEDURE DeleteProduct(
     IN p_Id INT
@@ -937,9 +926,10 @@ BEGIN
     
     SELECT 0 AS RESULT;
 END$$
+DELIMITER;
+DELIMITER $$
 
--- Lấy danh sách Product có phân trang và sắp xếp
-CREATE PROCEDURE GetProductsByPageOrder(
+create PROCEDURE GetProductsByPageOrder(
     IN p_PageIndex INT,
     IN p_PageSize INT,
     IN p_OrderType VARCHAR(4),
@@ -959,7 +949,7 @@ BEGIN
 
     -- Xây dựng SQL lấy danh sách sản phẩm kèm tổng số bản ghi
     SET @sql = CONCAT(
-        'SELECT p.*, d.DepartmentName, COUNT(*) OVER () AS TotalRecords 
+        'SELECT p.*, d.DepartmentName, p.Description, COUNT(*) OVER () AS TotalRecords 
          FROM Product p 
          JOIN Department d ON p.DepartmentId = d.Id 
          WHERE p.IsDeleted=0',
@@ -978,6 +968,7 @@ BEGIN
 END$$
 
 DELIMITER ;
+
 
 DELIMITER $$
 
@@ -1543,7 +1534,7 @@ CREATE PROCEDURE AddUser(
     IN p_Email VARCHAR(255),
     IN p_Password VARCHAR(255),
     IN p_FullName VARCHAR(255),
-    IN p_Role ENUM('admin', 'user')
+    IN p_Role VARCHAR(255)
 )
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION 
@@ -1556,14 +1547,14 @@ BEGIN
     
     SELECT 0 AS RESULT;
 END$$
-
+DELIMITER $$
 -- Cập nhật User
 CREATE PROCEDURE UpdateUser(
     IN p_Id INT,
     IN p_Email VARCHAR(255),
     IN p_Password VARCHAR(255),
     IN p_FullName VARCHAR(255),
-    IN p_Role ENUM('admin', 'user')
+    IN p_Role VARCHAR(255)
 )
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION 
@@ -1577,7 +1568,7 @@ BEGIN
     
     SELECT 0 AS RESULT;
 END$$
-
+DELIMITER $$
 -- Xóa mềm User
 CREATE PROCEDURE DeleteUser(
     IN p_Id INT
@@ -1910,8 +1901,144 @@ END$$
 DELIMITER ;
 
 
+DELIMITER $$
+
+-- Thêm đăng ký tư vấn mới
+CREATE PROCEDURE AddConsultation(
+    IN p_FullName NVARCHAR(100),
+    IN p_PhoneNumber VARCHAR(15),
+    IN p_Email VARCHAR(100),
+    IN p_RelatedId INT,
+    IN p_RelatedType NVARCHAR(50),
+    IN p_Description TEXT,
+    IN p_Status Text
+)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+    BEGIN
+        SELECT 1 AS RESULT;
+    END;
+    
+    INSERT INTO ConsultationRegistration 
+    (FullName, PhoneNumber, Email, RelatedId, RelatedType, Description,Status)
+    VALUES 
+    (p_FullName, p_PhoneNumber, p_Email, p_RelatedId, p_RelatedType, p_Description,p_Status);
+    
+    SELECT 0 AS RESULT;
+END$$
+
+-- Cập nhật đăng ký tư vấn
+CREATE PROCEDURE UpdateConsultation(
+    IN p_Consult_Id INT,
+    IN p_FullName NVARCHAR(100),
+    IN p_PhoneNumber VARCHAR(15),
+    IN p_Email VARCHAR(100),
+    IN p_RelatedId INT,
+    IN p_RelatedType NVARCHAR(50),
+    IN p_Description TEXT,
+    IN p_Status Text
+)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+    BEGIN
+        SELECT 1 AS RESULT;
+    END;
+    
+    UPDATE ConsultationRegistration
+    SET 
+        FullName = p_FullName,
+        PhoneNumber = p_PhoneNumber,
+        Email = p_Email,
+        RelatedId = p_RelatedId,
+        Status=p_Status,
+        RelatedType = p_RelatedType,
+        Description = p_Description,
+        updated_at = CURRENT_TIMESTAMP
+    WHERE Consult_Id = p_Consult_Id;
+    
+    SELECT 0 AS RESULT;
+END$$
+
+-- Xóa đăng ký tư vấn
+CREATE PROCEDURE DeleteConsultation(
+    IN p_Consult_Id INT
+)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+    BEGIN
+        SELECT 1 AS RESULT;
+    END;
+    
+    DELETE FROM ConsultationRegistration
+    WHERE Consult_Id = p_Consult_Id;
+    
+    SELECT 0 AS RESULT;
+END$$
+
+-- Lấy danh sách đăng ký tư vấn phân trang với tên Related
+CREATE PROCEDURE GetConsultationsByPageOrder(
+    IN p_PageIndex INT,         -- Trang hiện tại
+    IN p_PageSize INT,          -- Số dòng trên mỗi trang
+    IN p_OrderType VARCHAR(4),  -- 'ASC' hoặc 'DESC'
+    IN p_SearchText VARCHAR(255)  -- Từ khóa tìm kiếm (có thể NULL)
+)
+BEGIN
+    DECLARE v_Offset INT;
+    DECLARE v_SearchFilter VARCHAR(400);
+    SET v_Offset = (p_PageIndex - 1) * p_PageSize;
+
+    -- Xử lý điều kiện tìm kiếm
+    IF p_SearchText IS NOT NULL AND p_SearchText != '' THEN
+        SET v_SearchFilter = CONCAT(" AND (FullName LIKE '%", p_SearchText, "%' 
+                                   OR PhoneNumber LIKE '%", p_SearchText, "%' 
+                                   OR Email LIKE '%", p_SearchText, "%' 
+                                   OR Description LIKE '%", p_SearchText, "%') ");
+    ELSE
+        SET v_SearchFilter = "";
+    END IF;
+
+    -- Xây dựng SQL động để lấy tên Related tương ứng
+    SET @sql = CONCAT(
+        'SELECT 
+            cr.*,
+            CASE 
+                WHEN cr.RelatedType = "product" THEN (SELECT ProductName FROM Product WHERE Id = cr.RelatedId)
+                WHEN cr.RelatedType = "service" THEN (SELECT ServiceName FROM Service WHERE Id = cr.RelatedId)
+                WHEN cr.RelatedType = "training_course" THEN (SELECT CourseName FROM TrainingCourse WHERE Id = cr.RelatedId)
+                ELSE NULL
+            END AS RelatedName,
+            COUNT(*) OVER () AS TotalRecords 
+        FROM ConsultationRegistration cr
+        WHERE 1=1',
+        v_SearchFilter,
+        ' ORDER BY created_at ', p_OrderType,
+        ' LIMIT ', p_PageSize, ' OFFSET ', v_Offset
+    );
+
+    -- Thực thi SQL động
+    PREPARE stmt FROM @sql;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END$$
+
+-- Lấy chi tiết 1 đăng ký tư vấn với tên Related
+CREATE PROCEDURE GetConsultationDetail(
+    IN p_Consult_Id INT
+)
+BEGIN
+    SELECT 
+        cr.*,
+        CASE 
+            WHEN cr.RelatedType = "product" THEN (SELECT ProductName FROM Product WHERE Id = cr.RelatedId)
+            WHEN cr.RelatedType = "service" THEN (SELECT ServiceName FROM Service WHERE Id = cr.RelatedId)
+            WHEN cr.RelatedType = "training_course" THEN (SELECT CourseName FROM TrainingCourse WHERE Id = cr.RelatedId)
+            ELSE NULL
+        END AS RelatedName
+    FROM ConsultationRegistration cr
+    WHERE cr.Consult_Id = p_Consult_Id;
+END$$
+
+DELIMITER ;
 
 
 
-CALL GetCustomerLinksByPageOrder(1,10,"ASC",NULL,NULL,NULL,NULL,NULL)
-SELECT*FROM Customer_Link

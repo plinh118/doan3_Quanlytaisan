@@ -26,7 +26,11 @@ export const User_Colum: ColumnType[] = [
     dataIndex: 'Role',
     key: 'Role',
     render: (text) => (
-      <span>{text==='user'?'Người dùng' : 'Quản trị viên'}</span>
+      <span>
+      {text === 'admin' ? 'Quản trị viên' : 
+       text === 'leader' ? 'Lãnh đạo' : 
+       'Người dùng'}
+    </span>
     ),
   },
   {
