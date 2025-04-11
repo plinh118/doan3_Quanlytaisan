@@ -70,7 +70,11 @@
   text-align: left; /* Change from justify for better mobile reading */
   padding: 0 15px;
 }
-
+.pagination_container {
+  display: flex;
+  justify-content: center;  // Căn giữa pagination
+  margin-top: 20px;  // Khoảng cách phía trên
+}
 .TrainingButton {
   display: inline-flex;
   align-items: center;

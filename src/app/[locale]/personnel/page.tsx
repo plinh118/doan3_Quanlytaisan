@@ -30,6 +30,7 @@ import { getInforFile, uploadFilesImage } from '@/libs/api/upload.api';
 import { checkDateOfBirth, validateDates } from '@/utils/validator';
 import { fetchFile, NewuploadFiles } from '@/libs/api/newupload';
 import ExportExcel from '@/components/UI_shared/ExportExcel';
+import { useMediaQuery } from '@/utils/responsive';
 
 
 const PersonnelPage = () => {
@@ -309,6 +310,9 @@ const ExportExcelPersonnel =async () => {
     }));
     ExportExcel(headers,formattedData,'ams_Personnel.xlsx')
   };
+  const isMobile = useMediaQuery('(max-width: 768px)');
+  const isTablet = useMediaQuery('(max-width: 1024px)');
+  
   return (
     <>
       <Header_Children
@@ -316,68 +320,99 @@ const ExportExcelPersonnel =async () => {
         onAdd={openCreateModal}
         text_btn_add="Thêm nhân viên"
       />
-
+  
       <Divider />
-
-      <div className="py-4" >
-        <Space size="middle">
+  
+      <div className="filter-section">
+        <Space 
+          size="middle" 
+          direction={isMobile ? 'vertical' : 'horizontal'} 
+          style={{ width: '100%' }}
+        >
           <Input.Search
             placeholder="Tên nhân viên..."
             allowClear
             enterButton={<SearchOutlined />}
-            size="large"
+            size={isMobile ? 'middle' : 'large'}
             onSearch={handleSearch}
-            style={{ width: 300 }}
+            style={{ width: isMobile ? '100%' : 300 }}
           />
+  
           <Select
             placeholder="Chọn đơn vị"
             allowClear
-            size="large"
-            style={{ width: 200 }}
+            size={isMobile ? 'middle' : 'large'}
+            style={{ width: isMobile ? '100%' : 200 }}
             options={divisions.map((division) => ({
               label: division.DivisionName,
               value: division.Id,
             }))}
             onChange={(value) => setDivisionFilter(value)}
           />
+  
           <Select
             placeholder="Chọn chức vụ"
             allowClear
-            size="large"
-            style={{ width: 200 }}
+            size={isMobile ? 'middle' : 'large'}
+            style={{ width: isMobile ? '100%' : 200 }}
             options={positions.map((position) => ({
               label: position.PositionName,
               value: position.Id,
             }))}
             onChange={(value) => setPositionFilter(value)}
           />
-
-          {/* Bộ lọc trạng thái */}
+  
+          {/* Bộ lọc trạng thái - Ẩn trên mobile để tiết kiệm không gian */}
+          {!isMobile && (
+            <Select
+              placeholder="Chọn trạng thái"
+              allowClear
+              size="large"
+              style={{ width: 200 }}
+              options={[
+                { label: 'Đang làm việc', value: 'Đang làm việc' },
+                { label: 'Đã nghỉ việc', value: 'Đã nghỉ việc' },
+              ]}
+              onChange={(value) => setWorkStatust(value)}
+            />
+          )}
+  
+          <Space>
+            <Button
+              type="default"
+              icon={<ReloadOutlined />}
+              size={isMobile ? 'middle' : 'large'}
+              onClick={handleRefresh}
+            />
+            <Button 
+              icon={<UploadOutlined />} 
+              type="primary"
+              size={isMobile ? 'middle' : 'large'}
+              onClick={ExportExcelPersonnel}
+            >
+              {isMobile ? '' : 'Xuất Excel'}
+            </Button>
+          </Space>
+        </Space>
+  
+        {/* Hiển thị bộ lọc trạng thái dạng dropdown trên mobile */}
+        {isMobile && (
           <Select
             placeholder="Chọn trạng thái"
             allowClear
-            size="large"
-            style={{ width: 200 }}
+            size="middle"
+            style={{ width: '100%', marginTop: 8 }}
             options={[
               { label: 'Đang làm việc', value: 'Đang làm việc' },
               { label: 'Đã nghỉ việc', value: 'Đã nghỉ việc' },
             ]}
             onChange={(value) => setWorkStatust(value)}
           />
-          <Button
-            type="default"
-            icon={<ReloadOutlined />}
-            size="large"
-            onClick={handleRefresh}
-          />
-          <Button icon={<UploadOutlined />} type="primary"onClick={ExportExcelPersonnel}>
-                                Xuất Excel
-                              </Button>
-        </Space>
+        )}
       </div>
-
-      <div className="py-4" style={{ marginTop: '20px' }}>
-        <Table
+  
+      <div className="table-section">
+      <Table
           columns={columns}
           dataSource={Personnels}
           rowKey="Id"
@@ -397,7 +432,7 @@ const ExportExcelPersonnel =async () => {
           }}
         />
       </div>
-
+  
       {modalVisible && (
         <div
           onKeyDown={(e) => {
@@ -415,7 +450,7 @@ const ExportExcelPersonnel =async () => {
             open={modalVisible}
             onOk={handleSave}
             onCancel={closeModal}
-            width="60%"
+            width={isMobile ? '90%' : isTablet ? '80%' : '60%'}
             centered
             okText="Lưu"
             cancelText="Hủy"
@@ -428,8 +463,17 @@ const ExportExcelPersonnel =async () => {
           </Modal>
         </div>
       )}
+  
+      <style jsx>{`
+        .filter-section {
+          padding: ${isMobile ? '8px 0' : '16px 0'};
+        }
+        
+        .table-section {
+          margin-top: ${isMobile ? '12px' : '20px'};
+        }
+      `}</style>
     </>
   );
-};
-
+}
 export default PersonnelPage;

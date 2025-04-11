@@ -178,7 +178,7 @@ $transition: all 0.3s ease;
   text-align: center;
 
   h1 {
-    font-size: 1.8rem;
+    font-size: 1.75rem;
     color: $primary-color;
     margin-bottom: 15px;
   }
@@ -233,7 +233,7 @@ $transition: all 0.3s ease;
 
   h1 {
     font-size: 1.8rem;
-    color: $white;
+    color:$primary-color;
     margin-bottom: 30px;
   }
 }
@@ -478,7 +478,7 @@ $transition: all 0.3s ease;
     }
 
     p {
-      font-size: 1.25rem;
+      font-size: 1.5rem;
     }
   }
 
@@ -490,7 +490,7 @@ $transition: all 0.3s ease;
 
   .valueDetails {
     p {
-      font-size: 1.25rem;
+      font-size: 1.5rem;
     }
   }
 
@@ -502,7 +502,7 @@ $transition: all 0.3s ease;
 
   .expertInfo {
     h2 {
-      font-size: 1.25rem;
+      font-size: 1.5rem;
     }
 
     p {
@@ -516,7 +516,7 @@ $transition: all 0.3s ease;
     }
 
     p {
-      font-size: 1.25rem;
+      font-size: 1.5rem;
     }
 
     .consultButton {

@@ -205,6 +205,7 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
               viewport={{ once: false }}
+              style={{paddingTop:'40px'}}
             >
               Giá trị cốt lõi
             </motion.h1>

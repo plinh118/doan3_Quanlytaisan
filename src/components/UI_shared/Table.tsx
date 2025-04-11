@@ -1,6 +1,7 @@
 import { Button, Space, Popconfirm, Tooltip } from 'antd';
 import { EditOutlined, DeleteOutlined, UserAddOutlined } from '@ant-design/icons';
 import type { ColumnType } from 'antd/es/table';
+import { useMediaQuery } from '@/utils/responsive';
 
 // Define the interface for props
 interface ColumnProps<T> {
@@ -11,19 +12,20 @@ interface ColumnProps<T> {
   Tile1?:string;
   icon1?:React.ReactNode;
 }
-
 const createColumns = <T,>({
   columnType,
   openModal,
   handleDelete,addCustomer,Tile1,icon1
 }: ColumnProps<T>): ColumnType<T>[] => {
+  const isMobile = useMediaQuery('(max-width: 768px)');
+
   return [
     ...columnType,
     {
       title: 'Tác vụ',
       key: 'action',
       width: addCustomer?'150px':'100px',
-      fixed: 'right',
+      fixed: isMobile ? undefined : 'right',
       render: (_: any, record: T) => (
         <Space size="middle">
           {addCustomer &&(

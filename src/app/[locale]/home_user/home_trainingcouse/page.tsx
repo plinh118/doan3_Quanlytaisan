@@ -6,44 +6,63 @@ import { useNotification } from "@/components/UI_shared/Notification";
 import Image from "next/image";
 import { trainingCouseAPI } from "@/libs/api/trainingCouse.api";
 import { GetTrainingCourse } from "@/models/trainingCourse.api";
-import { Button, Tag } from "antd";
+import { Button, Tag, Input, Pagination } from "antd"; 
 import ConsultationFormModal from "@/components/home_user/modal_Consult";
 
 export default function TrainingCourse() {
   const { show } = useNotification();
+  
+  
   const [trainingcouse, settrainingcouse] = useState<GetTrainingCourse[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedTrainingCouse, setSelectedTrainingCouse] = useState<GetTrainingCourse | null>(null);
+  const [searchQuery, setSearchQuery] = useState(""); 
+  const [currentPage, setCurrentPage] = useState(1); 
+  const [totalItems, setTotalItems] = useState(0); 
+  
   useEffect(() => {
     fetchtrainingcouse();
-  }, []);
+  }, [currentPage, searchQuery]); 
 
+  
   const fetchtrainingcouse = useCallback(async () => {
     try {
-      const data = await trainingCouseAPI.gettrainingCousesByPageOrder(1, 10, "ASC", "", undefined, "Đang đào tạo");
+      const data = await trainingCouseAPI.gettrainingCousesByPageOrder(
+        currentPage,  
+        6,            
+        "ASC", 
+        searchQuery,  
+        undefined, 
+        "Đang đào tạo"
+      );
       settrainingcouse(data || []);
+      setTotalItems(data[0].TotalRecords || 0);
     } catch (error) {
       show({
         result: 1,
         messageError: 'Lỗi tải danh sách sản phẩm',
       });
     }
-  }, []);
+  }, [currentPage, searchQuery]);
 
-
-
-  // Mở modal đăng ký tư vấn
+  
   const openConsultModal = (training_course: GetTrainingCourse | null) => {
     setSelectedTrainingCouse(training_course);
     setModalVisible(true);
   };
 
-  // Đóng modal
+  
   const closeModal = () => {
     setModalVisible(false);
     setSelectedTrainingCouse(null);
   };
- 
+
+  
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+    setCurrentPage(1); 
+  };
+
   return (
     <>
       <section className={style.banner}>
@@ -71,7 +90,7 @@ export default function TrainingCourse() {
         </div>
       </section>
 
-      <section className={style.products_section} >
+      <section className={style.products_section}>
         <div className={style.products_container}>
           <motion.h2
             initial={{ opacity: 0 }}
@@ -81,6 +100,15 @@ export default function TrainingCourse() {
           >
             Danh sách khóa đào tạo của chúng tôi
           </motion.h2>
+
+          {/* Thêm ô tìm kiếm */}
+          <div className={style.search_box}>
+            <Input
+              placeholder="Tìm kiếm khóa học..."
+              value={searchQuery}
+              onChange={handleSearchChange}
+            />
+          </div>
 
           <div className={style.products_grid}>
             {trainingcouse.map((product) => (
@@ -94,7 +122,7 @@ export default function TrainingCourse() {
               >
                 <div className={style.product_image}>
                   <Image
-                    src={`/trainings/training-${product.CourseName}.jpg`} // Giả sử có 5 ảnh mẫu
+                    src={`/trainings/training-${product.CourseName}.jpg`}
                     alt={product.CourseName}
                     width={300}
                     height={200}
@@ -109,7 +137,7 @@ export default function TrainingCourse() {
 
                 <div className={style.product_info}>
                   <h3 className={style.product_name}>{product.CourseName}</h3>
-                  <p className={style.product_department}>Giảng Viên: <strong>{"" + product.InstructorName}</strong></p>
+                  <p className={style.product_department}>Giảng Viên: <strong>{product.InstructorName}</strong></p>
 
                   <div className={style.product_dates}>
                     <div>
@@ -124,13 +152,24 @@ export default function TrainingCourse() {
                       }}>Tham gia ngay </Button>
                     </div>
                   </div>
-
                 </div>
               </motion.div>
             ))}
           </div>
+
+          {/* Phân trang */}
+          <div className={style.pagination_container}>
+      <Pagination
+        current={currentPage}
+        total={totalItems}
+        pageSize={6}
+        onChange={(page) => setCurrentPage(page)}
+        showSizeChanger={false}
+      />
+    </div>
         </div>
       </section>
+
       <ConsultationFormModal
         visible={modalVisible}
         relatedItem={selectedTrainingCouse}

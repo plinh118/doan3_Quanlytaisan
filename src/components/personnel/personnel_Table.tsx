@@ -8,7 +8,6 @@ export const Personnel_Colum: ColumnType[] = [
     key: 'stt',
     width: '80px',
     align: 'center',
-    fixed:'left',
     render: (_text, _record, index) => (
       <span>{index !== undefined ? index + 1 : ''}</span>
     ),

@@ -2,6 +2,7 @@ import ThemeChanger from '@/modules/shared/changetheme';
 import { Button } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import Link from 'next/link';
+import { useMediaQuery } from '@/utils/responsive';
 
 interface HeaderProps {
   title: string;
@@ -14,6 +15,8 @@ const Header_Children: React.FC<HeaderProps> = ({
   onAdd,
   text_btn_add,
 }) => {
+  const isMobile = useMediaQuery('(max-width: 768px)');
+
   return (
     <>
       <div
