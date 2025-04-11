@@ -1,16 +1,19 @@
 "use client";
 import { motion } from "framer-motion";
-import styles from "./Product.module.scss"; // Import module SCSS
+import styles from "./Product.module.scss";
 import { useCallback, useEffect, useState } from "react";
 import { useNotification } from "@/components/UI_shared/Notification";
 import { productAPI } from "@/libs/api/product.api";
 import { Get_Product } from "@/models/product.model";
 import Image from "next/image";
 import { Tag } from "antd";
+import ConsultationFormModal from "@/components/home_user/modal_Consult";
 
-export default function Home() {
+export default function ProductPage() {
   const { show } = useNotification();
   const [products, setProducts] = useState<Get_Product[]>([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<Get_Product | null>(null);
 
   useEffect(() => {
     fetchProducts();
@@ -36,6 +39,18 @@ export default function Home() {
       day: "numeric",
     };
     return new Date(dateString).toLocaleDateString("vi-VN", options);
+  };
+
+  // Mở modal đăng ký tư vấn
+  const openConsultModal = (product: Get_Product) => {
+    setSelectedProduct(product);
+    setModalVisible(true);
+  };
+
+  // Đóng modal
+  const closeModal = () => {
+    setModalVisible(false);
+    setSelectedProduct(null);
   };
 
   return (
@@ -144,7 +159,7 @@ export default function Home() {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.3 }}
                   >
-                    {product.Description} 
+                    {product.Description}
                   </motion.p>
 
                   <motion.a
@@ -154,6 +169,10 @@ export default function Home() {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.4 }}
                     whileHover={{ scale: 1.05 }}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      openConsultModal(product);
+                    }}
                   >
                     <svg
                       width="20"
@@ -170,7 +189,7 @@ export default function Home() {
                         strokeLinejoin="round"
                       />
                     </svg>
-                    Xem chi tiết
+                    Đăng ký tư vấn
                   </motion.a>
                 </div>
 
@@ -227,6 +246,14 @@ export default function Home() {
           ></path>
         </svg>
       </div>
+
+      {/* Sử dụng component ConsultationFormModal */}
+      <ConsultationFormModal
+        visible={modalVisible}
+        relatedItem={selectedProduct}
+        relatedType='product'
+        onClose={closeModal}
+      />
     </>
   );
 }

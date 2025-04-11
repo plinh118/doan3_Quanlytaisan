@@ -1534,7 +1534,7 @@ CREATE PROCEDURE AddUser(
     IN p_Email VARCHAR(255),
     IN p_Password VARCHAR(255),
     IN p_FullName VARCHAR(255),
-    IN p_Role ENUM('admin', 'user')
+    IN p_Role VARCHAR(255)
 )
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION 
@@ -1547,14 +1547,14 @@ BEGIN
     
     SELECT 0 AS RESULT;
 END$$
-
+DELIMITER $$
 -- Cập nhật User
 CREATE PROCEDURE UpdateUser(
     IN p_Id INT,
     IN p_Email VARCHAR(255),
     IN p_Password VARCHAR(255),
     IN p_FullName VARCHAR(255),
-    IN p_Role ENUM('admin', 'user')
+    IN p_Role VARCHAR(255)
 )
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION 
@@ -1568,7 +1568,7 @@ BEGIN
     
     SELECT 0 AS RESULT;
 END$$
-
+DELIMITER $$
 -- Xóa mềm User
 CREATE PROCEDURE DeleteUser(
     IN p_Id INT
@@ -1901,7 +1901,144 @@ END$$
 DELIMITER ;
 
 
+DELIMITER $$
 
+-- Thêm đăng ký tư vấn mới
+CREATE PROCEDURE AddConsultation(
+    IN p_FullName NVARCHAR(100),
+    IN p_PhoneNumber VARCHAR(15),
+    IN p_Email VARCHAR(100),
+    IN p_RelatedId INT,
+    IN p_RelatedType NVARCHAR(50),
+    IN p_Description TEXT,
+    IN p_Status Text
+)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+    BEGIN
+        SELECT 1 AS RESULT;
+    END;
+    
+    INSERT INTO ConsultationRegistration 
+    (FullName, PhoneNumber, Email, RelatedId, RelatedType, Description,Status)
+    VALUES 
+    (p_FullName, p_PhoneNumber, p_Email, p_RelatedId, p_RelatedType, p_Description,p_Status);
+    
+    SELECT 0 AS RESULT;
+END$$
+
+-- Cập nhật đăng ký tư vấn
+CREATE PROCEDURE UpdateConsultation(
+    IN p_Consult_Id INT,
+    IN p_FullName NVARCHAR(100),
+    IN p_PhoneNumber VARCHAR(15),
+    IN p_Email VARCHAR(100),
+    IN p_RelatedId INT,
+    IN p_RelatedType NVARCHAR(50),
+    IN p_Description TEXT,
+    IN p_Status Text
+)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+    BEGIN
+        SELECT 1 AS RESULT;
+    END;
+    
+    UPDATE ConsultationRegistration
+    SET 
+        FullName = p_FullName,
+        PhoneNumber = p_PhoneNumber,
+        Email = p_Email,
+        RelatedId = p_RelatedId,
+        Status=p_Status,
+        RelatedType = p_RelatedType,
+        Description = p_Description,
+        updated_at = CURRENT_TIMESTAMP
+    WHERE Consult_Id = p_Consult_Id;
+    
+    SELECT 0 AS RESULT;
+END$$
+
+-- Xóa đăng ký tư vấn
+CREATE PROCEDURE DeleteConsultation(
+    IN p_Consult_Id INT
+)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+    BEGIN
+        SELECT 1 AS RESULT;
+    END;
+    
+    DELETE FROM ConsultationRegistration
+    WHERE Consult_Id = p_Consult_Id;
+    
+    SELECT 0 AS RESULT;
+END$$
+
+-- Lấy danh sách đăng ký tư vấn phân trang với tên Related
+CREATE PROCEDURE GetConsultationsByPageOrder(
+    IN p_PageIndex INT,         -- Trang hiện tại
+    IN p_PageSize INT,          -- Số dòng trên mỗi trang
+    IN p_OrderType VARCHAR(4),  -- 'ASC' hoặc 'DESC'
+    IN p_SearchText VARCHAR(255)  -- Từ khóa tìm kiếm (có thể NULL)
+)
+BEGIN
+    DECLARE v_Offset INT;
+    DECLARE v_SearchFilter VARCHAR(400);
+    SET v_Offset = (p_PageIndex - 1) * p_PageSize;
+
+    -- Xử lý điều kiện tìm kiếm
+    IF p_SearchText IS NOT NULL AND p_SearchText != '' THEN
+        SET v_SearchFilter = CONCAT(" AND (FullName LIKE '%", p_SearchText, "%' 
+                                   OR PhoneNumber LIKE '%", p_SearchText, "%' 
+                                   OR Email LIKE '%", p_SearchText, "%' 
+                                   OR Description LIKE '%", p_SearchText, "%') ");
+    ELSE
+        SET v_SearchFilter = "";
+    END IF;
+
+    -- Xây dựng SQL động để lấy tên Related tương ứng
+    SET @sql = CONCAT(
+        'SELECT 
+            cr.*,
+            CASE 
+                WHEN cr.RelatedType = "product" THEN (SELECT ProductName FROM Product WHERE Id = cr.RelatedId)
+                WHEN cr.RelatedType = "service" THEN (SELECT ServiceName FROM Service WHERE Id = cr.RelatedId)
+                WHEN cr.RelatedType = "training_course" THEN (SELECT CourseName FROM TrainingCourse WHERE Id = cr.RelatedId)
+                ELSE NULL
+            END AS RelatedName,
+            COUNT(*) OVER () AS TotalRecords 
+        FROM ConsultationRegistration cr
+        WHERE 1=1',
+        v_SearchFilter,
+        ' ORDER BY created_at ', p_OrderType,
+        ' LIMIT ', p_PageSize, ' OFFSET ', v_Offset
+    );
+
+    -- Thực thi SQL động
+    PREPARE stmt FROM @sql;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END$$
+
+-- Lấy chi tiết 1 đăng ký tư vấn với tên Related
+CREATE PROCEDURE GetConsultationDetail(
+    IN p_Consult_Id INT
+)
+BEGIN
+    SELECT 
+        cr.*,
+        CASE 
+            WHEN cr.RelatedType = "product" THEN (SELECT ProductName FROM Product WHERE Id = cr.RelatedId)
+            WHEN cr.RelatedType = "service" THEN (SELECT ServiceName FROM Service WHERE Id = cr.RelatedId)
+            WHEN cr.RelatedType = "training_course" THEN (SELECT CourseName FROM TrainingCourse WHERE Id = cr.RelatedId)
+            ELSE NULL
+        END AS RelatedName
+    FROM ConsultationRegistration cr
+    WHERE cr.Consult_Id = p_Consult_Id;
+END$$
+
+DELIMITER ;
 
 
 

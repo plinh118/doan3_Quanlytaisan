@@ -1,24 +1,26 @@
 "use client";
-import { color, motion } from "framer-motion";
-import style  from "./trainingcouse.module.scss";
+import { motion } from "framer-motion";
+import style from "./trainingcouse.module.scss";
 import { useCallback, useEffect, useState } from "react";
 import { useNotification } from "@/components/UI_shared/Notification";
 import Image from "next/image";
 import { trainingCouseAPI } from "@/libs/api/trainingCouse.api";
 import { GetTrainingCourse } from "@/models/trainingCourse.api";
-import { Tag } from "antd";
+import { Button, Tag } from "antd";
+import ConsultationFormModal from "@/components/home_user/modal_Consult";
 
 export default function TrainingCourse() {
   const { show } = useNotification();
   const [trainingcouse, settrainingcouse] = useState<GetTrainingCourse[]>([]);
-
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedTrainingCouse, setSelectedTrainingCouse] = useState<GetTrainingCourse | null>(null);
   useEffect(() => {
     fetchtrainingcouse();
   }, []);
 
   const fetchtrainingcouse = useCallback(async () => {
     try {
-      const data = await trainingCouseAPI.gettrainingCousesByPageOrder(1, 10, "ASC","",undefined,"Đang đào tạo");
+      const data = await trainingCouseAPI.gettrainingCousesByPageOrder(1, 10, "ASC", "", undefined, "Đang đào tạo");
       settrainingcouse(data || []);
     } catch (error) {
       show({
@@ -29,6 +31,19 @@ export default function TrainingCourse() {
   }, []);
 
 
+
+  // Mở modal đăng ký tư vấn
+  const openConsultModal = (training_course: GetTrainingCourse | null) => {
+    setSelectedTrainingCouse(training_course);
+    setModalVisible(true);
+  };
+
+  // Đóng modal
+  const closeModal = () => {
+    setModalVisible(false);
+    setSelectedTrainingCouse(null);
+  };
+ 
   return (
     <>
       <section className={style.banner}>
@@ -43,7 +58,7 @@ export default function TrainingCourse() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            Sản phẩm luôn đặt khách hàng làm trung tâm
+            Đào tạo hướng đến sự phát triển toàn diện của học viên
           </motion.h1>
           <br />
           <motion.p
@@ -51,10 +66,7 @@ export default function TrainingCourse() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.2 }}
           >
-            Chúng tôi đồng hành và giúp khách hàng tối ưu quy trình sản xuất, nâng cao hiệu quả công việc
-            nhờ áp dụng AI trong chuyển đổi số, giúp khách hàng tiến đến thành công trên con đường kinh doanh của họ.
-            Đối với chúng tôi, khách hàng chính là người quyết định sứ mệnh và định hướng cho sản phẩm và dịch vụ.
-            Sự thành công của khách hàng chính là sự thành công của chúng tôi.
+           "Chúng tôi đồng hành cùng học viên, tối ưu hóa hành trình học tập bằng các phương pháp hiện đại và công nghệ tiên tiến, giúp họ chinh phục tri thức và đạt được thành công trong sự nghiệp. Với chúng tôi, học viên là trung tâm của mọi chương trình đào tạo, và sự tiến bộ của họ chính là thành công lớn nhất của chúng tôi."
           </motion.p>
         </div>
       </section>
@@ -97,16 +109,19 @@ export default function TrainingCourse() {
 
                 <div className={style.product_info}>
                   <h3 className={style.product_name}>{product.CourseName}</h3>
-                  <p className= {style.product_department}>Giảng Viên: <strong>{"" + product.InstructorName}</strong></p>
+                  <p className={style.product_department}>Giảng Viên: <strong>{"" + product.InstructorName}</strong></p>
 
                   <div className={style.product_dates}>
-
                     <div>
                       <span className={style.date_label}>{product.Description}</span>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', paddingTop: "10px" }}>
                       <img src="/image/date.png" height={24} width={24} style={{ display: 'block' }} />
                       <span className={style.date_value}>{product.Duration + " Tuần"}</span>
+                      <Button className={style.TrainingButton} onClick={(e) => {
+                        e.preventDefault();
+                        openConsultModal(product);
+                      }}>Tham gia ngay </Button>
                     </div>
                   </div>
 
@@ -116,6 +131,12 @@ export default function TrainingCourse() {
           </div>
         </div>
       </section>
+      <ConsultationFormModal
+        visible={modalVisible}
+        relatedItem={selectedTrainingCouse}
+        relatedType="training_course"
+        onClose={closeModal}
+      />
     </>
   );
 }

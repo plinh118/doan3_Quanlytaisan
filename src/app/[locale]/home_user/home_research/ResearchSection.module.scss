@@ -1,263 +1,364 @@
 /* ResearchSection.module.scss */
 
-/* Base Styles - Mobile First */
-.banner {
-    height: 250px;
-    width: 100%;
-    background-image: url('/macbook.jpg');
-    background-size: cover;
-    background-position: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    color: white;
-    padding-left: 20px;
-  
-    a {
-      font-size: 20px;
-      color: rgb(255, 255, 255);
-  
-      &:hover {
-        color: rgb(226, 114, 3);
-      }
-    }
-  
-    h1 {
-      font-size: 24px;
-      margin-bottom: 8px;
-      float: none;
-    }
-  
-    p {
-      font-size: 14px;
-    }
-  }
-  @media (min-width: 1024px) {
-    .banner {
-      height: 400px;
-      padding-left: 100px;
-  
-      h1 {
-        font-size: 36px; /* Tăng thêm cho desktop */
-      }
-  
-      p {
-        font-size: 20px; /* Tăng thêm cho desktop */
-      }
-    }
+/* Base Variables */
+$primary-color: #f06418;
+$primary-hover: #e0550b;
+$dark-text: #11223f;
+$light-text: #4a4a4a;
+$white: #ffffff;
+$light-bg: #f9f9f9;
+$border-radius: 12px;
+$box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+$transition: all 0.3s ease;
+
+/* Page wrapper */
+.pageWrapper {
+  width: 100%;
+  background-color: $white;
 }
-/* Section chính */
-.sectionBg {
-    width: 100%;
-    padding-top: 50px;
-    padding-bottom: 50px;
-    background-color: #ffffff; /* Thêm màu nền nhẹ để phù hợp với giao diện */
+
+/* Banner section */
+.banner {
+  height: 280px;
+  width: 100%;
+  background-image: linear-gradient(rgba(17, 34, 63, 0.7), rgba(17, 34, 63, 0.7)), url('/macbook.jpg');
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  display: flex;
+  align-items: center;
+  
+  @media (min-width: 768px) {
+    height: 350px;
   }
   
-  /* Container padding chung */
-  .sectionContainer {
-    padding-top: calc(5rem * var(--mantine-scale));
-    padding-bottom: calc(5rem * var(--mantine-scale));
-    padding-top: 20px;
-    @media (min-width: 75em) {
-      padding-top: calc(3.75rem * var(--mantine-scale));
-      padding-bottom: calc(3.75rem * var(--mantine-scale));
-    }
+  @media (min-width: 1024px) {
+    height: 400px;
   }
   
-  /* Container chính */
-  .container {
-    width: 100%;
-    padding-top: 20px;
-    max-width: var(--container-size-xl); /* Sử dụng biến từ Mantine */
+  .bannerContent {
+    width: 90%;
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 0 1rem;
-  }
-  
-  /* Grid layout */
-  .grid {
-    overflow: hidden;
-    display: flex;
-    gap: 20;
-    align-items: center;
-    margin-top: calc(1.5rem * var(--mantine-scale));
-    --grid-gutter: calc(1.5rem * var(--mantine-scale));
-  
-    @media (min-width: 62em) {
-      --grid-gutter: calc(4rem * var(--mantine-scale));
-    }
-  }
-  
-  /* Grid inner */
-  .gridInner {
-    display: flex;
-    flex-wrap: wrap;
-    width: 100%;
-    gap: var(--grid-gutter);
-  }
-  
-  /* Grid column */
-  .gridCol {
-    flex: 0 0 100%;
-    max-width: 100%;
-  
-    @media (min-width: 62em) {
-      flex: 0 0 50%;
-      max-width: 50%;
-    }
-  }
-  
-  /* Background image container */
-  .backgroundImage {
-    background-size: contain;
-    background-position: right center;
-    background-repeat: no-repeat;
-    width: 100%;
-    padding: 1rem;
-  }
-  
-  /* Title */
-  .title {
-    font-weight: var(--mantine-h2-font-weight, 700);
-    line-height: var(--mantine-h2-line-height, 1.2);
-    font-size: var(--mantine-h2-font-size, 4rem); /* Default Mantine h2 size */
-    padding-bottom: calc(1rem * var(--mantine-scale));
-    padding-left: calc(1rem * var(--mantine-scale));
-    color: #11223f; /* Màu chữ tối cho nổi bật */
-  }
-  
-  /* Text description */
-  .text {
-    font-size: var(--mantine-font-size-lg, 1.125rem); /* Default Mantine lg size */
-    line-height: var(--mantine-line-height-lg, 1.6);
-    padding-left: calc(1rem * var(--mantine-scale));
-    color: #333;
-  
-    p {
-      margin: 0;
-    }
-  }
-  
-  /* Typography provider */
-  .typography {
-    padding-left: calc(1rem * var(--mantine-scale));
-  }
-  
-  /* Button wrapper */
-  .buttonWrapper {
-    margin-top: calc(1rem * var(--mantine-scale));
-    margin-left: calc(1rem * var(--mantine-scale));
-  }
-  
-  /* Button style */
-  .button {
-    height: var(--button-height-md, 36px); /* Default Mantine md height */
-    padding: 0 var(--button-padding-x-md, 16px); /* Default Mantine md padding */
-    font-size: var(--mantine-font-size-md, 14px); /* Default Mantine md font size */
-    border-radius: var(--mantine-radius-xl, 9999px); /* Default Mantine xl radius */
-    background-color: var(--mantine-color-primary-filled, #f06418); /* Màu cam nổi bật */
-    color: var(--mantine-color-white, #fff);
-    border: calc(0.0625rem * var(--mantine-scale)) solid transparent;
-    display: inline-flex;
-    align-items: center;
-    margin-top: 20px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    text-decoration: none;
-  
-    &:hover {
-      background-color: var(--mantine-color-primary-filled-hover, #e0550b);
-    }
-  
-    .buttonInner {
-      display: flex;
-      align-items: center;
-    }
-  
-    .buttonSection {
-      margin-right: 8px;
-  
-      svg {
-        width: 24px;
-        height: 24px;
+    color: $white;
+    
+    h1 {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      position: relative;
+      
+      &:after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        width: 60px;
+        height: 4px;
+        background-color: $primary-color;
       }
-    }
-  
-    .buttonLabel {
-      display: flex;
-      align-items: center;
-    }
-  }
-  
-  /* Image container */
-  .imageContainer {
-    display: flex;
-    justify-content: center;
-  }
-  
-  /* Image */
-  .image {
-    width: 80%;
-    height: auto;
-    max-width: 470px;
-  }
-  
-  /* Specific background images for each section */
-  .nlpBackground {
-    background-image: url("");
-  }
-  
-  .cvBackground {
-    background-image: url("/_next/static/media/triangle-2.bacab25d.png");
-  }
-  
-  .dsBackground {
-    background-image: url("/_next/static/media/triangle-3.c482f725.png");
-  }
-  
-  .mlBackground {
-    background-image: url("/_next/static/media/triangle-2.bacab25d.png");
-  }
-  
-  .audioBackground {
-    background-image: url("");
-  }
-  
-  /* Responsive adjustments */
-  @media (max-width: 62em) {
-    .gridCol:nth-child(odd) {
-      order: 1;
+      
+      @media (min-width: 768px) {
+        font-size: 40px;
+      }
+      
+      @media (min-width: 1024px) {
+        font-size: 48px;
+      }
     }
     
-    .gridCol:nth-child(even) {
-      order: 2;
-    }
- 
-  }
-  
-  @media (min-width: 62em) {
-    .gridCol:nth-child(odd) {
-      order: initial;
-    }
-  
-    .gridCol:nth-child(even) {
-      order: initial;
-    }
-  
-    /* Điều chỉnh thứ tự cụ thể cho từng section nếu cần */
-    .cvSection .gridCol:first-child {
-      order: 2;
-    }
-  
-    .cvSection .gridCol:last-child {
-      order: 1;
-    }
-  
-    .mlSection .gridCol:first-child {
-      order: 2;
-    }
-  
-    .mlSection .gridCol:last-child {
-      order: 1;
+    p {
+      font-size: 16px;
+      margin-top: 24px;
+      
+      a {
+        color: $white;
+        text-decoration: none;
+        transition: $transition;
+        
+        &:hover {
+          color: $primary-color;
+        }
+      }
+      
+      @media (min-width: 768px) {
+        font-size: 18px;
+      }
     }
   }
+}
+
+/* Intro section */
+.introSection {
+  padding: 60px 0 30px;
+  background-color: $light-bg;
+  
+  .container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+    
+    h2 {
+      font-size: 28px;
+      color: $dark-text;
+      margin-bottom: 16px;
+      font-weight: 700;
+      position: relative;
+      display: inline-block;
+      
+      &:after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 3px;
+        background-color: $primary-color;
+      }
+      
+      @media (min-width: 768px) {
+        font-size: 32px;
+      }
+    }
+    
+    p {
+      max-width: 800px;
+      margin: 24px auto 0;
+      color: $light-text;
+      font-size: 16px;
+      line-height: 1.6;
+      
+      @media (min-width: 768px) {
+        font-size: 18px;
+      }
+    }
+  }
+}
+
+/* Research areas section */
+.researchAreas {
+  padding: 40px 0 80px;
+  
+  .container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+}
+
+/* Section container */
+.sectionContainer {
+  display: flex;
+  flex-direction: column;
+  margin: 60px 0;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+  
+  &.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  @media (min-width: 992px) {
+    flex-direction: row;
+    align-items: center;
+    gap: 40px;
+    
+    &.reversed {
+      flex-direction: row-reverse;
+    }
+  }
+  
+  /* Content box */
+  .contentBox {
+    flex: 1;
+    padding: 30px 20px;
+    background-color: $white;
+    border-radius: $border-radius;
+    box-shadow: $box-shadow;
+    margin-bottom: 30px;
+    position: relative;
+    overflow: hidden;
+    
+    @media (min-width: 992px) {
+      margin-bottom: 0;
+      padding: 40px;
+    }
+    
+    &:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 6px;
+      height: 100%;
+      background-color: $primary-color;
+    }
+    
+    .iconWrapper {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background-color: rgba(240, 100, 24, 0.1);
+      color: $primary-color;
+      margin-bottom: 20px;
+    }
+    
+    h2 {
+      font-size: 22px;
+      font-weight: 700;
+      color: $dark-text;
+      margin-bottom: 16px;
+      
+      @media (min-width: 768px) {
+        font-size: 24px;
+      }
+    }
+    
+    p {
+      font-size: 16px;
+      line-height: 1.6;
+      color: $light-text;
+      margin-bottom: 20px;
+    }
+    
+    .applications {
+      margin-top: 24px;
+      
+      h3 {
+        font-size: 18px;
+        font-weight: 600;
+        color: $dark-text;
+        margin-bottom: 12px;
+      }
+      
+      .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        
+        .tag {
+          display: inline-block;
+          padding: 6px 12px;
+          background-color: rgba(240, 100, 24, 0.1);
+          color: $primary-color;
+          border-radius: 20px;
+          font-size: 14px;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+  
+  /* Image box */
+  .imageBox {
+    flex: 1;
+    
+    .imageWrapper {
+      width: 100%;
+      border-radius: $border-radius;
+      overflow: hidden;
+      box-shadow: $box-shadow;
+      
+      img {
+        width: 100%;
+        height: auto;
+        display: block;
+        transition: transform 0.5s ease;
+        
+        &:hover {
+          transform: scale(1.03);
+        }
+      }
+    }
+  }
+}
+
+/* Button style */
+.button {
+  display: inline-flex;
+  align-items: center;
+  padding: 12px 24px;
+  background-color: $primary-color;
+  color: $white;
+  border: none;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  text-decoration: none;
+  margin-top: 24px;
+  
+  &:hover {
+    background-color: $primary-hover;
+  }
+  
+  .buttonInner {
+    display: flex;
+    align-items: center;
+  }
+  
+  .buttonLabel {
+    margin-right: 8px;
+  }
+  
+  .buttonIcon {
+    display: flex;
+    align-items: center;
+    transition: transform 0.3s ease;
+  }
+  
+  &:hover .buttonIcon {
+    transform: translateX(4px);
+  }
+}
+
+.content {
+  height: auto; /* Change from fixed height */
+  min-height: 300px;
+  width: 100%;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0;
+}
+
+.center {
+  width: 90%;
+  height: auto; /* Change from fixed height */
+  padding: 20px 0;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  background-image: url('/tamgiac.png');
+  background-size: 200px 200px; /* Smaller for mobile */
+  background-position: right center;
+  background-repeat: no-repeat;
+}
+
+.center h1 {
+  font-size: 50px; /* Smaller for mobile */
+  font-weight: bold;
+  color: #f06418;
+  margin-top: 40px;
+  margin-bottom: 10px;
+  text-align: center; /* Center on mobile */
+}
+
+.center p {
+  color: black;
+  font-size: 20px;
+  max-width: 100%;
+  line-height: 1.5;
+  text-align: left; /* Change from justify for better mobile reading */
+  padding: 0 15px;
+}

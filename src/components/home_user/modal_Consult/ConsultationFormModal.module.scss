@@ -1,0 +1,52 @@
+/* ConsultationFormModal.module.scss */
+
+/* Modal style */
+.modal {
+    :global(.ant-modal-header) {
+      border-bottom: 1px solid #e8e8e8;
+      padding-bottom: 16px;
+    }
+  
+    :global(.ant-modal-title) {
+      font-size: 18px;
+      font-weight: 600;
+      color: #e0550b;
+    }
+  
+    :global(.ant-modal-body) {
+      padding: 24px;
+    }
+  
+    :global(.ant-form-item) {
+      margin-bottom: 16px;
+    }
+  
+    :global(.ant-form-item-label > label) {
+      font-weight: 500;
+      color: #ffffff;
+    }
+  
+    :global(.ant-input),
+    :global(.ant-select-selector) {
+      border-radius: 4px;
+      height: 40px;
+    }
+  
+    :global(.ant-input-textarea) {
+      border-radius: 4px;
+    }
+  
+    :global(.ant-btn-primary) {
+      background-color: #e0550b;
+      border-color: #e0550b;
+      border-radius: 4px;
+      height: 40px;
+      padding: 0 24px;
+    }
+  
+    :global(.ant-btn-default) {
+      border-radius: 4px;
+      height: 40px;
+      padding: 0 24px;
+    }
+  }

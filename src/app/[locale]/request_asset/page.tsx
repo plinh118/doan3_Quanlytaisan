@@ -195,6 +195,8 @@ return (
                     options={[
                         { label: 'Yêu cầu mua', value: 'Yêu cầu mua' },
                         { label: 'Từ chối yêu cầu mua', value: 'Từ chối yêu cầu mua' },
+                        { label: 'Đồng ý yêu cầu mua', value: 'Đồng ý yêu cầu mua' },
+
                     ]}
                     onChange={(value) => setStatusFilter(value)}
                 />

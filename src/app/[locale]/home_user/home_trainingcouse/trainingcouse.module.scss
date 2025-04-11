@@ -71,6 +71,28 @@
   padding: 0 15px;
 }
 
+.TrainingButton {
+  display: inline-flex;
+  align-items: center;
+  padding: 12px 24px;
+  background-color: #f06418;
+  color: white;
+  margin-left: 110px;
+  border: none;
+  border-radius: 50px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  text-decoration: none;
+
+  &:hover {
+    background-color: #e0550b;
+  }
+
+  svg {
+    margin-right: 10px;
+  }
+}
 .pr {
   height: 300px; /* Smaller for mobile */
   width: 100%;
@@ -309,22 +331,7 @@
 .date_value {
   color: #333;
   font-weight: 600;
-}
-
-.product-button {
-  width: 100%;
-  padding: 10px;
-  background-color: #f06418;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.product-button:hover {
-  background-color: #e0550b;
+  
 }
 
 /* Responsive Design */

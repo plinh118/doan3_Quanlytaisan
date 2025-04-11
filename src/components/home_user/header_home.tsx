@@ -20,7 +20,6 @@ export const HeaderUser = () => {
     { name: "Sản phẩm", path: "/vi/home_user/home_product" },
     { name: "Nghiên cứu", path: "/vi/home_user/home_research" },
     { name: "Đào tạo", path: "/vi/home_user/home_trainingcouse" },
-    { name: "Đăng nhập", path: "/vi/login" },
   ];
 
   const handleClick = (item: { name: string; path: string }) => {
