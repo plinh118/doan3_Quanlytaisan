@@ -36,7 +36,7 @@ const ThemeChanger = () => {
     if (e.key === 'logout') {
       console.log('Đăng xuất');
       await authAPI.logout();
-      push('/vi');
+      push('/vi/login');
     } else if (e.key === 'settings') {
       push('/vi/resetPassword');
     }

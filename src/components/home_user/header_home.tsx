@@ -29,12 +29,12 @@ export const HeaderUser = () => {
   };
 
   useEffect(() => {
-    // Xác định active item dựa trên current path
-    const currentItem = menuItems.find((item) =>
-      pathname?.startsWith(item.path)
-    );
+    // Xác định active item dựa trên exact match của URL
+    const currentItem = menuItems.find((item) => pathname === item.path);
     if (currentItem) {
       setActiveItem(currentItem.name);
+    } else {
+      setActiveItem(""); // Không có item nào khớp, đặt activeItem rỗng
     }
   }, [pathname]);
 
@@ -59,15 +59,15 @@ export const HeaderUser = () => {
         }}
       >
         <Link href='/vi/home_user'>
-        <div className={styles.logo}>
-          <Image
-            src="/image/logo.png"
-            width={130}
-            height={62}
-            alt="Logo"
-            priority
-          />
-        </div>
+          <div className={styles.logo}>
+            <Image
+              src="/image/logo.png"
+              width={130}
+              height={62}
+              alt="Logo"
+              priority
+            />
+          </div>
         </Link>
 
         <button

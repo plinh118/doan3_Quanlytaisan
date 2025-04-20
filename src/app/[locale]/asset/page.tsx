@@ -28,7 +28,6 @@ import { GetDivision } from '@/models/division.model';
 import { divisionAPI } from '@/libs/api/division.api';
 import { showDateFormat } from '@/utils/date';
 import { checkNumber } from '@/utils/validator';
-import * as XLSX from 'xlsx';
 import ExportExcel from '@/components/UI_shared/ExportExcel';
 
 const AssetPage = () => {
